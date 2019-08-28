@@ -6,7 +6,8 @@
         <mt-field label="账户名" placeholder="请输入账户名" v-model="model.account"></mt-field>
         <mt-field label="邮箱" placeholder="请输入邮箱" type="email" v-model="model.email"></mt-field>
         <mt-field label="手机号" placeholder="请输入手机号" type="tel" v-model="model.telephone"></mt-field>
-        <mt-field label="密码" placeholder="请输入密码" type="password" v-model="model.password"></mt-field>
+        <mt-field label="密码" placeholder="请输入密码" type="password" v-model="model.password1"></mt-field>
+        <mt-field label="确认密码" placeholder="请确认密码" type="password" v-model="model.password"></mt-field>
         <mt-field label="验证码" placeholder="请输入验证码" v-model="model.verify">
         <img :src="veritifyNum" height="45px" width="100px" @click="changeVerify">
         </mt-field>
@@ -53,12 +54,13 @@ export default {
             this.model.password===undefined||this.model.verify===undefined){
                 Toast('请输入完整信息')
                 return
-            } else
-            api.register(this.model).then((res)=>{
+            } else if(this.model.password === this.model.password1) {
+                api.register(this.model).then((res)=>{
                 // console.log(res)
                 Toast(res.message)
                 this.$router.push('/login')
             })
+            } else Toast('密码输入不一致');
         }
 
     },

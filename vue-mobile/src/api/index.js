@@ -32,6 +32,27 @@ const api = {
   uploadImg(data) {
     return request('http://localhost:3000/mobile/api/upload', data, 'post')
   },
+
+
+  //主题区
+  sendTopic(data) {
+    return request('http://localhost:3000/mobile/api/sendtopic', data, 'post')
+  },
+  showTopicList(data) {
+    return request('http://localhost:3000/mobile/api/topiclist', data, 'post')
+  },
+  topicComment(data) {
+    return request('http://localhost:3000/mobile/api/comment', data, 'post')
+  },
+  delComment(data) {
+    return request('http://localhost:3000/mobile/api/delcomment', data, 'post')
+  },
+  delTopic(data) {
+    return request('http://localhost:3000/mobile/api/deltopic', data, 'post')
+  },
+  thinkGood(data) {
+    return request('http://localhost:3000/mobile/api/thinkgood', data, 'post')
+  },
 }
 
 export default api

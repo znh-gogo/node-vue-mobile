@@ -4,6 +4,7 @@
         <div class="footer">
         <router-link class="nav-link" tag="div" to="/home"><div :class="{'current': $route.path === '/home/one'}">我的首页</div></router-link>
         <router-link class="nav-link" tag="div" to="/plan"><div :class="{'current': $route.path === '/plan'}">计划管理</div></router-link>
+        <router-link class="nav-link" tag="div" to="/social"><div :class="{'current': $route.path === '/social'}">社交中心</div></router-link>
         <router-link class="nav-link" tag="div" to="/mine"><div :class="{'current': $route.path === '/mine'}">个人中心</div></router-link>
         </div>
     </div>

@@ -22,7 +22,7 @@ module.exports = app => {
 
     //账户注册、登陆
     const Account = require('../../models/mobile/Account')
-    app.post('/mobile/api/register',async (req,res) => {
+    router.post('/register',async (req,res) => {
         const { account,verify }= req.body
         
         //根据用户名找到用户
@@ -40,8 +40,8 @@ module.exports = app => {
         res.send({model,message:'注册成功'})
     })
     
-    app.post('/mobile/api/login',async (req,res,next)=>{
-        const { account,password,verify,frozen }= req.body
+    router.post('/login',async (req,res,next)=>{
+        const { account,password,verify }= req.body
         //根据用户名找到用户
         // console.log(vetifys)
         
@@ -136,15 +136,13 @@ module.exports = app => {
     })
 
     //回显示用户信息
-    app.post('/mobile/api/showAccount/:id',solveMobileToken,async (req,res)=>{
-        const model = await Account.findById(req.params.id)
+    router.post('/showAccount/:id',solveMobileToken,async (req,res)=>{
+        const model = await Account.findById(req.params.id,'-password')
         res.send(model)
     })
 
-
-
     //更改nickname
-    app.post('/mobile/api/updateNickname',solveMobileToken,async (req,res)=>{
+    router.post('/updateNickname',solveMobileToken,async (req,res)=>{
         const { nickname, id } = req.body
         await Account.findByIdAndUpdate(id,{$set:{nickname}})
         res.send({
@@ -152,7 +150,7 @@ module.exports = app => {
         })
     })
     //更改telephone
-    app.post('/mobile/api/updateTelephone',solveMobileToken,async (req,res)=>{
+    router.post('/updateTelephone',solveMobileToken,async (req,res)=>{
         const { id, telephone } = req.body
         await Account.findByIdAndUpdate(id,{$set:{telephone}})
         res.send({
@@ -160,7 +158,7 @@ module.exports = app => {
         })
     })
     //更改email
-    app.post('/mobile/api/updateEmail',solveMobileToken,async (req,res)=>{
+    router.post('/updateEmail',solveMobileToken,async (req,res)=>{
         const { id, email } = req.body
         await Account.findByIdAndUpdate(id,{$set:{email}})
         res.send({
@@ -168,7 +166,7 @@ module.exports = app => {
         })
     })
     //更改description
-    app.post('/mobile/api/updateDescription',solveMobileToken,async (req,res)=>{
+    router.post('/updateDescription',solveMobileToken,async (req,res)=>{
         const { id, description } = req.body
         await Account.findByIdAndUpdate(id,{$set:{description}})
         res.send({
@@ -176,7 +174,7 @@ module.exports = app => {
         })
     })
     //更改密码
-    app.post('/mobile/api/updatePassword',solveMobileToken,async (req,res)=>{
+    router.post('/updatePassword',solveMobileToken,async (req,res)=>{
         const { id, newpassword, oldpassword } = req.body
         const user = await Account.findById(id)
         if (oldpassword === user.password){
@@ -191,7 +189,7 @@ module.exports = app => {
 
     })
     //更改头像
-    app.post('/mobile/api/updateHeadimg',solveMobileToken,async(req,res)=>{
+    router.post('/updateHeadimg',solveMobileToken,async(req,res)=>{
         const { id, headImg } = req.body
         await Account.findByIdAndUpdate(id,{$set:{headImg}})
         res.send({
@@ -199,10 +197,77 @@ module.exports = app => {
         })
     })
 
+    const Topic = require('../../models/mobile/Topic')
+    const Comment = require('../../models/mobile/Comment')
+    //发表话题
+    router.post('/sendtopic',solveMobileToken,async(req,res)=>{
+        const model = await Topic.create(req.body)
+        res.send({
+            message:'发布成功',
+            model
+        })
+    })
+
+    //查看话题
+    router.post('/checktopic',solveMobileToken,async(req,res)=>{
+        const { id } = req.body
+        const model = await Topic.find({relative:id}).populate('relative topiccomment commentuser')
+        res.send(model)
+    })
+
+    //查看所有的话题
+    router.post('/topiclist',solveMobileToken,async(req,res)=>{
+        const model = await Topic.find().populate('relative thinkgood').populate({path:'topiccomment',populate:{path:'commentuser'}})
+        res.send(model)
+    })
+
+    //对话题进行评论
+    router.post('/comment',solveMobileToken,async(req,res)=>{
+        const comment = await Comment.create(req.body)
+        const savecommentid = await Topic.findByIdAndUpdate(req.body.topicid,{$push:{topiccomment:comment._id}}).populate('relative topiccomment')
+        res.send({
+            message:'评论成功'
+        })
+    })
+
+    //点赞话题 
+    router.post('/thinkgood',solveMobileToken,async (req,res)=>{
+        const { userid, topicid } = req.body
+        const user = await Topic.findById(topicid,{thinkgood:userid})
+        // console.log(user.thinkgood[0] == userid)
+        for(let i = 0; i<user.thinkgood.length;i++){
+        if(user.thinkgood[0] == userid){
+            var model =  await Topic.findByIdAndUpdate(topicid,{$pull:{thinkgood:userid}})
+            res.send(model)
+            return
+        }
+        }
+        var model = await Topic.findByIdAndUpdate(topicid,{$push:{thinkgood:userid}})
+        res.send(model)
+    })
+
+    //删除话题
+    router.post('/deltopic',solveMobileToken,async(req,res)=>{
+        const {id} = req.body
+        await Topic.findByIdAndDelete(id)
+        res.send({
+        message:"删除成功"
+        })
+    })
+
+    //删除评论
+    router.post('/delcomment',solveMobileToken,async(req,res)=>{
+        const {id} = req.body
+        await Comment.findByIdAndDelete(id)
+        res.send({
+        message:"删除成功"
+        })
+    })
+
     //上传文件中间处理
     const multer = require('multer') //上传文件所需的中间件，帮忙做了很多处理
     const upload = multer({dest:__dirname + '/../../uploads'})
-    app.post('/mobile/api/upload', solveMobileToken,
+    router.post('/upload', solveMobileToken,
     upload.single('file') ,async (req,res)=>{
         const file = req.file
         file.url=`http://localhost:3000/uploads/${file.filename}`
@@ -215,4 +280,6 @@ module.exports = app => {
         })
     //   await next()   
     })
+
+    app.use('/mobile/api', router)
 }

@@ -53,6 +53,11 @@ const router = new Router({
           component: () => import('./views/Plan/plan.vue')
         },
         {
+          path: '/social',
+          name: 'social',
+          component: () => import('./views/Social/social.vue')
+        },
+        {
           path: '/mine',
           name: 'mine',
           component: () => import('./views/Mine/mine.vue')
@@ -94,6 +99,16 @@ const router = new Router({
       path:'/mine/myinfo/changeheadimg',
       name:'changeheadimg',
       component: () => import('./views/Mine/myinfo/changeheadimg.vue')
+    },
+    {
+      path:'/social/info',
+      name:'info',
+      component: () => import('./views/Social/Socialinfo/socialinfo.vue')
+    },
+    {
+      path:'/social/sendtopic',
+      name:'sendtopic',
+      component: () => import('./views/Social/Socialinfo/sendtopic.vue')
     },
     {
       path: '*',

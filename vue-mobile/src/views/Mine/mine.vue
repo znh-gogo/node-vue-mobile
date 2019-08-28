@@ -2,7 +2,7 @@
     <div style="width: 100%;height: 100vh;background-color: #eeeeee;">
         <div class="head">
             <div class="head-detail" @click="$router.push('/mine/myinfo')">
-                <img :src="accountInfo.headImg" alt="">
+                <div><img :src="accountInfo.headImg" alt=""></div>
                 <div style="display: flex;;flex-direction: column;justify-content: space-between;width: 100%;">
                     <div style="font-weight: 700;font-size: 1.8rem;margin-top: 0.5rem">{{this.accountInfo.nickname}}</div>
                     <div style="display: flex;margin-bottom: 0.2rem; color: #aaa;font-size: 1.4rem;justify-content: space-between;width: 100%;">
@@ -74,7 +74,7 @@ export default {
         .head-detail{
             display: flex;
             img {
-                width: 6rem;
+                width: 5rem;
                 height: 5rem;
                 margin-right: 2rem;
             }

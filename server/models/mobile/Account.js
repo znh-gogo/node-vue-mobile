@@ -10,6 +10,7 @@ const schema = new mongoose.Schema({
     headImg:{type:String,default:'https://s2.ax1x.com/2019/08/24/my1zWR.jpg'},
     description:{type:String,default:'这个人比较懒，什么都没有...'},
     frozen:{type:Number,default:1}, //0冻结1解冻
+    backgroundImg:{type:String,default:'https://s2.ax1x.com/2019/08/28/m7QXKf.jpg'}
 })
 
 module.exports = mongoose.model('Account',schema)
