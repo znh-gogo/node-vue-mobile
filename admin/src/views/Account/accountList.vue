@@ -58,7 +58,7 @@
   :visible.sync="dialogVisible"
   width="40%">
     <div style="display:flex">
-      <img :src="userDetails.headImg" alt="" style="width:200px">
+      <div><img :src="userDetails.headImg" alt="" style="width:200px;height:auto"></div>
       <div class="dialogInfo">
         <div>名称：{{userDetails.nickname}}</div>
         <div>账号：{{userDetails.account}}</div>

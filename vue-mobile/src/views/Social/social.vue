@@ -1,5 +1,5 @@
 <template>
-    <div style="positon:relative;margin-bottom: 5rem;">
+    <div style="positon:relative;margin-bottom: 5rem;height:100%" @click.stop="cancelAll">
         <!-- <mt-header title="社交中心" style="background-color:#f1f1f1;color: #222222;font-size: 1.2rem;height:4rem;position:fixed:top:0;left:0">
         </mt-header> -->
         <div class="social_top" :style="{backgroundImage: 'url(' + accountInfo.backgroundImg + ')'}">
@@ -10,43 +10,52 @@
         </div>
         <div class="social_content" v-for="(item,index) in topicList" :key="index">
             <div class="contents" v-if="item.relative">
-                <div><img :src="item.relative.headImg" alt="" style="width:4rem;height:4rem;background-size:100%;"
+                <div><img :src="item.relative.headImg" alt="" style="width:4rem;height:4rem;border-radius:0.3rem;background-size:100%;"
                 @click="$router.push({path:'/social/info',query:{id:item.relative._id}})"></div>
                 <div class="contents-right">
                     <div class="username">{{item.relative.nickname}}</div>
                     <div class="topiccontent">{{item.topiccontent}}</div>
-                    <img src="../../assets/p2.jpg" alt="" style="width:10rem;height:10rem">
+                    <div v-if="item.topicImg.length !== 0" style="display:flex;width:100%;flex-flow:row wrap;">
+                        <div v-for="(img,imgindex) in item.topicImg" :key="imgindex">
+                            <img
+                            :src="img"
+                            @click="zoomIn(img)"
+                            :class="[{'singleImg':item.topicImg.length === 1},{'mulImg': item.topicImg.length > 1}]">
+                        </div>
+                    </div>
                     <div class="content-bottom">
-                        <div style="color:#666;height:2rem;line-height:2rem">{{item.createdAt.split('T').reverse().pop()}}
+                        <div style="color:#666;height:2rem;line-height:2rem">{{format(item.createdAt)}}
                             <span style="color:red;font-size:0.8rem;margin-left:1rem" v-if="item.relative._id === accountId" @click="delTopic(item._id)">删除</span></div>
-                        <!-- <div style="display:flex"> -->
                         <transition name="moveR">
                             <div class="controlbtn" v-show="showBtn"  v-if="nowIndex === index">
-                                <span style="margin-right:1rem">点赞</span> |
-                                <span style="margin-left:1rem" @click="comment(item._id)">评论</span>
+                                <span style="margin-right:1rem" @click="thinkgood(item._id)">{{item.goodflag === 1?'取消点赞':'点赞'}}</span>
+                                 |
+                                <span style="margin-left:1rem" @click.stop="comment(item._id)">评论</span>
                             </div>
                         </transition>
-                        <img src="../../assets/more.png" alt="" style="width:2rem;height:2rem" @click="showMore(index)">
-                        <!-- </div> -->
+                        <img src="../../assets/more.png" alt="" style="width:2rem;height:2rem;" @click.stop="showMore(index)">
                     </div>
                     <div class="replybox" v-if="item.thinkgood.length!==0 || item.topiccomment.length!==0">
-                        <div class="thinkgood" v-if="item.thinkgood.length!==0">
-                            <img src="../../assets/like.png" alt="" style="width:1rem;height:1rem">
-                            <div>123</div><span style="color:#222">、</span>
+                        <div v-if="item.thinkgood.length!==0" style="display:flex">
+                            <div class="thinkgood" v-for="(good,num) in item.thinkgood" :key="num">
+                                <img src="../../assets/like.png" alt="" style="width:1rem;height:1rem">
+                                <div>{{good.nickname}}</div><span style="color:#222" v-if="item.thinkgood.length !== 1 && item.thinkgood.length !== (num+1)">、</span>
+                            </div>
                         </div>
+                        <div style="width:100%;height:1px;background:#ccc;margin-bottom:0.3rem" v-if="item.thinkgood.length!==0 && item.topiccomment.length!==0"></div>
                         <div v-if="item.topiccomment.length!==0">
-                            <div v-for="(c,i) in item.topiccomment" :key="i" :class="['reply',{'current':item.topiccomment.length==i}]">
+                            <div v-for="(c,i) in item.topiccomment" :key="i" :class="['reply',{'current':item.topiccomment.length==(i+1)}]">
                                 <span style="color:#0399d3;" v-if="c.commentuser">{{c.commentuser.nickname}}</span>
                                 <span v-if="c.commentuser">：{{c.comment}}</span>
                                 <span style="float:right;color:red" v-if="c.commentuser._id === accountId" @click="delcomment(c._id)">删除</span>
                             </div>
-                    </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <transition name="moveT">
-            <div style="position:fixed;width:100%;bottom:5rem;left:0:z-index: 20;border-top:1px solid #ccc;background:#fff" v-if="commentFlag">
+            <div style="position:fixed;width:100%;bottom:5rem;left:0:z-index: 20;border-top:1px solid #ccc;background:#fff" v-if="commentFlag" @click.stop="">
                 <mt-field placeholder="请输入评论内容" type="textarea" rows="2" v-model="model.comment">
                     <div>
                         <mt-button type="primary" size="small" @click="sendcomment">发表评论</mt-button>
@@ -58,13 +67,16 @@
         <div class="sendBtn" @click="$router.push({path:'/social/sendtopic',query:{id:accountId}})" v-if="!commentFlag">
             <img src="../../assets/sendtopic.png" alt="" style="width:3rem;height:3rem;border-radius: 50%;">
         </div>
-
+        <div class="zoom" @click="zoomFlag = false" v-if="zoomFlag">
+            <img :src="zoomImg" style="width:100%;height:auto">
+        </div>
     </div>
 </template>
 
 <script>
 import api from '../../api'
 import { Toast } from 'mint-ui'
+import format from '../../common/common'
 export default {
     data (){
         return{
@@ -77,9 +89,24 @@ export default {
             nowIndex: -1,
             model:{},
             topicid:null,
+            zoomImg:'',
+            zoomFlag:false,
+            format
         }
     },
     methods:{
+        cancelAll(){
+            this.showBtn = false
+            this.commentFlag = false
+        },
+        thinkgood(tid){
+            api.thinkGood({ userid:this.accountId,topicid:tid }).then((res)=>{
+                if(res){
+                    this.showBtn = false
+                    this.getTopicList()
+                }
+            })
+        },
         comment (id){
             this.commentFlag = !this.commentFlag
             this.showBtn = false
@@ -98,6 +125,18 @@ export default {
             api.showTopicList().then(res => {
                 if(res){
                     this.topicList = res.reverse()
+                    for( let i =0; i<this.topicList.length;i++){
+                        if(this.topicList[i].relative._id){
+                            for(let j = 0;j<this.topicList[i].thinkgood.length;j++){
+                                if(this.accountId === this.topicList[i].thinkgood[j]._id) {
+                                    this.$set(this.topicList[i],'goodflag',1)
+                                } 
+                                else {
+                                    this.$set(this.topicList[i],'goodflag',0)
+                                }
+                            }
+                        }
+                    }
                 }
             })
         },
@@ -127,6 +166,10 @@ export default {
                     this.getTopicList()
                 }
             })
+        },
+        zoomIn(img){
+            this.zoomImg = img
+            this.zoomFlag = true
         }
     },
     mounted (){
@@ -174,6 +217,17 @@ export default {
                     line-height: 1.4rem;
                     margin-bottom: 0.5rem;
                 }
+                .mulImg{
+                    width: 7rem;
+                    height: 7rem;
+                    margin-right: 0.7rem;
+                    margin-bottom: 0.7rem;
+                    flex-flow:row wrap;
+                }
+                .singleImg{
+                    width:12rem;
+                    height:12rem
+                }
                 .content-bottom{
                     margin-top: 0.5rem;
                     display: flex;
@@ -196,9 +250,10 @@ export default {
                     padding: 0.4rem;
                     .thinkgood{
                         color:#0399d3;
-                        border-bottom: 1px solid #ccc;
-                        padding-bottom: 0.3rem;
+                        padding-top: 0.1rem; ;
+                        padding-bottom: 0.1rem;
                         display: flex;
+                        // display: inline-block
                     }
                     .reply{
                         margin-bottom: 0.5rem;
@@ -217,6 +272,16 @@ export default {
         width: 3rem;
         height: 3rem;
         line-height: 3rem;
+    }
+    .zoom{
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        padding-top: 45%;
+        background-color: #000;
+        z-index: 99;
+        top: 0;
+        left: 0;
     }
     .current{
         margin-bottom: 0!important;

@@ -236,7 +236,7 @@ module.exports = app => {
         const user = await Topic.findById(topicid,{thinkgood:userid})
         // console.log(user.thinkgood[0] == userid)
         for(let i = 0; i<user.thinkgood.length;i++){
-        if(user.thinkgood[0] == userid){
+        if(user.thinkgood[i] == userid){
             var model =  await Topic.findByIdAndUpdate(topicid,{$pull:{thinkgood:userid}})
             res.send(model)
             return

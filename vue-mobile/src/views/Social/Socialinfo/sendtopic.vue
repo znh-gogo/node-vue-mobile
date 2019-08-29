@@ -8,8 +8,15 @@
         </mt-header>
         <mt-field placeholder="这一刻的想法..." type="textarea" rows="4" v-model="model.topiccontent">
         </mt-field>
-        <div style="background:#fff;padding:1rem;display:flex">
-            <img :src="headImg" alt="" style="width:8rem;height:8rem;margin-right:1rem;maigin-bottom:0.5rem" v-if="headImg!==''">
+        <div style="background:#fff;padding:1rem;display:flex;flex-wrap:wrap">
+            <div style="display:inline-block" v-if="model.topicImg.length!==0">
+                <img 
+                :src="item"
+                v-for="(item,index) in model.topicImg"
+                :key="index"
+                @click="delImg(index)"
+                style="width:8rem;height:8rem;margin-right:0.5rem;maigin-bottom:0.5rem">
+            </div>
             <label for="file" style="display:inline-block;font-size:5rem;width:8rem;height:8rem;line-height:8rem;
             background-color:#ddd;color:#ecf6fb;border-radius:1rem;text-align:center">+</label>
             <input type="file" name="file" id="file" @change="getfile" style="display:none">
@@ -23,8 +30,9 @@ import { Toast } from 'mint-ui'
 export default {
     data(){
         return{
-            model:{},
-            headImg:''
+            model:{
+                topicImg:[]
+            }
         }
     },
     methods:{
@@ -33,7 +41,7 @@ export default {
             let form = new FormData()
             form.append('file',e.target.files[0])
             api.uploadImg(form).then((res)=>{
-                this.headImg = res.url
+                this.model.topicImg.push(res.url)
             })
         },
         sendInfo(){
@@ -47,6 +55,9 @@ export default {
                     this.$router.push('/social')
                 }
             })
+        },
+        delImg(i){
+            this.model.topicImg.splice(i,1)
         }
     }
 }
