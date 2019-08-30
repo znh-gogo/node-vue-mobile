@@ -1,19 +1,32 @@
 <template>
+<mt-loadmore :top-method="loadTop" :top-status.sync="topStatus" ref="loadmore">
+    <div slot="top" class="mint-loadmore-top" style="text-align:center">
+        <span v-show="topStatus !== 'loading'" :class="{ 'rotate': topStatus === 'drop' }">↓</span>
+        <span style="display:flex;justify-content:space-around">
+        <mt-spinner v-show="topStatus == 'loading'" color="#26a2ff"></mt-spinner>
+        <span v-show="topStatus == 'loading'">加载中</span>
+        </span>
+
+        <!-- <mt-spinner v-show="topStatus == 'loading'" type="fading-circle"></mt-spinner> -->
+    </div>
     <div style="positon:relative;margin-bottom: 5rem;height:100%" @click.stop="cancelAll">
         <!-- <mt-header title="社交中心" style="background-color:#f1f1f1;color: #222222;font-size: 1.2rem;height:4rem;position:fixed:top:0;left:0">
         </mt-header> -->
         <div class="social_top" :style="{backgroundImage: 'url(' + accountInfo.backgroundImg + ')'}">
             <div class="top_content">
                 <div style="font-size:1.5rem;line-height:4rem;margin-right:2rem;color:#222">{{accountInfo.nickname}}</div>
-                <img :src="accountInfo.headImg" alt="" style="width:4rem;height:4rem;border-radius:0.3rem" @click="$router.push({path:'/social/info',query:{id:accountId}})">
+                <img :src="accountInfo.headImg" alt="" style="width:4rem;height:4rem;border-radius:0.3rem" @click="$router.push({path:'/social/info',query:{id:accountId,flag:false}})">
             </div>
         </div>
         <div class="social_content" v-for="(item,index) in topicList" :key="index">
             <div class="contents" v-if="item.relative">
                 <div><img :src="item.relative.headImg" alt="" style="width:4rem;height:4rem;border-radius:0.3rem;background-size:100%;"
-                @click="$router.push({path:'/social/info',query:{id:item.relative._id}})"></div>
+                @click="$router.push({path:'/social/info',query:{id:item.relative._id,flag:item.relative._id===accountId?false:true}})"></div>
                 <div class="contents-right">
-                    <div class="username">{{item.relative.nickname}}</div>
+                    <div class="username"
+                    @click="$router.push({path:'/social/info',query:{id:item.relative._id,flag:item.relative._id===accountId?false:true}})">
+                    {{item.relative.nickname}}
+                    </div>
                     <div class="topiccontent">{{item.topiccontent}}</div>
                     <div v-if="item.topicImg.length !== 0" style="display:flex;width:100%;flex-flow:row wrap;">
                         <div v-for="(img,imgindex) in item.topicImg" :key="imgindex">
@@ -71,12 +84,14 @@
             <img :src="zoomImg" style="width:100%;height:auto">
         </div>
     </div>
+    </mt-loadmore>
 </template>
 
 <script>
 import api from '../../api'
 import { Toast } from 'mint-ui'
 import format from '../../common/common'
+import { Spinner } from 'mint-ui'
 export default {
     data (){
         return{
@@ -91,7 +106,8 @@ export default {
             topicid:null,
             zoomImg:'',
             zoomFlag:false,
-            format
+            format,
+            topStatus:''
         }
     },
     methods:{
@@ -170,6 +186,18 @@ export default {
         zoomIn(img){
             this.zoomImg = img
             this.zoomFlag = true
+        },
+        handleTopChange(status) {
+            this.topStatus = status;
+        },
+        loadTop() {
+            // load more data
+            this.handleTopChange("loading");
+            setTimeout(() => {
+                this.getTopicList()
+                this.handleTopChange("loadingEnd")
+                this.$refs.loadmore.onTopLoaded();
+            },1500)
         }
     },
     mounted (){
@@ -277,7 +305,7 @@ export default {
         position: fixed;
         width: 100%;
         height: 100%;
-        padding-top: 45%;
+        padding-top: 55%;
         background-color: #000;
         z-index: 99;
         top: 0;

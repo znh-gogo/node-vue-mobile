@@ -1,6 +1,6 @@
 <template>
     <div style="width: 100%;height: 100vh;background-color: #fafafa;">
-        <mt-header title="修改个性签名" style="background-color:#fafafa;color: #222222;font-size: 1.2rem;height:4rem">
+        <mt-header title="修改个性签名" style="background-color:#f1f1f1;color: #222222;font-size: 1.2rem;height:4rem">
             <router-link to="/mine/myinfo" slot="left">
                 <mt-button icon="back"></mt-button>
             </router-link>

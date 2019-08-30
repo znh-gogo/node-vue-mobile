@@ -53,6 +53,16 @@ const api = {
   thinkGood(data) {
     return request('http://localhost:3000/mobile/api/thinkgood', data, 'post')
   },
+
+  //私信区
+  showPrivateLetter(data) {
+    return request('http://localhost:3000/mobile/api/showprivateletter', data, 'post')
+  },
+  sendPrivateLetter(data) {
+    return request('http://localhost:3000/mobile/api/sendprivateletter', data, 'post')
+  },
+  
+  
 }
 
 export default api

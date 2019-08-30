@@ -111,6 +111,11 @@ const router = new Router({
       component: () => import('./views/Social/Socialinfo/sendtopic.vue')
     },
     {
+      path:'/social/privateletter',
+      name:'privateletter',
+      component: () => import('./views/Social/Socialinfo/privateletter.vue')
+    },
+    {
       path: '*',
       redirect: '/home'
     }

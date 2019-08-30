@@ -264,6 +264,32 @@ module.exports = app => {
         })
     })
 
+    const Communication = require('../../models/mobile/Communication')
+    //发送私信
+    router.post('/sendprivateletter',solveMobileToken,async(req,res)=>{
+        const { comcontent,sendrelative,receiverelative,flag,id } = req.body
+        if(flag === 0){
+            await Communication.create(req.body)
+            res.send({message:'发送成功'})
+        } else {
+            const model = await Communication.findByIdAndUpdate(id,{$push:{comcontent}})
+            res.send({message:'发送成功'})            
+        }
+    })
+
+    //显示私信回调
+    router.post('/showprivateletter',solveMobileToken,async(req,res)=>{
+        const { sendrelative,receiverelative } = req.body
+        const user = await Communication.find({receiverelative,sendrelative}).populate({path:'comcontent.talker'})
+        // console.log(user)
+        if(user.length===0){
+            res.send({flag:0})
+        } else if(user.length!==0){
+            res.send(user)
+        }
+    })
+
+
     //上传文件中间处理
     const multer = require('multer') //上传文件所需的中间件，帮忙做了很多处理
     const upload = multer({dest:__dirname + '/../../uploads'})

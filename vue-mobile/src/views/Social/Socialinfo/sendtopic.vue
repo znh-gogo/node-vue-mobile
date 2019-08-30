@@ -1,6 +1,6 @@
 <template>
     <div>
-        <mt-header style="background-color:#fafafa;color: #222222;font-size: 1.2rem;height:4rem">
+        <mt-header style="background-color:#f1f1f1;color: #222222;font-size: 1.2rem;height:4rem">
             <router-link to="/social" slot="left">
                 <mt-button icon="back"></mt-button>
             </router-link>

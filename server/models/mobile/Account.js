@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 
 const schema = new mongoose.Schema({
     account:{type:String,required:true,index:{unique:true}},
-    password:{type:String,required:true},
+    password:{type:String,required:true,select:false},
     email:{type:String},
     telephone:{type:Number},
     nickname:{type:String,default:'小萌新'},

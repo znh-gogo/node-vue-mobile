@@ -22,6 +22,9 @@
             <div style="margin-bottom:0.5rem">邮箱：{{userinfo.email}}</div>
             <div>个性签名：{{userinfo.description}}</div>
         </div>
+        <div style="width:100%;text-align:center;margin-top:5rem" v-if="$route.query.flag">
+            <mt-button type="primary" style="width:80%" @click="priLetter">私信</mt-button>
+        </div>
     </div>
 </template>
 
@@ -30,19 +33,33 @@ import api from '../../../api'
 export default {
     data(){
         return{
-            userinfo:''
+            userinfo:'',
         }
     },
     methods:{
         getUser(){
+            
             api.showAccount(this.$route.query.id,null).then((res)=>{
                 this.userinfo = res
                 console.log(res)
             })
         },
+        priLetter(){
+            let that = this
+            this.$router.push({
+                path:'/social/privateletter',
+                query:{
+                    username:that.userinfo.nickname,
+                    receiveid:that.userinfo._id
+                }
+            })
+        }
     },
     mounted(){
         this.getUser()
+    },
+    created(){
+        
     }
 }
 </script>
