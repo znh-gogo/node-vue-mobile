@@ -37,6 +37,15 @@ export default {
 
 
 <style scoped>
+.login{
+    width: 100%;
+    min-height: 100%;
+    /* height:100vh; */
+    background: #f0f2f5 url(~@/assets/background.svg) no-repeat 50%;
+    background-size: 100%;
+    padding: 2rem 0 2rem;
+    position: relative;
+}
 .login-card{
     width: 25rem;
     margin: 10rem auto;

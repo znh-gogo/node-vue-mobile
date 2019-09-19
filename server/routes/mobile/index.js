@@ -289,6 +289,37 @@ module.exports = app => {
         }
     })
 
+    //显示会话列表
+    router.post('/showConversation',solveMobileToken,async(req,res)=>{
+        const { sendrelative,receiverelative } = req.body
+        const user1 = await Communication.find({sendrelative}).populate({path:'comcontent.talker'}).populate('receiverelative sendrelative')
+        const user2 = await Communication.find({receiverelative}).populate({path:'comcontent.talker'}).populate('receiverelative sendrelative')
+        const user = user1.concat(user2)
+        res.send(user)
+    })
+
+    //删除会话/私信/聊天记录
+    router.post('/delConversation',solveMobileToken,async(req,res)=>{
+        const { id } = req.body
+        await Communication.findByIdAndDelete(id)
+        res.send({
+            message:"删除成功"
+        })
+    })
+
+    //搜索会话人账号
+    router.post('/searchConversation',solveMobileToken,async(req,res)=>{
+        const { account,nickname } = req.body
+        if(account) {var model = await Account.find({account})}
+        else if(nickname) {var model = await Account.find({nickname})}
+        if(model.length === 0){
+            res.send({
+                message:'搜索结果为空'
+            })
+        } else
+        res.send(model)
+    })
+
 
     //上传文件中间处理
     const multer = require('multer') //上传文件所需的中间件，帮忙做了很多处理

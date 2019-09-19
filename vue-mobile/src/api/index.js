@@ -61,7 +61,15 @@ const api = {
   sendPrivateLetter(data) {
     return request('http://localhost:3000/mobile/api/sendprivateletter', data, 'post')
   },
-  
+  showConversation(data) {
+    return request('http://localhost:3000/mobile/api/showConversation', data, 'post')
+  },
+  delConversation(data) {
+    return request('http://localhost:3000/mobile/api/delConversation', data, 'post')
+  },
+  searchConversation(data) {
+    return request('http://localhost:3000/mobile/api/searchConversation', data, 'post')
+  },
   
 }
 

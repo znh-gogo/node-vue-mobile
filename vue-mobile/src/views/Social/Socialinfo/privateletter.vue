@@ -1,47 +1,33 @@
 <template>
-    <div style="width:100%;height:100vh;position:relative;padding-top:4rem">
+    <div style="width:100%;height:100vh;position:relative;padding-top:4rem;background-color: #fafafa;">
         <div class="priTop">
             <mt-header :title="$route.query.username" style="background-color:#f1f1f1;color: #222222;font-size: 1.2rem;height:4rem;">
                 <mt-button icon="back" slot="left" @click="$router.go(-1)"></mt-button>
         </mt-header>
         </div>
-        <div  ref="contentScroll" style="height:100%;overflow: hidden;">
+        <div  ref="contentScroll" style="height:88%;overflow: hidden;margin-bottom:5rem">
             <div class="center-content">
                 <div v-for="(item,index) in privateinfo.comcontent" :key="index">
                     <div v-if="item.talker">
                         <div class="content-right" v-if="item.talker._id === accountId">
-                            <div v-if="item.talker"><img :src="item.talker.headImg" style="width:3rem;height:3rem;border-radius:0.3rem"></div>
+                            <div v-if="item.talker"><img
+                            :src="item.talker.headImg"
+                            style="width:3rem;height:3rem;border-radius:0.3rem"
+                            @touchstart="$router.push({path:'/social/info',query:{id:item.talker._id,flag:false}})"
+                            ></div>
                             <div class="right-word">{{item.content}}</div>
                         </div>
                     </div>
                     <div v-if="item.talker">
                         <div class="content-left" v-if="item.talker._id !== accountId">
-                            <div><img :src="item.talker.headImg" style="width:3rem;height:3rem;border-radius:0.3rem"></div>
+                            <div><img
+                            :src="item.talker.headImg"
+                            @touchstart="$router.push({path:'/social/info',query:{id:item.talker._id,flag:false}})"
+                            style="width:3rem;height:3rem;border-radius:0.3rem"></div>
                             <div class="left-word">{{item.content}}</div>
                         </div>
                     </div>
                 </div>
-                            <p>123</p>
-            <p>123</p>
-            <p>123</p>
-            <p>123</p>
-            <p>123</p>
-            <p>123</p>
-            <p>123</p>
-            <p>123</p>
-            <p>123</p>
-                        <p>123</p>
-            <p>123</p>
-            <p>123</p>
-            <p>123</p>
-            <p>123</p>
-            <p>123</p>
-            <p>123</p>
-            <p>123</p>
-            <p>123</p>
-            <p>123</p>
-            <p>123</p>
-            <p>333</p>
             </div>
 
         </div>
@@ -128,7 +114,7 @@ export default {
         },
         _initScroll(){
             this.contentScroll=new BScroll(this.$refs.contentScroll);
-            console.log(this.contentScroll)
+            // console.log(this.contentScroll)
         }
     },
     mounted(){
@@ -139,7 +125,6 @@ export default {
     },
     created(){
         this.accountId = window.sessionStorage.getItem('id')
-
     }
 }
 </script>
@@ -168,6 +153,7 @@ export default {
         height: auto;
         .right-word{
             margin-right: 0.8rem;
+            margin-top: 0.5rem;
             // white-space:normal;
             // line-height: 3rem;
             max-width: 80%;
@@ -188,6 +174,7 @@ export default {
         width: 100%;
         height: 100%;
         .left-word{
+            margin-top: 0.5rem;
             margin-left: 0.8rem;
             max-width: 80%;
             height: 100%;
@@ -203,7 +190,7 @@ export default {
     left: 0;
     bottom: 0;
     width: 100%;
-    // height: 100%;
+    // height: 10%;
     border-top: 1px solid #eee;
     border-bottom: 1px solid #eee
     // height: 100%;

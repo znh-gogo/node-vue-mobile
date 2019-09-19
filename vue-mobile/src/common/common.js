@@ -15,6 +15,20 @@ export default function formatUTC(utc_datetime) {
     var timestamp = timestamp+8*60*60;
   
     // 时间戳转为时间
-    var beijing_datetime = new Date(parseInt(timestamp) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");
-    return beijing_datetime;
+    var beijing_datetime = new Date(parseInt(timestamp) * 1000).toLocaleString().replace(/年|月/g, "/").replace(/日/g, " ").replace(/下午/g, "").replace(/上午/g, "");
+
+      // var time = new Date(parseInt(timestamp) * 1000);
+      // var y = time.getFullYear();
+      // var m = time.getMonth() + 1;
+      // var d = time.getDate();
+      // var h = time.getHours();
+      // var mm = time.getMinutes();
+      // var s = time.getSeconds();
+      // var result = y + '-' + m + '-' + d+' '+ h+':'+mm+':'+s
+
+      var outtime = beijing_datetime.replace(/\-/g,'/')
+      // var outtime = "2019/9/10 16:13:32"
+      return outtime;
+   
+    // return timestamp;
   } 

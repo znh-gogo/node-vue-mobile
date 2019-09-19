@@ -48,9 +48,9 @@ const router = new Router({
           ]
         },
         {
-          path: '/plan',
-          name: 'plan',
-          component: () => import('./views/Plan/plan.vue')
+          path: '/conversation',
+          name: 'conversation',
+          component: () => import('./views/Conversation/conversation.vue')
         },
         {
           path: '/social',
@@ -114,6 +114,11 @@ const router = new Router({
       path:'/social/privateletter',
       name:'privateletter',
       component: () => import('./views/Social/Socialinfo/privateletter.vue')
+    },
+    {
+      path:'/conversation/addconversation',
+      name:'addconversation',
+      component: () => import('./views/Conversation/addconversation.vue')
     },
     {
       path: '*',
