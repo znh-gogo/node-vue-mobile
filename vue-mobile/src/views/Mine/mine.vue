@@ -20,18 +20,24 @@
 <!--            <img src="../../assets/left.png" alt="" style="width: 1.8rem;height: 1.8rem;margin-right: 0;vertical-align: middle;display: inline-block">-->
             <img slot="icon" src="../../assets/box.png" width="24" height="24">
         </mt-cell>
-        <mt-cell title="我的购物车" style="border-bottom: 1px solid #eee" is-link>
-<!--            <img src="../../assets/left.png" alt="" style="width: 1.8rem;height: 1.8rem;margin-right: 0;vertical-align: middle;display: inline-block">-->
-            <img slot="icon" src="../../assets/shopcar1.png" width="24" height="24">
-        </mt-cell>
-        <mt-cell title="我的反馈" style="" is-link>
-<!--            <img src="../../assets/left.png" alt="" style="width: 1.8rem;height: 1.8rem;margin-right: 0;vertical-align: middle;display: inline-block">-->
-            <img slot="icon" src="../../assets/feedback.png" width="24" height="24">
-        </mt-cell>
-        <mt-cell title="我的设置" style="margin: 1rem 0;" is-link>
-<!--            <img src="../../assets/left.png" alt="" style="width: 1.8rem;height: 1.8rem;margin-right: 0;vertical-align: middle;display: inline-block">-->
-            <img slot="icon" src="../../assets/setting.png" width="24" height="24">
-        </mt-cell>
+        <div @click="$router.push('/mine/mycart')">
+            <mt-cell title="我的购物车" style="border-bottom: 1px solid #eee" is-link>
+    <!--            <img src="../../assets/left.png" alt="" style="width: 1.8rem;height: 1.8rem;margin-right: 0;vertical-align: middle;display: inline-block">-->
+                <img slot="icon" src="../../assets/shopcar1.png" width="24" height="24">
+            </mt-cell>
+        </div>
+        <div @click="$router.push('/mine/myfeedback')">
+            <mt-cell title="意见反馈" style="" is-link>
+    <!--            <img src="../../assets/left.png" alt="" style="width: 1.8rem;height: 1.8rem;margin-right: 0;vertical-align: middle;display: inline-block">-->
+                <img slot="icon" src="../../assets/feedback.png" width="24" height="24">
+            </mt-cell>
+        </div>
+        <div @click="$router.push('/mine/mysettings')">
+            <mt-cell title="我的设置" style="margin: 1rem 0;" is-link>
+    <!--            <img src="../../assets/left.png" alt="" style="width: 1.8rem;height: 1.8rem;margin-right: 0;vertical-align: middle;display: inline-block">-->
+                <img slot="icon" src="../../assets/setting.png" width="24" height="24">
+            </mt-cell>
+        </div>
         <div style="width: 100%;text-align: center;margin-top: 2rem;">
             <mt-button type="primary" @click="logout" style="width: 90%;">退出登陆</mt-button>
         </div>

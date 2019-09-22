@@ -35,6 +35,7 @@ export default {
                 if(res.user){
                 window.sessionStorage.setItem('token',res.token)
                 window.sessionStorage.setItem('id',(res.user._id))
+                window.sessionStorage.setItem('account',(res.user.account))
                 // this.$store.commit('GET_ACCOUNT',res.user)
                 Toast(res.message)
                 this.$router.push({path:'/home'})
@@ -44,9 +45,27 @@ export default {
         },
         changeVerify(){
             this.vetifyNum = 'http://localhost:3000/photoVerify?'+Math.random();
+        },
+        checkAutoLogin(){
+            if(window.localStorage.autoLogin == 1){
+                if(window.localStorage.account!==undefined){
+                    let account = window.localStorage.account
+                    api.login({account,autoLogin:true}).then((res)=>{
+                        if(res.user){
+                            window.sessionStorage.setItem('token',res.token)
+                            window.sessionStorage.setItem('id',(res.user._id))
+                            window.sessionStorage.setItem('account',(res.user.account))
+                            // this.$store.commit('GET_ACCOUNT',res.user)
+                            Toast(res.message)
+                            this.$router.push({path:'/home'})
+                        }
+                    })
+                }
+            }
         }
     },
     mounted (){
+        this.checkAutoLogin()
         this.changeVerify()
     }
 }

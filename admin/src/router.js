@@ -143,6 +143,12 @@ const router = new Router({
           name: 'accountList',
           component: () => import('./views/Account/accountList.vue')
         },
+        //反馈
+        {
+          path: '/feedbackList',
+          name: 'feedbackList',
+          component: () => import('./views/Feedback/feedback.vue')
+        },
       ]
     },
 

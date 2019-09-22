@@ -5,7 +5,7 @@
                 <mt-button icon="back" slot="left" @click="$router.go(-1)"></mt-button>
         </mt-header>
         </div>
-        <div  ref="contentScroll" style="height:88%;overflow: hidden;margin-bottom:5rem">
+        <div  ref="contentScroll" style="height:88%;margin-bottom:5rem;overflow:hidden;">
             <div class="center-content">
                 <div v-for="(item,index) in privateinfo.comcontent" :key="index">
                     <div v-if="item.talker">
@@ -68,6 +68,7 @@ export default {
     methods:{
         getLetter(){
             // this.check.sendrelative = this.accountId
+            this.accountId = window.sessionStorage.getItem('id')
             this.check.sendrelative = this.accountId
             this.check.receiverelative = this.$route.query.receiveid
             api.showPrivateLetter(this.check).then((res)=>{
@@ -109,22 +110,64 @@ export default {
                 if(res){
                     this.model = {comcontent:{}}
                     this.getLetter()
+                    // this.contentScroll.refresh()
+                    this.$nextTick(()=>{
+                        this.contentScroll.refresh()
+                    })
+                    setTimeout(() => {
+                        if(this.contentScroll.scrollerHeight>this.contentScroll.wrapperHeight){
+                            this.contentScroll.scrollTo(0,this.contentScroll.maxScrollY)
+                        }         
+                    }, 100);
                 }
             })
         },
+        refreshScroll(){
+            setTimeout(() => {
+                this.$nextTick(()=>{
+                    this.contentScroll.refresh()
+                    // console.log('101')
+                })
+            }, 1100);
+        },
         _initScroll(){
-            this.contentScroll=new BScroll(this.$refs.contentScroll);
-            // console.log(this.contentScroll)
+            this.contentScroll=new BScroll(this.$refs.contentScroll,{click:true});
+            console.log(this.contentScroll)
+            // this.refreshScroll()
         }
     },
+    // watch:{
+    //     data(){
+    //         setTimeout(() => {
+    //             console.log('123')
+    //             this.$nextTick(()=>{
+    //             this.contentScroll.refresh()
+    //             })
+    //             if(this.contentScroll.scrollerHeight>this.contentScroll.wrapperHeight){
+    //             this.contentScroll.scrollTo(0,this.contentScroll.maxScrollY)
+    //         }  
+    //         }, 100);
+    //     }
+    // },
     mounted(){
+        
         this.getLetter()
-                this.$nextTick(()=>{
-            this._initScroll()
+    
+        setTimeout(() => {
+            this.$nextTick(()=>{
+                this._initScroll()
         })
+        }, 100);
+        // this.refreshScroll()
+        
+        setTimeout(() => {
+            if(this.contentScroll.scrollerHeight>this.contentScroll.wrapperHeight){
+                this.contentScroll.scrollTo(0,this.contentScroll.maxScrollY)
+            }         
+        }, 120);
     },
     created(){
-        this.accountId = window.sessionStorage.getItem('id')
+        
     }
 }
 </script>

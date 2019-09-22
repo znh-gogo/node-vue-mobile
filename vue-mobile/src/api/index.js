@@ -32,7 +32,22 @@ const api = {
   uploadImg(data) {
     return request('http://localhost:3000/mobile/api/upload', data, 'post')
   },
-
+  changeAddress(data) {
+    return request('http://localhost:3000/mobile/api/updateAddress', data, 'post')
+  },
+  Feedback(data) {
+    return request('http://localhost:3000/mobile/api/feedback', data, 'post')
+  },
+  showMyFeedback(data) {
+    return request('http://localhost:3000/mobile/api/showMyFeedback', data, 'post')
+  },
+  showMyFeedbackDetail(data) {
+    return request('http://localhost:3000/mobile/api/showMyFeedbackDetail', data, 'post')
+  },
+  delMyfeedback(data) {
+    return request('http://localhost:3000/mobile/api/delMyfeedback', data, 'post')
+  },
+  
 
   //主题区
   sendTopic(data) {
