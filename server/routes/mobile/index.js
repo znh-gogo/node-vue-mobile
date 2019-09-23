@@ -41,15 +41,26 @@ module.exports = app => {
     })
     
     router.post('/login',async (req,res,next)=>{
-        const { account,password,verify }= req.body
+        const { account,password,verify,autoLogin }= req.body
         //根据用户名找到用户
         // console.log(vetifys)
-        
+
+        //检验是否自动登陆
+        if(autoLogin){
+            const user = await Account.findOne({account}).select('+password')
+            const token = jwt.sign({id:user._id},app.get('secret'))
+            return res.send({
+                token:token,
+                message:'登陆成功',
+                user
+            })
+        } else {
+
         const user = await Account.findOne({account}).select('+password')
-        assert(user,422,'用户不存在') //等价下面的
-        // if(!user){
-        //     return res.status(422).send({message:'用户不存在'})
-        // }
+        // assert(user,422,'用户不存在') //等价下面的
+        if(!user){
+            return res.status(422).send({message:'用户不存在'})
+        }
         if(user.frozen !== 1){
             return res.status(422).send({message:'账号被冻结'})
         }
@@ -69,6 +80,7 @@ module.exports = app => {
             message:'登陆成功',
             user
         })
+        }
     })
 
     //判断是否有token
@@ -197,6 +209,22 @@ module.exports = app => {
         })
     })
 
+    //更改地址
+    router.post('/updateAddress',solveMobileToken,async(req,res)=>{
+        const { id, address } = req.body
+        await Account.findByIdAndUpdate(id,{$set:{address}})
+        res.send({
+            message:'修改成功'
+        })
+    })
+
+    // //回显当前的自动登陆状态
+    // router.post('/showAutoLogin',solveMobileToken,async(req,res)=>{
+    //     const { id } = req.body
+    //     const model = await Account.findById(id,'autoLogin')
+    //     res.send(model)
+    // })
+
     const Topic = require('../../models/mobile/Topic')
     const Comment = require('../../models/mobile/Comment')
     //发表话题
@@ -289,6 +317,103 @@ module.exports = app => {
         }
     })
 
+    //显示会话列表
+    router.post('/showConversation',solveMobileToken,async(req,res)=>{
+        const { sendrelative,receiverelative } = req.body
+        const user1 = await Communication.find({sendrelative}).populate({path:'comcontent.talker'}).populate('receiverelative sendrelative')
+        const user2 = await Communication.find({receiverelative}).populate({path:'comcontent.talker'}).populate('receiverelative sendrelative')
+        const user = user1.concat(user2)
+        res.send(user)
+    })
+
+    //删除会话/私信/聊天记录
+    router.post('/delConversation',solveMobileToken,async(req,res)=>{
+        const { id } = req.body
+        await Communication.findByIdAndDelete(id)
+        res.send({
+            message:"删除成功"
+        })
+    })
+
+    //搜索会话人账号
+    router.post('/searchConversation',solveMobileToken,async(req,res)=>{
+        const { account,nickname } = req.body
+        if(account) {var model = await Account.find({account})}
+        else if(nickname) {var model = await Account.find({nickname})}
+        if(model.length === 0){
+            res.send({
+                message:'搜索结果为空'
+            })
+        } else
+        res.send(model)
+    })
+
+    const Feedback = require('../../models/mobile/Feedback')
+    //发送反馈
+    router.post('/feedback',solveMobileToken,async(req,res)=>{
+        const model = await Feedback.create(req.body)
+        res.send({
+            message:'反馈成功',
+            model
+        })
+    })
+
+    //删除反馈
+    router.post('/delMyfeedback',solveMobileToken,async(req,res)=>{
+        const {id} = req.body
+        await Feedback.findByIdAndDelete(id)
+        res.send({
+            message:"删除成功"
+        })
+    })
+
+    //回显我的反馈进度
+    router.post('/showMyFeedback',solveMobileToken,async(req,res)=>{
+        const { id } = req.body
+        const model = await Feedback.find({relative:id}).populate('relative')
+        res.send(model)
+    })
+
+    //回显我的反馈详情
+    router.post('/showMyFeedbackDetail',solveMobileToken,async(req,res)=>{
+        const {id} = req.body
+        const model = await Feedback.findById(id)
+        res.send(model)
+    })
+
+    //admin端获取反馈列表信息
+    app.get('/admin/api/FeedbackList/:numPage/:numSize',solveAdminToken ,async(req,res)=>{
+        const count = await Feedback.countDocuments()
+        //前端传入页数
+        let Page = Number(req.params.numPage) || 1;
+        //前端传入每页条数
+        let Size = Number(req.params.numSize)|| 1;
+        //计算总页数
+        let allPages = Math.ceil(count/Size);
+        //当前页不能大于总页数
+        Page = Math.min(Page,allPages)
+        //当前页不能小于1
+        Page = Math.max(Page,1)
+        //忽略数
+        let skip = (Page-1)*Size;
+        const items = await Feedback.find().populate('relative').skip(skip).limit(Size)
+        BeanPage = {
+            count,
+            Page,
+            Size,
+            allPages
+        }
+        res.send({items,BeanPage})
+    })
+
+    //admin端处理反馈事件
+    app.post('/admin/api/handleFeedback',solveAdminToken,async(req,res)=>{
+        const { id,feedbackflag } = req.body
+        await Feedback.findByIdAndUpdate(id,{$set:{feedbackflag}})
+        res.send({
+            message:'反馈处理成功!'
+        })
+    })
 
     //上传文件中间处理
     const multer = require('multer') //上传文件所需的中间件，帮忙做了很多处理

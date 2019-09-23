@@ -1,13 +1,11 @@
 <template>
     <div>
         <mt-header title="用户信息" style="background-color:#fafafa;color: #222222;font-size: 1.2rem;height:4rem">
-            <router-link to="/social" slot="left">
-                <mt-button icon="back"></mt-button>
-            </router-link>
+                <mt-button icon="back" slot="left" @click="$router.go(-1)"></mt-button>
             <!--            <mt-button icon="more" slot="right"></mt-button>-->
         </mt-header>
         <div class="head">
-            <div class="head-detail" @click="$router.push('/mine/myinfo')">
+            <div class="head-detail">
                 <img :src="userinfo.headImg" alt="">
                 <div style="display: flex;;flex-direction: column;justify-content: space-between;width: 100%;">
                     <div style="font-weight: 700;font-size: 1.8rem;margin-top: 0.5rem">{{userinfo.nickname}}</div>
@@ -41,7 +39,7 @@ export default {
             
             api.showAccount(this.$route.query.id,null).then((res)=>{
                 this.userinfo = res
-                console.log(res)
+                // console.log(res)
             })
         },
         priLetter(){

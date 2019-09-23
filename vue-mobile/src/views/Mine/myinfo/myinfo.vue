@@ -26,6 +26,11 @@
                 <span>{{accountInfo.email}}</span>
             </mt-cell>
             </div>
+            <div @click="$router.push({path:'/mine/myinfo/changeaddress',query:{id:accountId,address:accountInfo.address}})">
+            <mt-cell title="地址" is-link style="border-bottom: 1px solid #eee">
+                <span>{{accountInfo.address}}</span>
+            </mt-cell>
+            </div>
             <div @click="$router.push({path:'/mine/myinfo/changedescription',query:{id:accountId,description:accountInfo.description}})">
             <mt-cell title="个性签名" is-link>
                  <span style="width:12rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{accountInfo.description}}</span>

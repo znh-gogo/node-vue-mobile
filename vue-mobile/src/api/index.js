@@ -32,7 +32,22 @@ const api = {
   uploadImg(data) {
     return request('http://localhost:3000/mobile/api/upload', data, 'post')
   },
-
+  changeAddress(data) {
+    return request('http://localhost:3000/mobile/api/updateAddress', data, 'post')
+  },
+  Feedback(data) {
+    return request('http://localhost:3000/mobile/api/feedback', data, 'post')
+  },
+  showMyFeedback(data) {
+    return request('http://localhost:3000/mobile/api/showMyFeedback', data, 'post')
+  },
+  showMyFeedbackDetail(data) {
+    return request('http://localhost:3000/mobile/api/showMyFeedbackDetail', data, 'post')
+  },
+  delMyfeedback(data) {
+    return request('http://localhost:3000/mobile/api/delMyfeedback', data, 'post')
+  },
+  
 
   //主题区
   sendTopic(data) {
@@ -61,7 +76,15 @@ const api = {
   sendPrivateLetter(data) {
     return request('http://localhost:3000/mobile/api/sendprivateletter', data, 'post')
   },
-  
+  showConversation(data) {
+    return request('http://localhost:3000/mobile/api/showConversation', data, 'post')
+  },
+  delConversation(data) {
+    return request('http://localhost:3000/mobile/api/delConversation', data, 'post')
+  },
+  searchConversation(data) {
+    return request('http://localhost:3000/mobile/api/searchConversation', data, 'post')
+  },
   
 }
 

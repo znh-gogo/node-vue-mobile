@@ -2,9 +2,9 @@
 <mt-loadmore :top-method="loadTop" :top-status.sync="topStatus" ref="loadmore">
     <div slot="top" class="mint-loadmore-top" style="text-align:center">
         <span v-show="topStatus !== 'loading'" :class="{ 'rotate': topStatus === 'drop' }">↓</span>
-        <span style="display:flex;justify-content:space-around">
+        <span style="display:flex;justify-content:space-around;">
         <mt-spinner v-show="topStatus == 'loading'" color="#26a2ff"></mt-spinner>
-        <span v-show="topStatus == 'loading'">加载中</span>
+        <span v-show="topStatus == 'loading'">加载中...</span>
         </span>
 
         <!-- <mt-spinner v-show="topStatus == 'loading'" type="fading-circle"></mt-spinner> -->
@@ -17,6 +17,11 @@
                 <div style="font-size:1.5rem;line-height:4rem;margin-right:2rem;color:#222">{{accountInfo.nickname}}</div>
                 <img :src="accountInfo.headImg" alt="" style="width:4rem;height:4rem;border-radius:0.3rem" @click="$router.push({path:'/social/info',query:{id:accountId,flag:false}})">
             </div>
+        </div>
+        <div v-if="topicList.length === 0" style="width:100%;height:100%;margin-top:10rem;text-align:center;">
+            <span style="width:5rem;height:1px;background:#999;display:inline-block;"></span>
+            <span style="display:inline-block;height:1rem;line-height:1rem;">暂时没有发现话题哦</span>
+            <span style="width:5rem;height:1px;background:#999;display:inline-block"></span>
         </div>
         <div class="social_content" v-for="(item,index) in topicList" :key="index">
             <div class="contents" v-if="item.relative">
@@ -80,8 +85,8 @@
         <div class="sendBtn" @click="$router.push({path:'/social/sendtopic',query:{id:accountId}})" v-if="!commentFlag">
             <img src="../../assets/sendtopic.png" alt="" style="width:3rem;height:3rem;border-radius: 50%;">
         </div>
-        <div class="zoom" @click="zoomFlag = false" v-if="zoomFlag">
-            <img :src="zoomImg" style="width:100%;height:auto">
+        <div class="zoom" @click="zoomOut" v-if="zoomFlag">
+            <img :src="zoomImg" style="width:100%;max-height:80%">
         </div>
     </div>
     </mt-loadmore>
@@ -186,6 +191,11 @@ export default {
         zoomIn(img){
             this.zoomImg = img
             this.zoomFlag = true
+            document.body.style.overflow='hidden';
+        },
+        zoomOut(){
+            this.zoomFlag = false
+            document.body.style.overflow='';
         },
         handleTopChange(status) {
             this.topStatus = status;
@@ -305,7 +315,7 @@ export default {
         position: fixed;
         width: 100%;
         height: 100%;
-        padding-top: 55%;
+        padding-top: 20%;
         background-color: #000;
         z-index: 99;
         top: 0;

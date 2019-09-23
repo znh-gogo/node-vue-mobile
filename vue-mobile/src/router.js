@@ -48,9 +48,9 @@ const router = new Router({
           ]
         },
         {
-          path: '/plan',
-          name: 'plan',
-          component: () => import('./views/Plan/plan.vue')
+          path: '/conversation',
+          name: 'conversation',
+          component: () => import('./views/Conversation/conversation.vue')
         },
         {
           path: '/social',
@@ -101,6 +101,31 @@ const router = new Router({
       component: () => import('./views/Mine/myinfo/changeheadimg.vue')
     },
     {
+      path:'/mine/myinfo/changeaddress',
+      name:'changeaddress',
+      component: () => import('./views/Mine/myinfo/changeaddress.vue')
+    },
+    {
+      path:'/mine/mysettings',
+      name:'mysettings',
+      component: () => import('./views/Mine/mysettings/mysettings.vue')
+    },
+    {
+      path:'/mine/mycart',
+      name:'mycart',
+      component: () => import('./views/Mine/mycart/mycart.vue')
+    },
+    {
+      path:'/mine/myfeedback',
+      name:'myfeedback',
+      component: () => import('./views/Mine/myfeedback/myfeedback.vue')
+    },
+    {
+      path:'/mine/checkmyfeedback',
+      name:'checkmyfeedback',
+      component: () => import('./views/Mine/myfeedback/checkmyfeedback.vue')
+    },
+    {
       path:'/social/info',
       name:'info',
       component: () => import('./views/Social/Socialinfo/socialinfo.vue')
@@ -114,6 +139,11 @@ const router = new Router({
       path:'/social/privateletter',
       name:'privateletter',
       component: () => import('./views/Social/Socialinfo/privateletter.vue')
+    },
+    {
+      path:'/conversation/addconversation',
+      name:'addconversation',
+      component: () => import('./views/Conversation/addconversation.vue')
     },
     {
       path: '*',

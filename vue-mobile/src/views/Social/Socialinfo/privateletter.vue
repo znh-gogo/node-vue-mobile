@@ -1,22 +1,29 @@
 <template>
-    <div style="width:100%;height:100vh;position:relative;padding-top:4rem">
+    <div style="width:100%;height:100vh;position:relative;padding-top:4rem;background-color: #fafafa;">
         <div class="priTop">
             <mt-header :title="$route.query.username" style="background-color:#f1f1f1;color: #222222;font-size: 1.2rem;height:4rem;">
                 <mt-button icon="back" slot="left" @click="$router.go(-1)"></mt-button>
         </mt-header>
         </div>
-        <div  ref="contentScroll" style="height:100%;overflow: hidden;">
+        <div  ref="contentScroll" style="height:88%;margin-bottom:5rem;overflow:hidden;">
             <div class="center-content">
                 <div v-for="(item,index) in privateinfo.comcontent" :key="index">
                     <div v-if="item.talker">
                         <div class="content-right" v-if="item.talker._id === accountId">
-                            <div v-if="item.talker"><img :src="item.talker.headImg" style="width:3rem;height:3rem;border-radius:0.3rem"></div>
+                            <div v-if="item.talker"><img
+                            :src="item.talker.headImg"
+                            style="width:3rem;height:3rem;border-radius:0.3rem"
+                            @touchstart="$router.push({path:'/social/info',query:{id:item.talker._id,flag:false}})"
+                            ></div>
                             <div class="right-word">{{item.content}}</div>
                         </div>
                     </div>
                     <div v-if="item.talker">
                         <div class="content-left" v-if="item.talker._id !== accountId">
-                            <div><img :src="item.talker.headImg" style="width:3rem;height:3rem;border-radius:0.3rem"></div>
+                            <div><img
+                            :src="item.talker.headImg"
+                            @touchstart="$router.push({path:'/social/info',query:{id:item.talker._id,flag:false}})"
+                            style="width:3rem;height:3rem;border-radius:0.3rem"></div>
                             <div class="left-word">{{item.content}}</div>
                         </div>
                     </div>
@@ -61,6 +68,7 @@ export default {
     methods:{
         getLetter(){
             // this.check.sendrelative = this.accountId
+            this.accountId = window.sessionStorage.getItem('id')
             this.check.sendrelative = this.accountId
             this.check.receiverelative = this.$route.query.receiveid
             api.showPrivateLetter(this.check).then((res)=>{
@@ -102,23 +110,64 @@ export default {
                 if(res){
                     this.model = {comcontent:{}}
                     this.getLetter()
+                    // this.contentScroll.refresh()
+                    this.$nextTick(()=>{
+                        this.contentScroll.refresh()
+                    })
+                    setTimeout(() => {
+                        if(this.contentScroll.scrollerHeight>this.contentScroll.wrapperHeight){
+                            this.contentScroll.scrollTo(0,this.contentScroll.maxScrollY)
+                        }         
+                    }, 100);
                 }
             })
         },
+        refreshScroll(){
+            setTimeout(() => {
+                this.$nextTick(()=>{
+                    this.contentScroll.refresh()
+                    // console.log('101')
+                })
+            }, 1100);
+        },
         _initScroll(){
-            this.contentScroll=new BScroll(this.$refs.contentScroll);
+            this.contentScroll=new BScroll(this.$refs.contentScroll,{click:true});
             console.log(this.contentScroll)
+            // this.refreshScroll()
         }
     },
+    // watch:{
+    //     data(){
+    //         setTimeout(() => {
+    //             console.log('123')
+    //             this.$nextTick(()=>{
+    //             this.contentScroll.refresh()
+    //             })
+    //             if(this.contentScroll.scrollerHeight>this.contentScroll.wrapperHeight){
+    //             this.contentScroll.scrollTo(0,this.contentScroll.maxScrollY)
+    //         }  
+    //         }, 100);
+    //     }
+    // },
     mounted(){
+        
         this.getLetter()
-                this.$nextTick(()=>{
-            this._initScroll()
+    
+        setTimeout(() => {
+            this.$nextTick(()=>{
+                this._initScroll()
         })
+        }, 100);
+        // this.refreshScroll()
+        
+        setTimeout(() => {
+            if(this.contentScroll.scrollerHeight>this.contentScroll.wrapperHeight){
+                this.contentScroll.scrollTo(0,this.contentScroll.maxScrollY)
+            }         
+        }, 120);
     },
     created(){
-        this.accountId = window.sessionStorage.getItem('id')
-
+        
     }
 }
 </script>
@@ -147,6 +196,7 @@ export default {
         height: auto;
         .right-word{
             margin-right: 0.8rem;
+            margin-top: 0.5rem;
             // white-space:normal;
             // line-height: 3rem;
             max-width: 80%;
@@ -167,6 +217,7 @@ export default {
         width: 100%;
         height: 100%;
         .left-word{
+            margin-top: 0.5rem;
             margin-left: 0.8rem;
             max-width: 80%;
             height: 100%;
@@ -182,7 +233,7 @@ export default {
     left: 0;
     bottom: 0;
     width: 100%;
-    // height: 100%;
+    // height: 10%;
     border-top: 1px solid #eee;
     border-bottom: 1px solid #eee
     // height: 100%;
