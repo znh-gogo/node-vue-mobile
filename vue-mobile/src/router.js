@@ -121,6 +121,16 @@ const router = new Router({
       component: () => import('./views/Mine/myfeedback/myfeedback.vue')
     },
     {
+      path:'/mine/mypay',
+      name:'mypay',
+      component: () => import('./views/Mine/mypay/mypay.vue')
+    },
+    {
+      path:'/mine/mypay/recharge',
+      name:'recharge',
+      component: () => import('./views/Mine/mypay/recharge.vue')
+    },
+    {
       path:'/mine/checkmyfeedback',
       name:'checkmyfeedback',
       component: () => import('./views/Mine/myfeedback/checkmyfeedback.vue')

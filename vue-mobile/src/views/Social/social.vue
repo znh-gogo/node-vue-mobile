@@ -9,15 +9,51 @@
 
         <!-- <mt-spinner v-show="topStatus == 'loading'" type="fading-circle"></mt-spinner> -->
     </div>
-    <div style="positon:relative;margin-bottom: 5rem;height:100%" @click.stop="cancelAll">
-        <!-- <mt-header title="社交中心" style="background-color:#f1f1f1;color: #222222;font-size: 1.2rem;height:4rem;position:fixed:top:0;left:0">
-        </mt-header> -->
-        <div class="social_top" :style="{backgroundImage: 'url(' + accountInfo.backgroundImg + ')'}">
+    <div style="positon:relative;margin-bottom: 5rem;height:100%;background:#fff" @click.stop="cancelAll">
+
+        <!-- <div class="social_top" :style="{backgroundImage: 'url(' + accountInfo.backgroundImg + ')'}">
             <div class="top_content">
                 <div style="font-size:1.5rem;line-height:4rem;margin-right:2rem;color:#222">{{accountInfo.nickname}}</div>
                 <img :src="accountInfo.headImg" alt="" style="width:4rem;height:4rem;border-radius:0.3rem" @click="$router.push({path:'/social/info',query:{id:accountId,flag:false}})">
             </div>
+        </div> -->
+        <div style="width:100%;padding:1rem 0;">
+            <div style="width:100%;height:3rem;">
+                <img src="../../assets/laba.png" alt="" style="float:left;margin:0.3rem 0 0 0.8rem">
+                <swiper :options="swiperOption" style="width:80%;height:3rem;border:1px solid #ccc;border-radius:5rem;text-align:center;line-height:3rem;color:#FFA500;background:#fafafa">
+                    <swiper-slide>服务三农，助力国家一带一路</swiper-slide>
+                    <swiper-slide>促进农产品全产业链的互融互通</swiper-slide>
+                    <swiper-slide>生态农业，绿色环保，安全生产放心消费</swiper-slide>
+                    <swiper-slide>推行标准化生产，推动农业发展再上新台阶</swiper-slide>
+                    <swiper-slide>推行农产品标准化生产，促进农业增效和收入</swiper-slide>
+                    <!-- <swiper-slide>Slide 6</swiper-slide>
+                    <swiper-slide>Slide 7</swiper-slide>
+                    <swiper-slide>Slide 8</swiper-slide>
+                    <swiper-slide>Slide 9</swiper-slide>
+                    <swiper-slide>Slide 10</swiper-slide> -->
+                    <!-- <div class="swiper-pagination" slot="pagination"></div> -->
+                </swiper>
+            </div>
+        <div style="font-size:1.5rem;margin:1rem;border-bottom:1px solid #ccc;padding-bottom:0.5rem;color: #439057;">农业资讯：</div>
+        <div style="width:90%;padding:1rem;background-color:#f6f6f6;margin:0 auto;border-radius:1rem">
+            <div style="text-decoration:underline;color:#000;display:flex;justify-content:space-between;padding:0 1rem;margin:0.5rem 0">
+                    <span style="width:100%;" class="text-hidden">[资讯]今年的猪肉是真的贵啊</span>
+                    <span style="white-space:nowrap;">2019/9/24 3:34:01</span>
+            </div>
+            <div style="text-decoration:underline;color:#000;display:flex;justify-content:space-between;padding:0 1rem;margin:0.5rem 0">
+                    <span>[资讯]132</span>
+                    <span>2019/9/24 3:34:01</span>
+            </div>
+            <div style="text-decoration:underline;color:#000;display:flex;justify-content:space-between;padding:0 1rem;margin:0.5rem 0">
+                    <span>[资讯]132</span>
+                    <span>2019/9/24 3:34:01</span>
+            </div>
+            <div style="width:100%;text-align:right;padding-right:1rem;color:#666;text-decoration:underline;">查看更多资讯</div>
         </div>
+
+        </div>
+        <div style="font-size:1.5rem;margin:1rem;border-bottom:1px solid #ccc;padding-bottom:0.5rem;color: #439057;">信息发布：</div>
+
         <div v-if="topicList.length === 0" style="width:100%;height:100%;margin-top:10rem;text-align:center;">
             <span style="width:5rem;height:1px;background:#999;display:inline-block;"></span>
             <span style="display:inline-block;height:1rem;line-height:1rem;">暂时没有发现话题哦</span>
@@ -41,6 +77,7 @@
                             :class="[{'singleImg':item.topicImg.length === 1},{'mulImg': item.topicImg.length > 1}]">
                         </div>
                     </div>
+                    <div v-if="item.relative.address" style="font-size:0.8rem;margin-top:0.5rem;color:#4169E1">{{item.relative.address}}</div>
                     <div class="content-bottom">
                         <div style="color:#666;height:2rem;line-height:2rem">{{format(item.createdAt)}}
                             <span style="color:red;font-size:0.8rem;margin-left:1rem" v-if="item.relative._id === accountId" @click="delTopic(item._id)">删除</span></div>
@@ -112,7 +149,15 @@ export default {
             zoomImg:'',
             zoomFlag:false,
             format,
-            topStatus:''
+            topStatus:'',
+            swiperOption: {
+                direction: 'vertical',
+                slidesPerView: 1,
+                spaceBetween: 30,
+                // mousewheel: true,
+                autoplay:true,
+                loop : true
+            }
         }
     },
     methods:{
@@ -238,6 +283,7 @@ export default {
     .social_content{
         width: 100%;
         height: 100%;
+        position: relative;
         .contents{
             display: flex;
             padding: 2rem;
@@ -320,6 +366,11 @@ export default {
         z-index: 99;
         top: 0;
         left: 0;
+    }
+    .text-hidden{
+        overflow:hidden; //超出的文本隐藏
+        text-overflow:ellipsis; //溢出用省略号显示
+        white-space:nowrap; //溢出不换行
     }
     .current{
         margin-bottom: 0!important;

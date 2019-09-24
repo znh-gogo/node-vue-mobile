@@ -13,7 +13,7 @@
             <div>添加会话</div>
         </div>
         </transition>
-        <div style="height:100%;width:100%;padding-top:4rem">
+        <div style="height:100%;width:100%;padding-top:4rem;">
             <div
             class="item-content"
             v-for="(item,index) in newdataList"
@@ -165,6 +165,7 @@ export default {
         // height: 100%;
         display: flex;
         padding: 1rem;
+        background:#fff;
         .content-detail{
             margin-left: 1rem;
             border-bottom: 1px solid #ccc;

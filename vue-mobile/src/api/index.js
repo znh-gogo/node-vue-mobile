@@ -47,6 +47,13 @@ const api = {
   delMyfeedback(data) {
     return request('http://localhost:3000/mobile/api/delMyfeedback', data, 'post')
   },
+  showMyMoney(data) {
+    return request('http://localhost:3000/mobile/api/showMyMoney', data, 'post')
+  },
+  recharge(data) {
+    return request('http://localhost:3000/mobile/api/recharge', data, 'post')
+  },
+  
   
 
   //主题区

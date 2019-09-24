@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="login-top">
-            Zz综合应用App
+            农商产品信息服务平台
         </div>
         <mt-field label="账户名" placeholder="请输入账户名" v-model="model.account"></mt-field>
         <mt-field label="邮箱" placeholder="请输入邮箱" type="email" v-model="model.email"></mt-field>
@@ -83,8 +83,12 @@ export default {
     .login-top{
         width: 100%;
         height: 14rem;
+        color: #439057;
         line-height: 14rem;
         text-align: center;
-        font-size: 2rem;
+        font-size: 2.3rem;
+        text-shadow:3px 2px 3px #000;
+        background: url('../../assets/login-bg.jpg') no-repeat 100% center;
+        background-size: 100%;
     }
 </style>

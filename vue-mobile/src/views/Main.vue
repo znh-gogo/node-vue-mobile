@@ -2,10 +2,26 @@
     <div style="height:100%">
         <router-view></router-view>
         <div class="footer">
-        <router-link class="nav-link" tag="div" to="/home"><div :class="{'current': $route.path === '/home/one'}">我的首页</div></router-link>
-        <router-link class="nav-link" tag="div" to="/conversation"><div :class="{'current': $route.path === '/conversation'}">会话列表</div></router-link>
-        <router-link class="nav-link" tag="div" to="/social"><div :class="{'current': $route.path === '/social'}">社交中心</div></router-link>
-        <router-link class="nav-link" tag="div" to="/mine"><div :class="{'current': $route.path === '/mine'}">个人中心</div></router-link>
+        <router-link class="nav-link" tag="div" to="/home" style="flex:1">
+            <img src="../assets/home.png" alt="" style="width:2.2rem;margin-top:0.5rem" v-if="$route.path !== '/home/one'">
+            <img src="../assets/home-checked.png" alt="" style="width:2.2rem;margin-top:0.5rem" v-if="$route.path === '/home/one'">     
+            <div  :class="{'current': $route.path === '/home/one'}">商品首页</div>
+        </router-link>
+        <router-link class="nav-link" tag="div" to="/social" style="flex:1">
+            <img src="../assets/social.png" alt="" style="width:2.2rem;margin-top:0.5rem" v-if="$route.path !== '/social'">
+            <img src="../assets/social-checked.png" alt="" style="width:2.2rem;margin-top:0.5rem" v-if="$route.path === '/social'">
+            <div :class="{'current': $route.path === '/social'}">资讯中心</div>
+        </router-link>
+        <router-link class="nav-link" tag="div" to="/conversation" style="flex:1">
+            <img src="../assets/chat.png" alt="" style="width:2.2rem;margin-top:0.5rem" v-if="$route.path !== '/conversation'">
+            <img src="../assets/chat-checked.png" alt="" style="width:2.2rem;margin-top:0.5rem" v-if="$route.path === '/conversation'">
+            <div :class="{'current': $route.path === '/conversation'}">会话列表</div>
+        </router-link>
+        <router-link class="nav-link" tag="div" to="/mine" style="flex:1">
+            <img src="../assets/my.png" alt="" style="width:2.2rem;margin-top:0.5rem" v-if="$route.path !== '/mine'">
+            <img src="../assets/my-checked.png" alt="" style="width:2.2rem;margin-top:0.5rem" v-if="$route.path === '/mine'">
+            <div :class="{'current': $route.path === '/mine'}">个人中心</div>
+        </router-link>
         </div>
     </div>
 </template>
@@ -28,12 +44,13 @@
         background-color: #fff;
         div {
             text-align: center;
-            line-height: 5rem;
-            flex: 1;
+            color: #707070;
+            // line-height: 5rem;
+            // flex: 1;
             // cursor: pointer;
         }
     }
     .current {
-        color: #3385ff;
+        color: #3385ff !important;
     }
 </style>

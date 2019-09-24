@@ -11,8 +11,9 @@ const schema = new mongoose.Schema({
     description:{type:String,default:'这个人比较懒，什么都没有...'},
     address:{type:String},
     frozen:{type:Number,default:1}, //0冻结1解冻
+    money:{type:Number,default:parseFloat(0.00),select:false},
     // autoLogin:{type:Boolean,default:false},//自动登陆
-    backgroundImg:{type:String,default:'https://s2.ax1x.com/2019/08/28/m7QXKf.jpg'}
+    // backgroundImg:{type:String,default:'https://s2.ax1x.com/2019/08/28/m7QXKf.jpg'}
 })
 
 module.exports = mongoose.model('Account',schema)

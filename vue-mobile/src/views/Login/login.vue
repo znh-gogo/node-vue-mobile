@@ -1,7 +1,7 @@
 <template>
     <div class="login-warp">
         <div class="login-top">
-            Zz综合应用App
+            农商产品信息服务平台
         </div>
         <mt-field label="账号" placeholder="请输入账号" v-model="model.account"></mt-field>
         <mt-field label="密码" placeholder="请输入密码" type="password" v-model="model.password"></mt-field>
@@ -80,8 +80,12 @@ export default {
         width: 100%;
         height: 14rem;
         line-height: 14rem;
+        color: #439057;
         text-align: center;
-        font-size: 2rem;
+        font-size: 2.3rem;
+        text-shadow:3px 2px 3px #000;
+        background: url('../../assets/login-bg.jpg') no-repeat 100% center;
+        background-size: 100%;
     }
     .loginBtn{
         padding: 1rem;

@@ -12,29 +12,26 @@
                 </div>
             </div>
         </div>
-        <mt-cell title="我的支付" style="margin: 1rem 0;" is-link>
-<!--            <img src="../../assets/left.png" alt="" style="width: 1.8rem;height: 1.8rem;margin-right: 0;vertical-align: middle;display: inline-block">-->
-            <img slot="icon" src="../../assets/pay.png" width="24" height="24">
-        </mt-cell>
+        <div @click="$router.push('/mine/mypay')">
+            <mt-cell title="我的钱包" style="margin: 1rem 0;" is-link>
+                <img slot="icon" src="../../assets/pay.png" width="24" height="24">
+            </mt-cell>
+        </div>
         <mt-cell title="我的收藏" style="border-bottom: 1px solid #eee" is-link>
-<!--            <img src="../../assets/left.png" alt="" style="width: 1.8rem;height: 1.8rem;margin-right: 0;vertical-align: middle;display: inline-block">-->
             <img slot="icon" src="../../assets/box.png" width="24" height="24">
         </mt-cell>
         <div @click="$router.push('/mine/mycart')">
             <mt-cell title="我的购物车" style="border-bottom: 1px solid #eee" is-link>
-    <!--            <img src="../../assets/left.png" alt="" style="width: 1.8rem;height: 1.8rem;margin-right: 0;vertical-align: middle;display: inline-block">-->
                 <img slot="icon" src="../../assets/shopcar1.png" width="24" height="24">
             </mt-cell>
         </div>
         <div @click="$router.push('/mine/myfeedback')">
             <mt-cell title="意见反馈" style="" is-link>
-    <!--            <img src="../../assets/left.png" alt="" style="width: 1.8rem;height: 1.8rem;margin-right: 0;vertical-align: middle;display: inline-block">-->
                 <img slot="icon" src="../../assets/feedback.png" width="24" height="24">
             </mt-cell>
         </div>
         <div @click="$router.push('/mine/mysettings')">
             <mt-cell title="我的设置" style="margin: 1rem 0;" is-link>
-    <!--            <img src="../../assets/left.png" alt="" style="width: 1.8rem;height: 1.8rem;margin-right: 0;vertical-align: middle;display: inline-block">-->
                 <img slot="icon" src="../../assets/setting.png" width="24" height="24">
             </mt-cell>
         </div>

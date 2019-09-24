@@ -40,6 +40,7 @@
                 <div style="line-height:5rem;margin-left:1rem;font-size:1.4rem">{{item.feedbacktopic}}</div>
                 <div style="line-height:5rem;margin-right:1rem;font-size:1rem">处理进度：<span :class="[{'warning':item.feedbackflag===0},{'success':item.feedbackflag===1}]">{{item.feedbackflag === 0?'处理中':'已处理'}}</span></div>
             </div>
+            <div style="width:100%;text-align:center;margin-top:1rem" v-if="myfeedbacklist.length === 0">暂时没有发现您的反馈信息哦</div>
         </div>
     </div>
 </template>

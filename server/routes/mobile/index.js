@@ -218,12 +218,29 @@ module.exports = app => {
         })
     })
 
-    // //回显当前的自动登陆状态
-    // router.post('/showAutoLogin',solveMobileToken,async(req,res)=>{
-    //     const { id } = req.body
-    //     const model = await Account.findById(id,'autoLogin')
-    //     res.send(model)
-    // })
+    //回显个人余额
+    router.post('/showMyMoney',solveMobileToken,async(req,res)=>{
+        const { id } = req.body
+        const model = await Account.findById(id,'money')
+        res.send(model)
+    })
+
+    //充值
+    router.post('/recharge',solveMobileToken,async(req,res)=>{
+        const { id,money } = req.body
+        if(money>=10000){
+            res.send({
+                message:'充值失败，所充值的金额大于9999'
+            })
+        } else {
+            const model = await Account.findById(id,'money')
+            let newmoney = parseFloat(model.money) + parseFloat(money)
+            await Account.findByIdAndUpdate(id,{$set:{money:newmoney}})
+            res.send({
+                message:'充值成功'
+            })
+        }
+    })
 
     const Topic = require('../../models/mobile/Topic')
     const Comment = require('../../models/mobile/Comment')
