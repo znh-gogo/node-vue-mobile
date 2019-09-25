@@ -34,26 +34,36 @@
                     <!-- <div class="swiper-pagination" slot="pagination"></div> -->
                 </swiper>
             </div>
-        <div style="font-size:1.5rem;margin:1rem;border-bottom:1px solid #ccc;padding-bottom:0.5rem;color: #439057;">农业资讯：</div>
+        <div style="width:100%;height:0.3rem;background:#eee;margin-top:1rem"></div>    
+        <div style="font-size:1.5rem;margin:1rem;padding-bottom:0.5rem;color: #439057;">农业资讯：</div>
         <div style="width:90%;padding:1rem;background-color:#f6f6f6;margin:0 auto;border-radius:1rem">
-            <div style="text-decoration:underline;color:#000;display:flex;justify-content:space-between;padding:0 1rem;margin:0.5rem 0">
-                    <span style="width:100%;" class="text-hidden">[资讯]今年的猪肉是真的贵啊</span>
-                    <span style="white-space:nowrap;">2019/9/24 3:34:01</span>
+            <div ref="personWrap" style="width:90%;overflow:hidden;margin:0 auto;">
+                <div style="display:flex;" ref="personTab">
+                    <div
+                    v-for="(item,index) in articleclasslist"
+                    :key="index"
+                    :class="{'currentArticle':articleIndex === index}"
+                    @click="chooseArticleClass(item._id,index)"
+                    style="padding:0.5rem;width:5rem;white-space:nowrap;">{{item.className}}</div>
+                    <!-- <div style="padding:0.5rem">5555</div> -->
+                </div>
             </div>
-            <div style="text-decoration:underline;color:#000;display:flex;justify-content:space-between;padding:0 1rem;margin:0.5rem 0">
-                    <span>[资讯]132</span>
-                    <span>2019/9/24 3:34:01</span>
+            <div
+            v-for="(text,key) in articleList"
+            :key="key"
+            @click="$router.push({path:'/social/news-content',query:{id:text._id}})"
+            style="text-decoration:underline;color:#000;display:flex;justify-content:space-between;padding:0 1rem;margin:0.5rem 0">
+                    <span style="width:100%;" class="text-hidden">[资讯]{{text.articleName}}</span>
+                    <span style="white-space:nowrap;">{{format(text.createdAt)}}</span>
             </div>
-            <div style="text-decoration:underline;color:#000;display:flex;justify-content:space-between;padding:0 1rem;margin:0.5rem 0">
-                    <span>[资讯]132</span>
-                    <span>2019/9/24 3:34:01</span>
-            </div>
-            <div style="width:100%;text-align:right;padding-right:1rem;color:#666;text-decoration:underline;">查看更多资讯</div>
+            <div style="width:100%;text-align:right;padding-right:1rem;color:#666;text-decoration:underline;" v-if="articleList.length !== 0" @click="$router.push('/social/news')">查看更多资讯</div>
         </div>
 
         </div>
-        <div style="font-size:1.5rem;margin:1rem;border-bottom:1px solid #ccc;padding-bottom:0.5rem;color: #439057;">信息发布：</div>
-
+        <div style="width:100%;height:0.3rem;background:#eee;margin-top:1rem"></div>    
+        <div style="font-size:1.5rem;margin:1rem;padding-bottom:0.5rem;color: #439057;">信息发布：</div>
+        <div style="width:100%;text-align:right;padding-right:1.5rem;color:#777">当前共有{{topicList.length}}条动态</div>
+        <!-- <div style="width:100%;height:0.3rem;background:#eee;margin-top:1rem"></div>     -->
         <div v-if="topicList.length === 0" style="width:100%;height:100%;margin-top:10rem;text-align:center;">
             <span style="width:5rem;height:1px;background:#999;display:inline-block;"></span>
             <span style="display:inline-block;height:1rem;line-height:1rem;">暂时没有发现话题哦</span>
@@ -108,6 +118,7 @@
                     </div>
                 </div>
             </div>
+        <div style="width:100%;height:0.3rem;background:#eee;margin-top:1rem"></div>    
         </div>
         <transition name="moveT">
             <div style="position:fixed;width:100%;bottom:5rem;left:0:z-index: 20;border-top:1px solid #ccc;background:#fff" v-if="commentFlag" @click.stop="">
@@ -134,6 +145,7 @@ import api from '../../api'
 import { Toast } from 'mint-ui'
 import format from '../../common/common'
 import { Spinner } from 'mint-ui'
+import BScroll from 'better-scroll'
 export default {
     data (){
         return{
@@ -157,7 +169,11 @@ export default {
                 // mousewheel: true,
                 autoplay:true,
                 loop : true
-            }
+            },
+            articleclasslist:[],
+            articleIndex:0,
+            scroll:'',
+            articleList:[]
         }
     },
     methods:{
@@ -253,14 +269,61 @@ export default {
                 this.handleTopChange("loadingEnd")
                 this.$refs.loadmore.onTopLoaded();
             },1500)
+        },
+        getArticleClass(){
+            api.getArticleclass().then(res =>{
+                this.articleclasslist = res
+                this.$nextTick(() => {
+                    this.personScroll();
+                });
+                this.getArticleInfo(this.articleclasslist[this.articleIndex]._id)
+            })
+        },
+        chooseArticleClass(id,index){
+            this.articleIndex = index
+            this.getArticleInfo(id)
+        },
+        getArticleInfo(id){
+            api.getArticle({id}).then(res=>{
+                this.articleList = res.reverse()
+                if(res.length>5){
+                    this.articleList.splice(5,res.length)
+                }
+            })
+        },
+        personScroll() {
+        // 默认有六个li子元素，每个子元素的宽度为120px
+        // let width = 6 * 120;
+        let count = this.articleclasslist.length
+        let width = 5*count
+        console.log(count)
+        this.$refs.personTab.style.width = width + "rem";
+        // this.$nextTick 是一个异步函数，为了确保 DOM 已经渲染
+        this.$nextTick(() => {
+            if (!this.scroll) {
+            this.scroll = new BScroll(this.$refs.personWrap, {
+                startX: 0,
+                click: true,
+                scrollX: true,
+                // 忽略竖直方向的滚动
+                scrollY: false,
+                // eventPassthrough: "vertical"
+            });
+            console.log(this.scroll)
+            } else {
+            this.scroll.refresh();
+            }
+        });
         }
     },
     mounted (){
-        this.getUser()
+        // this.getUser()
         this.getTopicList()
+        this.getArticleClass()
   },
     created(){
         this.accountId = window.sessionStorage.getItem('id')
+        
     }
     
 }
@@ -287,7 +350,7 @@ export default {
         .contents{
             display: flex;
             padding: 2rem;
-            border-bottom: 1px solid #eee;
+            // border-bottom: 1px solid #eee;
             .contents-right{
                 margin-left: 1rem;
                 width: 100%;
@@ -374,6 +437,11 @@ export default {
     }
     .current{
         margin-bottom: 0!important;
+    }
+    .currentArticle{
+        font-weight:bold;
+        border-bottom:0.2rem solid #FFA500;
+        // font-size:1.2rem
     }
     .moveR-enter-active,  .moveR-leave-active {
         transition: all 0.3s linear;

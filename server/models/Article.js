@@ -6,6 +6,6 @@ const articleschema = new mongoose.Schema({
     articleContent:{type:String},
     relative:[{type:mongoose.SchemaTypes.ObjectId,ref:'ArticleClass'}]
     
-})
+},{timestamps: true})
 
 module.exports = mongoose.model('Article',articleschema)

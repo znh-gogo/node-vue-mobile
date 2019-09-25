@@ -92,6 +92,22 @@ const api = {
   searchConversation(data) {
     return request('http://localhost:3000/mobile/api/searchConversation', data, 'post')
   },
+
+
+  //资讯区
+  getArticleclass(data) {
+    return request('http://localhost:3000/mobile/api/getArticleclass', data, 'post')
+  },
+  getArticle(data) {
+    return request('http://localhost:3000/mobile/api/getArticle', data, 'post')
+  },
+  newsInfo(data) {
+    return request('http://localhost:3000/mobile/api/newsInfo', data, 'post')
+  },
+  getAllNews(data) {
+    return request('http://localhost:3000/mobile/api/getAllNews', data, 'post')
+  },
+  
   
 }
 

@@ -71,6 +71,8 @@ module.exports = app => {
                     path:'planmaker',
                     select:'makername _id makericon'
                 }
+            } else if(req.Model.modelName==='Article'){
+                queryOptions.populate='relative'
             }
                 const items = await req.Model.find().setOptions(queryOptions).skip(skip).limit(Size)
                 BeanPage = {
@@ -140,7 +142,7 @@ module.exports = app => {
         }
         //返回token
         const token = jwt.sign({id:user._id},app.get('secret'))
-        return res.send({token:token})
+        return res.send({token:token,user})
     })
 
     //错误处理函数

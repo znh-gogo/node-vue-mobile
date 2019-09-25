@@ -432,6 +432,34 @@ module.exports = app => {
         })
     })
 
+    const ArticleClass = require('../../models/ArticleClass')
+    const Article = require('../../models/Article')
+    //mobile端获取pc资讯分类信息
+    router.post('/getArticleclass',solveMobileToken,async(req,res)=>{
+        const model = await ArticleClass.find()
+        res.send(model)
+    })
+
+    //通过分类获取该分类的所有文章
+    router.post('/getArticle',solveMobileToken,async(req,res)=>{
+        const { id } = req.body
+        const model = await Article.find({relative:id})
+        res.send(model)
+    })
+
+    //通过id查询文章详情
+    router.post('/newsInfo',solveMobileToken,async(req,res)=>{
+        const { id } = req.body
+        const model = await Article.findById(id)
+        res.send(model) 
+    })
+
+    //查询所有文章
+    router.post('/getAllNews',solveMobileToken,async(req,res)=>{
+        const model = await Article.find().populate('relative')
+        res.send(model)
+    })
+
     //上传文件中间处理
     const multer = require('multer') //上传文件所需的中间件，帮忙做了很多处理
     const upload = multer({dest:__dirname + '/../../uploads'})

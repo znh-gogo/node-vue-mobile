@@ -8,8 +8,8 @@
                 <el-form-item label="密码">
                     <el-input v-model="model.password" type="password" show-password placeholder="请输入密码"></el-input>
                 </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" native-type="submit">登陆</el-button>
+                <el-form-item style="text-align:center">
+                    <el-button type="primary" native-type="submit" style="width:80%">登陆</el-button>
                 </el-form-item>
             </el-form>
         </el-card>
@@ -27,6 +27,7 @@ export default {
         login(){
             this.$http.post('login',this.model).then((res)=>{
                 sessionStorage.token=res.data.token
+                sessionStorage.username = res.data.user.adminName
                 this.$router.push('/')
                 this.$message.success('登陆成功')
             })
@@ -41,7 +42,7 @@ export default {
     width: 100%;
     min-height: 100%;
     /* height:100vh; */
-    background: #f0f2f5 url(~@/assets/background.svg) no-repeat 50%;
+    background: url(~@/assets/background.svg) no-repeat 100% center;
     background-size: 100%;
     padding: 2rem 0 2rem;
     position: relative;

@@ -22,19 +22,6 @@
       label="文章所属分类"
       >
     </el-table-column>
-    <!-- <el-table-column
-      prop="icon"
-      label="图标"
-      width="130px"
-      >
-      <template slot-scope="scope">
-        <el-image :src="scope.row.icon" alt="" style="width: 100px; height: 100px;" >
-        <div slot="error" class="image-slot" style="line-height:100px;text-align:center">
-          未上传图片
-         </div>
-        </el-image>
-      </template>
-    </el-table-column> -->
     <el-table-column
       fixed="right"
       label="操作"
@@ -45,6 +32,14 @@
       </template>
     </el-table-column>
   </el-table>
+  <el-pagination
+    layout="prev, pager, next"
+    v-if="page"
+    @current-change="changePage"
+    :page-size="numSize"
+    :page-count="page.allPages"
+    :total="page.count">
+  </el-pagination>
   </div>
 </template>
 
@@ -67,8 +62,9 @@
       },
       fetchArticle(){
         this.$http.get('rest/articleClass').then(()=>{
-            this.$http.get('rest/article').then((res)=>{
-              this.tableData=res.data
+            this.$http.get('rest/article'+`/${this.numPage}/${this.numSize}`).then((res)=>{
+              this.page = res.data.BeanPage
+              this.tableData=res.data.items
               let className = ''
               for (let j = 0; j<this.tableData.length;j++){
                 className = ''
@@ -83,24 +79,10 @@
           //   this.translate()
           // })
       },
-      translate(){
-        this.$http.get('rest/articleClass').then((res)=>{
-          this.temp=res.data
-          let flag= 0
-          let names  = ''
-          for(let i=0;i<this.tableData.length;i++){
-            flag=0
-            names=''
-            for(let j=0;j<this.temp.length;j++){
-              if(this.tableData[i].relative[flag]===this.temp[j]._id){
-                names = `${this.temp[j].className}、` + names
-                flag++
-                this.$set(this.tableData[i],'name',names)
-              }
-            }
-          }
-          
-         })
+      changePage(e){
+        console.log(e)
+        this.numPage=e
+        this.fetchArticle()
       }
     },
     created(){
@@ -111,7 +93,10 @@
     data() {
       return {
         tableData: [],
-        temp:[]
+        temp:[],
+        page:[],
+        numSize: 4,
+        numPage: 1
       }
     }
   }

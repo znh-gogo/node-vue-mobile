@@ -151,6 +151,16 @@ const router = new Router({
       component: () => import('./views/Social/Socialinfo/privateletter.vue')
     },
     {
+      path:'/social/news-content',
+      name:'news-content',
+      component: () => import('./views/Social/News/news-content.vue')
+    },
+    {
+      path:'/social/news',
+      name:'news',
+      component: () => import('./views/Social/News/news.vue')
+    },
+    {
       path:'/conversation/addconversation',
       name:'addconversation',
       component: () => import('./views/Conversation/addconversation.vue')

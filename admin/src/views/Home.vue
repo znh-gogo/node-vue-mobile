@@ -3,8 +3,8 @@
     <el-container style="height: 100vh; ">
       
   <el-aside width="200px" style="background-color: #EBEEF5">
-    <div style="height:60px;line-height:60px;text-align:center;font-size:18px;padding:0 10px">
-      Zz综合应用后台管理
+    <div style="height:60px;line-height:60px;text-align:center;font-size:18px;padding:0 10px;color: #439057;">
+      农商产品信息服务后台管理系统
     </div>
     <el-menu router :default-active="$route.path" unique-opened >
       <el-submenu index="1">
@@ -79,15 +79,15 @@
      
   <el-container>
     <el-header style="text-align: right; font-size: 12px">
+      <span style="margin-right:15px">{{username}}</span>
+      <!-- <span  style="margin-left:15px">退出登陆</span> -->
       <el-dropdown>
         <i class="el-icon-setting" style="margin-right: 15px;color:#fff"></i>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>查看</el-dropdown-item>
-          <!-- <el-dropdown-item >退出登陆</el-dropdown-item> -->
+          <el-dropdown-item @click.native="logout">退出登陆</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      <span>王小虎</span>
-      <span @click="logout" style="margin-left:15px">退出登陆</span>
     </el-header>
     
     <el-main >
@@ -112,7 +112,7 @@ export default {
   name: 'home',
   data() {
       return {
-        
+        username:''
       }
     },
     methods:{
@@ -120,6 +120,9 @@ export default {
         sessionStorage.clear()
         this.$router.push('/login')
       }
+    },
+    mounted(){
+      this.username = sessionStorage.username
     }
 
 }
