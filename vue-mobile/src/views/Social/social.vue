@@ -1,9 +1,11 @@
 <template>
 <mt-loadmore :top-method="loadTop" :top-status.sync="topStatus" ref="loadmore">
     <div slot="top" class="mint-loadmore-top" style="text-align:center">
-        <span v-show="topStatus !== 'loading'" :class="{ 'rotate': topStatus === 'drop' }">↓</span>
+        <div v-show="topStatus !== 'loading'" :class="{ 'rotate': topStatus === 'drop' }">
+                <div>下拉刷新 ↓</div>
+        </div>
         <span style="display:flex;justify-content:space-around;">
-        <mt-spinner v-show="topStatus == 'loading'" color="#26a2ff"></mt-spinner>
+        <mt-spinner v-show="topStatus == 'loading'" color="#26a2ff" style="margin-top:1rem"></mt-spinner>
         <span v-show="topStatus == 'loading'">加载中...</span>
         </span>
 
@@ -44,7 +46,7 @@
                     :key="index"
                     :class="{'currentArticle':articleIndex === index}"
                     @click="chooseArticleClass(item._id,index)"
-                    style="padding:0.5rem;width:5rem;white-space:nowrap;">{{item.className}}</div>
+                    style="padding:0.5rem;width:5rem;white-space:nowrap;text-align:center;">{{item.className}}</div>
                     <!-- <div style="padding:0.5rem">5555</div> -->
                 </div>
             </div>
@@ -54,7 +56,7 @@
             @click="$router.push({path:'/social/news-content',query:{id:text._id}})"
             style="text-decoration:underline;color:#000;display:flex;justify-content:space-between;padding:0 1rem;margin:0.5rem 0">
                     <span style="width:100%;" class="text-hidden">[资讯]{{text.articleName}}</span>
-                    <span style="white-space:nowrap;">{{format(text.createdAt)}}</span>
+                    <span style="white-space:nowrap;" v-if="text.createdAt">{{format(text.createdAt)}}</span>
             </div>
             <div style="width:100%;text-align:right;padding-right:1rem;color:#666;text-decoration:underline;" v-if="articleList.length !== 0" @click="$router.push('/social/news')">查看更多资讯</div>
         </div>

@@ -16,7 +16,7 @@
             @click="$router.push({path:'/social/news-content',query:{id:text._id}})"
             style="text-decoration:underline;color:#000;display:flex;justify-content:space-between;padding:0 1rem;margin:0.5rem 0">
                     <span style="width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" class="text-hidden">[资讯]{{text.articleName}}</span>
-                    <span style="white-space:nowrap;">{{format(text.createdAt)}}</span>
+                    <span style="white-space:nowrap;" v-if="text.createdAt">{{format(text.createdAt)}}</span>
             </div>
         </div>
     </div>    

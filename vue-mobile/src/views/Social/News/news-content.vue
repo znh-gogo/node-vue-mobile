@@ -10,8 +10,8 @@
                 完成
             </div> -->
         </mt-header>
-        <div style="text-align:center;margin-top:1rem;font-size:1.5rem">{{news.articleName}}</div>
-        <div style="width:95%;text-align:right;margin-top:1rem;font-size:0.8rem">{{format(news.createdAt)}}</div>
+        <div style="text-align:center;margin-top:1rem;font-size:1.5rem;line-height:1.5rem">{{news.articleName}}</div>
+        <div style="width:95%;text-align:right;margin-top:1rem;font-size:0.8rem" v-if="news.createdAt">{{format(news.createdAt)}}</div>
         <div v-html="news.articleContent" class="contents"></div>
     </div>
 </template>

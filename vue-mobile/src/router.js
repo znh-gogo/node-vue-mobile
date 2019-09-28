@@ -33,12 +33,12 @@ const router = new Router({
           path:'/home',
           name:'home',
           component:Home,
-          redirect:'/home/one',
+          redirect:'/home/good',
           children:[
             {
-              path: '/home/one',
-              name: 'one',
-              component: () => import('./views/Home/HomeOne.vue')
+              path: '/home/good',
+              name: 'good',
+              component: () => import('./views/Home/HomeGood.vue')
             },
             {
               path: '/about',

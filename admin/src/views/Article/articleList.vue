@@ -1,5 +1,5 @@
 <template>
-<div>
+<div >
   <h1 style="margin-top:0">文章列表</h1>
   <el-table
     height="500"

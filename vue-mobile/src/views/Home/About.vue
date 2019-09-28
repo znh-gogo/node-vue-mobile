@@ -1,5 +1,5 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
+  <div class="about" style="text-align:center">
+    <div>您暂时还没有关注任何商品哦，快去关注吧~</div>
   </div>
 </template>

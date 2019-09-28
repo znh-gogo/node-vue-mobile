@@ -90,8 +90,8 @@
       </el-dropdown>
     </el-header>
     
-    <el-main >
-      <div style="padding:20px">
+    <el-main style="overflow:hidden">
+      <div style="padding:20px;">
         <router-view :key="$route.path"></router-view>
       </div>
       

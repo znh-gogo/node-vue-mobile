@@ -3,9 +3,9 @@
         <router-view></router-view>
         <div class="footer">
         <router-link class="nav-link" tag="div" to="/home" style="flex:1">
-            <img src="../assets/home.png" alt="" style="width:2.2rem;margin-top:0.5rem" v-if="$route.path !== '/home/one'">
-            <img src="../assets/home-checked.png" alt="" style="width:2.2rem;margin-top:0.5rem" v-if="$route.path === '/home/one'">     
-            <div  :class="{'current': $route.path === '/home/one'}">商品首页</div>
+            <img src="../assets/home.png" alt="" style="width:2.2rem;margin-top:0.5rem" v-if="$route.path !== '/home/good'">
+            <img src="../assets/home-checked.png" alt="" style="width:2.2rem;margin-top:0.5rem" v-if="$route.path === '/home/good'">     
+            <div  :class="{'current': $route.path === '/home/good'}">商品首页</div>
         </router-link>
         <router-link class="nav-link" tag="div" to="/social" style="flex:1">
             <img src="../assets/social.png" alt="" style="width:2.2rem;margin-top:0.5rem" v-if="$route.path !== '/social'">
