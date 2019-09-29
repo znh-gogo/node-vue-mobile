@@ -1,6 +1,6 @@
 <template>
     <div class="userAdd">
-        <h1 style="margin-top:0">{{id?'编辑':'添加'}}商品</h1>
+        <h1 style="margin-top:0">{{id?'编辑':'添加'}}商品类别</h1>
         <el-form @submit.native.prevent="save" label-width="120px">
             <!-- <el-form-item label="所属关系">
                 <el-select v-model="model.relative" placeholder="请选择">
@@ -8,28 +8,40 @@
                     :value="item._id" :label="item.name"></el-option>
                 </el-select>
             </el-form-item> -->
-            <el-form-item label="商品名称">
-                <el-input style="width:300px" v-model="model.name"></el-input>
+            <el-form-item label="商品类别">
+                <el-input style="width:300px;margin-right:20px" v-model="model.goodcategory"></el-input> <el-button type="primary" :disabled="model.goodcategory === '' || model.goodcategory === undefined" native-type="submit">添加</el-button>
             </el-form-item>
-            <el-form-item label="上传商品图片">
+            <!-- <el-form-item label="上传商品图片">
                 <el-upload
                 class="avatar-uploader"
                 :headers="getAuth()"
-                :action="$http.defaults.baseURL+'/upload'"
+                :action="ADMIN+'/upload'"
                 :show-file-list="false"
                 :on-success="afterUpload"
                 >
                 <img v-if="model.icon" :src="model.icon" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
-            </el-form-item>
-            <el-form-item>
+            </el-form-item> -->
+            <!-- <el-form-item>
                 <el-button type="primary" native-type="submit">保存</el-button>
-            </el-form-item>
+            </el-form-item> -->
         </el-form>
+        <div style="font-weight:bold">已有类别：</div>
+        <div style="padding:0 50px;margin-top:20px">
+            <el-tag
+                v-for="(tag,index) in categoriesList"
+                :key="index"
+                closable
+                @close="handleclose(tag._id)"
+                >
+                {{tag.goodcategory}}
+                </el-tag>
+        </div>
     </div>
 </template>
 <script>
+import {ADMIN} from '../../api/globol'
 export default {
     props:{
         id:{}
@@ -37,8 +49,8 @@ export default {
     data (){
         return{
             model:{
-                
             },
+            categoriesList:[]
             // relativeOptions:[]
         }
     },
@@ -48,35 +60,34 @@ export default {
                 Authorization:`Bearer ${sessionStorage.token || ''}`
             }
         },
-        afterUpload(res){
-            this.$set(this.model,'icon',res.url)
-        },
+        // afterUpload(res){
+        //     this.$set(this.model,'icon',res.url)
+        // },
        async save(){
-           let res
-            if(this.id){
-                res= await this.$http.put(`rest/good/${this.id}`,this.model)
-                
-            } else{
-                res= await this.$http.post('rest/good',this.model)
-             }
-                this.$message.success('保存成功')
-                this.$router.push('/goodsList')
+                await this.$http.post(ADMIN+'/rest/goodcategory',this.model)
+                this.$message.success('添加成功')
+                this.model = {}
+                this.fetchData()
+                // this.$router.push('/goodsList')
            
         },
         fetchData(){
-            this.$http.get(`rest/good/${this.id}`).then((res)=>{
-                this.model=res.data
+            this.$http.get(ADMIN+`/rest/goodcategory`).then((res)=>{
+                this.categoriesList=res.data
                 })
         },
-        // fetchRelativeData(){
-        //     this.$http.get(`rest/users`).then((res)=>{
-        //     this.relativeOptions=res.data
-        // })
-        // }
+        handleclose(id){
+            this.$http.delete(ADMIN+`/rest/goodcategory/${id}`).then(res =>{
+                if(res){
+                    this.$message.success('删除成功')
+                    this.fetchData()
+                }
+            })
+        }
     },
     created(){
        
-        this.id && this.fetchData()
+        this.fetchData()
         // this.fetchRelativeData()
     }
 }
@@ -107,5 +118,8 @@ export default {
     width: 178px;
     height: 178px;
     display: block;
+  }
+  .el-tag + .el-tag {
+    margin-left: 10px;
   }
 </style>

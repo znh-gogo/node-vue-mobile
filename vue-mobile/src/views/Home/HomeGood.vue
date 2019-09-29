@@ -1,13 +1,13 @@
 <template>
   <div style="width:100%;min-height:100%;background:#eee;padding-bottom:6rem;">
-    <div style="width:100%;padding:0.5rem 0.5rem;">
+    <div style="width:100%;padding:0.3rem 0">
         <ul style="width:100%;overflow:hidden;padding:0 1rem">
           <li
           v-for="(item,index) in typelist"
           :key="index"
           @click="choosetype(item,index)"
           :class="{'current':typeIndex === index}"
-          style="float:left;margin-right:1rem;font-size:1.2rem">{{item}}</li>
+          style="float:left;margin-right:1rem;font-size:1.2rem;padding:0.5rem;">{{item}}</li>
         </ul>
     </div>
   <div class="goodbox">
@@ -40,12 +40,6 @@
       <div>123123</div>
       <div>123123</div>
     </div>
-            <!-- <div class="goodcontent">
-      <img src="../../assets/n2.jpg" alt="" style="width:100%;height:auto;border-radius:0.8rem;">
-      <div>123123</div>
-      <div>123123</div>
-      <div>123123</div>
-    </div> -->
   </div>
   </div>
 </template>

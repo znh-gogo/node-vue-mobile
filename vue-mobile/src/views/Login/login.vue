@@ -21,6 +21,7 @@
 <script>
 import api from '../../api/index'
 import { Toast } from 'mint-ui'
+
 export default {
     data (){
         return {

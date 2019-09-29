@@ -35,6 +35,7 @@
 </template>
 <script>
 import {VueEditor} from 'vue2-editor'
+import {ADMIN} from '../../api/globol'
 export default {
     props:{
         id:{}
@@ -57,7 +58,7 @@ export default {
        async handupload(file,Editor,cursorLocation,resetUploader){
             const form = new FormData()
             form.append('file',file)
-            const res = await this.$http.post('upload',form)
+            const res = await this.$http.post(ADMIN+'/upload',form)
             Editor.insertEmbed(cursorLocation,'image',res.data.url)
             resetUploader()
 
@@ -65,22 +66,22 @@ export default {
        async save(){
            let res
             if(this.id){
-                res= await this.$http.put(`rest/article/${this.id}`,this.model)
+                res= await this.$http.put(ADMIN+`/rest/article/${this.id}`,this.model)
                 
             } else{
-                res= await this.$http.post('rest/article',this.model)
+                res= await this.$http.post(ADMIN+'/rest/article',this.model)
              }
                 this.$message.success('保存成功')
                 this.$router.push('/articleList')
            
         },
         fetchData(){
-            this.$http.get(`rest/article/${this.id}`).then((res)=>{
+            this.$http.get(ADMIN+`/rest/article/${this.id}`).then((res)=>{
                 this.model=res.data
                 })
         },
         fetchArticleClassData(){
-            this.$http.get(`rest/articleClass`).then((res)=>{
+            this.$http.get(ADMIN+`/rest/articleClass`).then((res)=>{
             this.articleOptions=res.data
         })
         }

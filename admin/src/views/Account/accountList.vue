@@ -76,6 +76,7 @@
 </template>
 
 <script>
+import {ADMIN} from '../../api/globol'
   export default {
     methods: {
      async remove(row) {
@@ -84,7 +85,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then( async() => {
-            let res = await this.$http.delete(`/AccountDel/${row._id}`)
+            let res = await this.$http.delete(ADMIN+`/AccountDel/${row._id}`)
           this.$message({
             type: 'success',
             message: '删除成功!'
@@ -93,7 +94,7 @@
         })
       },
       fetchUsers(){
-          this.$http.get('/AccountList'+`/${this.numPage}/${this.numSize}`).then((res)=>{
+          this.$http.get(ADMIN+'/AccountList'+`/${this.numPage}/${this.numSize}`).then((res)=>{
               this.tableData=res.data
               // console.log(this.tableData)
           })
@@ -110,7 +111,7 @@
       frozenAccount(e){
         // console.log(e)
         if(e.frozen === 1){
-          this.$http.post('/frozenAccount',{
+          this.$http.post(ADMIN+'/frozenAccount',{
             frozen:0,
             id:e._id
           }).then((res)=>{
@@ -119,7 +120,7 @@
             
           })
         } else if(e.frozen === 0){
-          this.$http.post('/frozenAccount',{
+          this.$http.post(ADMIN+'/frozenAccount',{
             frozen:1,
             id:e._id
           }).then((res)=>{

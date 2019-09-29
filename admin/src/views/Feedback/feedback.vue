@@ -67,10 +67,11 @@
 </template>
 
 <script>
+import {ADMIN} from '../../api/globol'
   export default {
     methods: {
       fetchUsers(){
-          this.$http.get('/FeedbackList'+`/${this.numPage}/${this.numSize}`).then((res)=>{
+          this.$http.get(ADMIN+'/FeedbackList'+`/${this.numPage}/${this.numSize}`).then((res)=>{
               this.tableData=res.data
               this.tableData.items = this.tableData.items.reverse()
               // console.log(this.tableData)
@@ -89,7 +90,7 @@
       handleFeedback(e){
         // console.log(e)
         if(e.feedbackflag === 0){
-          this.$http.post('/handleFeedback',{
+          this.$http.post(ADMIN+'/handleFeedback',{
             feedbackflag:1,
             id:e._id
           }).then((res)=>{

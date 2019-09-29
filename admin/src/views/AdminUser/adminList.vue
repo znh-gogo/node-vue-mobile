@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import {ADMIN} from '../../api/globol'
   export default {
     methods: {
      async remove(row) {
@@ -39,7 +40,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then( async() => {
-            let res = await this.$http.delete(`rest/adminUser/${row._id}`)
+            let res = await this.$http.delete(ADMIN+`/rest/adminUser/${row._id}`)
           this.$message({
             type: 'success',
             message: '删除成功!'
@@ -48,7 +49,7 @@
         })
       },
       fetchUsers(){
-          this.$http.get('rest/adminUser').then((res)=>{
+          this.$http.get(ADMIN+'/rest/adminUser').then((res)=>{
               
               this.tableData=res.data
               console.log(this.tableData)

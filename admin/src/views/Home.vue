@@ -7,7 +7,14 @@
       农商产品信息服务后台管理系统
     </div>
     <el-menu router :default-active="$route.path" unique-opened >
-      <el-submenu index="1">
+      <el-submenu index="0">
+        <template slot="title"><i class="el-icon-eleme"></i>首页</template>
+        <el-menu-item-group>
+          <el-menu-item index="/homepage">首页</el-menu-item>
+        </el-menu-item-group>
+      </el-submenu>
+
+      <el-submenu index="1" v-if="authflag === 1">
         <template slot="title"><i class="el-icon-user"></i>用户管理</template>
         <el-menu-item-group>
           <template slot="title">用户</template>
@@ -16,16 +23,16 @@
         </el-menu-item-group>
       </el-submenu>
 
-      <el-submenu index="2">
+      <el-submenu index="2"  v-if="authflag === 1">
         <template slot="title"><i class="el-icon-s-shop"></i>商品管理</template>
         <el-menu-item-group>
           <template slot="title">商品</template>
           <el-menu-item index="/goodsList">商品列表</el-menu-item>
-          <el-menu-item index="/goodsAdd">添加商品</el-menu-item>
+          <el-menu-item index="/goodsAdd">商品类别</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
 
-      <el-submenu index="3">
+      <el-submenu index="3"  v-if="authflag === 1">
         <template slot="title"><i class="el-icon-notebook-2"></i>文章管理</template>
         <el-menu-item-group>
           <template slot="title">文章</template>
@@ -35,7 +42,7 @@
           <el-menu-item index="/articleList">文章列表</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
-      <el-submenu index="4">
+      <el-submenu index="4"  v-if="authflag === 1">
         <template slot="title"><i class="el-icon-collection"></i>计划管理</template>
         <el-menu-item-group>
           <template slot="title">计划</template>
@@ -46,7 +53,7 @@
         </el-menu-item-group>
       </el-submenu>
 
-      <el-submenu index="5">
+      <el-submenu index="5" v-if="authflag === 1">
         <template slot="title"><i class="el-icon-user-solid"></i>管理员管理</template>
         <el-menu-item-group>
           <template slot="title">管理员</template>
@@ -55,7 +62,7 @@
         </el-menu-item-group>
       </el-submenu>
 
-      <el-submenu index="6">
+      <el-submenu index="6"  v-if="authflag === 1">
         <template slot="title"><i class="el-icon-s-custom"></i>账户管理</template>
         <el-menu-item-group>
           <!-- <template slot="title">管理员</template> -->
@@ -64,12 +71,21 @@
         </el-menu-item-group>
       </el-submenu>
 
-      <el-submenu index="7">
+      <el-submenu index="7"  v-if="authflag === 1">
         <template slot="title"><i class="el-icon-edit-outline"></i>反馈管理</template>
         <el-menu-item-group>
           <!-- <template slot="title">管理员</template> -->
           <el-menu-item index="/feedbackList">反馈列表</el-menu-item>
           <!-- <el-menu-item index="/adminAdd">添加管理员</el-menu-item> -->
+        </el-menu-item-group>
+      </el-submenu>
+
+      <el-submenu index="8"  v-if="authflag === 0">
+        <template slot="title"><i class="el-icon-s-shop"></i>商品管理</template>
+        <el-menu-item-group>
+          <!-- <template slot="title">管理员</template> -->
+          <el-menu-item index="/selling">商品发售</el-menu-item>
+          <el-menu-item index="/myprolist">商品列表</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
 
@@ -90,13 +106,13 @@
       </el-dropdown>
     </el-header>
     
-    <el-main style="overflow:hidden">
+    <el-main style="">
       <div style="padding:20px;">
         <router-view :key="$route.path"></router-view>
       </div>
       
     </el-main>
-    <div style="height:60px;width:100%;background-color:#eee;line-height:60px;text-align:center;color:#666;font-size:14px;">
+    <div style="height:50px;width:100%;background-color:#eee;line-height:60px;text-align:center;color:#666;font-size:14px;">
       All informations from node.js. 
     </div>
   </el-container>
@@ -112,7 +128,8 @@ export default {
   name: 'home',
   data() {
       return {
-        username:''
+        username:'',
+        authflag:''
       }
     },
     methods:{
@@ -123,6 +140,7 @@ export default {
     },
     mounted(){
       this.username = sessionStorage.username
+      this.authflag = parseInt(sessionStorage.authflag)
     }
 
 }

@@ -18,8 +18,25 @@ const router = new Router({
       path: '/',
       name: 'home',
       component: Home,
-      redirect:'/userList',
+      redirect:'/homepage',
       children:[
+        //首页
+        {
+          path: '/homepage',
+          name: 'homepage',
+          component: () => import('./views/homepage.vue')
+        },
+        //用户发售商品
+        {
+          path: '/selling',
+          name: 'selling',
+          component: () => import('./views/Seller/seller.vue')
+        },
+        {
+          path: '/myprolist',
+          name: 'myprolist',
+          component: () => import('./views/Seller/myprolist.vue')
+        },
         // 用户
         {
           path: '/userAdd',

@@ -41,12 +41,20 @@ module.exports = app => {
     })
     
     router.post('/login',async (req,res,next)=>{
-        const { account,password,verify,autoLogin }= req.body
+        const { account,password,verify,autoLogin,authflag }= req.body
         //根据用户名找到用户
         // console.log(vetifys)
 
         //检验是否自动登陆
         if(autoLogin){
+            const user = await Account.findOne({account}).select('+password')
+            const token = jwt.sign({id:user._id},app.get('secret'))
+            return res.send({
+                token:token,
+                message:'登陆成功',
+                user
+            })
+        } else if(authflag){ //admin端商家登陆
             const user = await Account.findOne({account}).select('+password')
             const token = jwt.sign({id:user._id},app.get('secret'))
             return res.send({
@@ -457,6 +465,44 @@ module.exports = app => {
     //查询所有文章
     router.post('/getAllNews',solveMobileToken,async(req,res)=>{
         const model = await Article.find().populate('relative')
+        res.send(model)
+    })
+
+    const GoodCategory = require('../../models/GoodCategory')
+    const Product = require('../../models/mobile/Product')
+
+    //商品类别回显
+    router.post('/proCategory',solveMobileToken,async(req,res)=>{
+        const model = await GoodCategory.find()
+        res.send(model)
+    })
+
+    //商品发售
+    router.post('/saleProduct',solveMobileToken,async(req,res)=>{
+        await Product.create(req.body)
+        res.send({
+            message:'发售成功'
+        })
+    })
+
+    //编辑商品
+    router.post('/editProduct',solveMobileToken,async(req,res)=>{
+        const {id} = req.body
+        await Product.findByIdAndUpdate(id,req.body)
+        res.send({message:'修改成功'})
+    })
+
+    //删除我的商品
+    router.post('/delProduct',solveMobileToken,async(req,res)=>{
+        const {id} = req.body
+        await Product.findOneAndDelete(id)
+        res.send({message:'删除成功'})
+    })
+
+    //回显我的商品
+    router.post('/showMyProduct',solveMobileToken,async(req,res)=>{
+        const {id} = req.body
+        const model = await Product.findById(id)
         res.send(model)
     })
 

@@ -18,6 +18,7 @@
     </div>
 </template>
 <script>
+import {ADMIN} from '../../api/globol'
 export default {
     props:{
         id:{}
@@ -34,22 +35,22 @@ export default {
        async save(){
            let res
             if(this.id){
-                res= await this.$http.put(`rest/users/${this.id}`,this.model)
+                res= await this.$http.put(ADMIN+`/rest/users/${this.id}`,this.model)
                 
             } else{
-                res= await this.$http.post('rest/users',this.model)
+                res= await this.$http.post(ADMIN+'/rest/users',this.model)
              }
                 this.$message.success('保存成功')
                 this.$router.push('/userList')
            
         },
         fetchData(){
-            this.$http.get(`rest/users/${this.id}`).then((res)=>{
+            this.$http.get(ADMIN+`/rest/users/${this.id}`).then((res)=>{
                 this.model=res.data
                 })
         },
         fetchRelativeData(){
-            this.$http.get(`rest/users`).then((res)=>{
+            this.$http.get(ADMIN+`/rest/users`).then((res)=>{
             this.relativeOptions=res.data
         })
 }

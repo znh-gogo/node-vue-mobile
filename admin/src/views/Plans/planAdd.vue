@@ -89,6 +89,7 @@
     </div>
 </template>
 <script>
+import {ADMIN} from '../../api/globol'
     export default {
         props:{
              id:{}
@@ -124,22 +125,22 @@
     async save(){
         let res
         if(this.id){
-            res= await this.$http.put(`rest/plan/${this.id}`,this.model)
+            res= await this.$http.put(ADMIN+`/rest/plan/${this.id}`,this.model)
         } else{
-            res= await this.$http.post('rest/plan',this.model)
+            res= await this.$http.post(ADMIN+'/rest/plan',this.model)
         }
         this.$message.success('保存成功')
         this.$router.push('/planList')
     },
     fetchData(){
-        this.$http.get(`rest/plan/${this.id}`).then((res)=>{
+        this.$http.get(ADMIN+`/rest/plan/${this.id}`).then((res)=>{
         this.model=res.data
         }).then(()=>{
             this.fetchSelect()
         })
     },
       fetchSelect(){
-          this.$http.get('rest/planmaker').then((res)=>{
+          this.$http.get(ADMIN+'/rest/planmaker').then((res)=>{
               this.selectData=res.data
             //   console.log(this.selectData)
           }).then(()=>{

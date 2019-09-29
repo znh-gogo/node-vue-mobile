@@ -61,7 +61,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then( async() => {
-            let res = await this.$http.delete(`rest/planmaker/${row._id}`)
+            let res = await this.$http.delete(ADMIN+`/rest/planmaker/${row._id}`)
           this.$message({
             type: 'success',
             message: '删除成功!'
@@ -70,7 +70,7 @@
         })
       },
       fetchGoods(){
-          this.$http.get('rest/planmaker'+`/${this.numPage}/${this.numSize}`).then((res)=>{
+          this.$http.get(ADMIN+'/rest/planmaker'+`/${this.numPage}/${this.numSize}`).then((res)=>{
               this.tableData=res.data
             //   console.log(this.tableData)
           })

@@ -30,7 +30,7 @@
             <el-upload
             class="avatar-uploader"
             :headers="getAuth()"
-            :action="$http.defaults.baseURL+'/upload'"
+            :action="ADMIN+'/upload'"
             :show-file-list="false"
             :on-success="afterUpload"
             >
@@ -46,13 +46,15 @@
     </div>
 </template>
 <script>
+import {ADMIN} from '../../api/globol'
     export default {
         props:{
              id:{}
         },
         data (){
             return{
-            model:{},
+                ADMIN,
+                model:{},
              // relativeOptions:[]
         }
     },
@@ -68,15 +70,15 @@
     async save(){
         let res
         if(this.id){
-            res= await this.$http.put(`rest/planmaker/${this.id}`,this.model)
+            res= await this.$http.put(ADMIN+`/rest/planmaker/${this.id}`,this.model)
         } else{
-            res= await this.$http.post('rest/planmaker',this.model)
+            res= await this.$http.post(ADMIN+'/rest/planmaker',this.model)
         }
         this.$message.success('保存成功')
         this.$router.push('/planmakerList')
     },
     fetchData(){
-        this.$http.get(`rest/planmaker/${this.id}`).then((res)=>{
+        this.$http.get(ADMIN+`/rest/planmaker/${this.id}`).then((res)=>{
         this.model=res.data
         })
     },
