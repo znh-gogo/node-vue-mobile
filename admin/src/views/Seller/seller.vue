@@ -1,14 +1,14 @@
 <template>
-    <div>
-        <h1>商品出售</h1>
-        <el-form @submit.native.prevent="save" label-width="120px">
-            <el-form-item label="商品类别:">
+    <div style="padding: 5px">
+        <h1>{{id?'编辑':'出售'}}商品 <el-button v-if="id" style="float:right" type="primary" plain @click="$router.go(-1)">返回</el-button></h1>
+        <el-form :model="model" ref="model" :rules="rules" label-width="120px">
+            <el-form-item label="商品类别:" prop="pro_categories">
                 <el-select v-model="model.pro_categories" placeholder="请选择" multiple>
                     <el-option v-for="(item,index) in productcategory" :key="index"
                     :value="item._id" :label="item.goodcategory"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="商品描述:">
+            <el-form-item label="商品描述:" prop="pro_description">
                 <el-input style="width:400px"
                     v-model="model.pro_description"
                     type="textarea"
@@ -16,19 +16,25 @@
                     placeholder="请输入描述内容">
                 </el-input>
             </el-form-item>
-            <el-form-item label="发货地址:">
+            <el-form-item label="发货地址:" prop="pro_address">
                 <el-input
                 style="width:400px;"
                 v-model="model.pro_address"
                 placeholder="请输入发货地址"></el-input>
             </el-form-item>
-            <el-form-item label="商品价格:">
+            <el-form-item label="商品价格:" prop="pro_price">
                 <el-input
                 style="width:150px;"
                 v-model="model.pro_price"
                 maxlength="5"
                 placeholder="请输入金额"
                 show-word-limit></el-input>
+            </el-form-item>
+            <el-form-item label="售卖初始状态:" prop="buyflag">
+                <el-select v-model="model.buyflag" placeholder="请选择">
+                    <el-option label="上架中" :value="parseInt(0)" :key="parseInt(0)"></el-option>
+                    <el-option label="下架中" :value="parseInt(2)" :key="parseInt(2)"></el-option>
+                </el-select>
             </el-form-item>
             <el-form-item label="上传商品图片:">
                 <div style="display:inline-block;margin-right:10px;margin-bottom:10px;width:178px;height:178px;position:relative"
@@ -55,7 +61,7 @@
                 </el-upload>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" native-type="submit">保存</el-button>
+                <el-button type="primary" @click="save('model')">保存</el-button>
             </el-form-item>
         </el-form>
         
@@ -68,16 +74,43 @@
 <script>
 import {MOBILE} from '../../api/globol'
 export default {
+    props:{
+        id:{}
+    },
     data(){
         return {
             MOBILE,
             productcategory:[],
             model:{
-                pro_imgs:[]
+                pro_imgs:[],
+                pro_categories:'',
+                pro_description:'',
+                pro_address:'',
+                pro_price:'',
+                buyflag:0
             },
             dialogImageUrl: '',
             dialogVisible: false,
-            nowIndex:-1
+            nowIndex:-1,
+            rules: {
+            pro_categories: [
+                { required: true, message: '请选择商品类别', trigger: 'blur' },
+                // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+            ],
+            pro_description: [
+                { required: true, message: '请输入描述内容', trigger: 'blur' }
+            ],
+            pro_address: [
+                { required: true,  message: '请输入发货地址', trigger: 'blur' }
+            ],
+            pro_price: [
+                { required: true,  message: '请输入金额', trigger: 'blur' },
+                // { min: 1, max: 5, message: '长度在 1 到 5 个字符', trigger: 'blur' }
+            ],
+            pro_imgs: [
+                // { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
+            ],
+            }
         }
     },
     methods:{
@@ -105,18 +138,52 @@ export default {
             // this.$set(this.model,'seller',res.url)
             this.model.pro_imgs.push(res.url)
         },
-        save(){
-            let id = sessionStorage.id
-            this.$set(this.model,'seller',id)
-            this.$http.post(MOBILE+'/saleProduct',this.model).then(res=>{
-                if(res){
-                    this.$message.success(res.message)
+        save(model){
+            this.$refs[model].validate((valid) => {
+                if (valid) {
+                    // alert('submit!');
+                    let id = sessionStorage.id
+                    this.$set(this.model,'seller',id)
+                    // if(this.model.pro_categories )
+                    if(this.id){
+                        this.$set(this.model,'id',this.id)
+                        this.$http.post(MOBILE+'/editProduct',this.model).then(res=>{
+                            if(res){
+                                this.$message.success(res.data.message)
+                                this.$refs[model].resetFields();
+                                this.model.pro_imgs = []
+                                this.$router.push('/myprolist')
+                                // console.log(res)
+                            }
+                        })  
+                    } else {
+                        this.$http.post(MOBILE+'/saleProduct',this.model).then(res=>{
+                            if(res){
+                                this.$message.success(res.data.message)
+                                this.$refs[model].resetFields();
+                                this.model.pro_imgs = []
+                                this.$router.push('/myprolist')
+                                // console.log(res)
+                            }
+                        })
+                    }
+                } else {
+                    console.log('error submit!!');
+                    return false;
                 }
+            });
+        },
+        fetchData(){
+            this.$http.post(MOBILE+'/showMyProdetail',{id:this.id}).then(res=>{
+                this.model = res.data
             })
         }
     },
     mounted(){
         this.getcategory()
+    },
+    created(){
+        this.id && this.fetchData()
     }
 }
 </script>

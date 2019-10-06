@@ -52,7 +52,7 @@ export default {
             if(this.value === 0) {
                 this.$http.post(MOBILE+'/login',{account:this.model.adminName,password:this.model.password,authflag:1}).then((res)=>{
                 sessionStorage.token=res.data.token
-                sessionStorage.username = res.data.user.account
+                sessionStorage.username = res.data.user.nickname
                 sessionStorage.authflag = res.data.user.authflag
                 sessionStorage.id = res.data.user._id
                 this.$router.push('/')

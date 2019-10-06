@@ -56,6 +56,15 @@ module.exports = app => {
             })
         } else if(authflag){ //admin端商家登陆
             const user = await Account.findOne({account}).select('+password')
+            if(!user){
+                return res.status(422).send({message:'用户不存在'})
+            }
+            if(user.frozen !== 1){
+                return res.status(422).send({message:'账号被冻结'})
+            }
+            if(user.password!==password){
+                    return res.status(422).send({message:'密码错误'})
+            }
             const token = jwt.sign({id:user._id},app.get('secret'))
             return res.send({
                 token:token,
@@ -485,6 +494,13 @@ module.exports = app => {
         })
     })
 
+    //回显我的商品详情
+    router.post('/showMyProdetail',solveMobileToken,async(req,res)=>{
+        const {id} = req.body
+        const model = await Product.findById(id).populate('seller pro_categories comments.relative')
+        res.send(model)
+    })
+
     //编辑商品
     router.post('/editProduct',solveMobileToken,async(req,res)=>{
         const {id} = req.body
@@ -495,15 +511,103 @@ module.exports = app => {
     //删除我的商品
     router.post('/delProduct',solveMobileToken,async(req,res)=>{
         const {id} = req.body
-        await Product.findOneAndDelete(id)
+        await Product.findByIdAndDelete(id)
         res.send({message:'删除成功'})
     })
 
-    //回显我的商品
+    //回显我的商品列表
     router.post('/showMyProduct',solveMobileToken,async(req,res)=>{
+        const {id,numPage,numSize} = req.body
+
+        const count = await Product.countDocuments()
+        //前端传入页数
+        let Page = Number(numPage) || 1;
+        //前端传入每页条数
+        let Size = Number(numSize)|| 1;
+        //计算总页数
+        let allPages = Math.ceil(count/Size);
+        //当前页不能大于总页数
+        Page = Math.min(Page,allPages)
+        //当前页不能小于1
+        Page = Math.max(Page,1)
+        //忽略数
+        let skip = (Page-1)*Size;
+
+        const items = await Product.find({seller:id}).populate('pro_categories').skip(skip).limit(Size)
+        BeanPage = {
+            count,
+            Page,
+            Size,
+            allPages
+        }
+        res.send({items,BeanPage})
+    })
+
+    //admin端回显所有商品列表
+    app.get('/admin/api/showAllProduct/:numPage/:numSize',solveAdminToken,async(req,res)=>{
+        const count = await Product.countDocuments()
+        //前端传入页数
+        let Page = Number(req.params.numPage) || 1;
+        //前端传入每页条数
+        let Size = Number(req.params.numSize)|| 1;
+        //计算总页数
+        let allPages = Math.ceil(count/Size);
+        //当前页不能大于总页数
+        Page = Math.min(Page,allPages)
+        //当前页不能小于1
+        Page = Math.max(Page,1)
+        //忽略数
+        let skip = (Page-1)*Size;
+        const items = await Product.find().populate('pro_categories seller').skip(skip).limit(Size)
+        BeanPage = {
+            count,
+            Page,
+            Size,
+            allPages
+        }
+        res.send({items,BeanPage})
+    })
+
+    //mobile商品列表
+    router.post('/MobileProduct',solveMobileToken,async(req,res)=>{
         const {id} = req.body
-        const model = await Product.findById(id)
+        if(id){
+            const model = await Product.find({pro_categories:id}).populate('seller')
+            res.send(model)
+        } else {
+            const model = await Product.find().populate('seller')
+            res.send(model)
+        }
+    })
+
+    //mobile收藏商品
+    router.post('/saveProduct',solveMobileToken,async(req,res)=>{
+        const { id,uid } = req.body
+        const user = await Product.findById(id,{pro_attention:uid})
+        // console.log(user.thinkgood[0] == userid)
+        for(let i = 0; i<user.pro_attention.length;i++){
+        if(user.pro_attention[i] == uid){
+            var model =  await Product.findByIdAndUpdate(id,{$pull:{pro_attention:uid}})
+            res.send(model)
+            return
+        }
+        }
+        var model = await Product.findByIdAndUpdate(id,{$push:{pro_attention:uid}})
         res.send(model)
+    })
+
+    //商品留言
+    router.post('/ProLeaving',solveMobileToken,async(req,res)=>{
+        const {id,comment,cid} = req.body
+        await Product.findByIdAndUpdate(id,{$push:{comments:{'com_content':comment,'relative':cid}}})
+        res.send({message:'留言成功'})
+    })
+
+    //删除商品留言
+    router.post('/delLeaving',solveMobileToken,async(req,res)=>{
+        const {id,cid} = req.body
+        await Product.findByIdAndUpdate(id,{$pull:{comments:{'_id':cid}}})
+        res.send({message:'删除留言成功'})
     })
 
     //上传文件中间处理

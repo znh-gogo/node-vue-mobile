@@ -1,5 +1,5 @@
 <template>
-<div>
+<div style="padding: 5px;min-height:500px">
   <h1 style="margin-top:0">管理员列表</h1>
   <el-table
     height="500"

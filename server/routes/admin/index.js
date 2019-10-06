@@ -32,7 +32,7 @@ module.exports = app => {
     //通用获取数据接口
     router.get('/' ,async(req,res)=>{
         const queryOptions = {}
-        // console.log(req.Model.modelName)
+        // console.log(req.Model)
         if(req.Model.modelName==='User'){
             queryOptions.populate='relative'
             } else if(req.Model.modelName==='Article'){
@@ -41,7 +41,7 @@ module.exports = app => {
                     path:'relative',
                     select:'className _id'
                 }
-            } 
+            }
                 const items = await req.Model.find().setOptions(queryOptions)
                 res.send(items)
     })

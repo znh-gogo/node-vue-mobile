@@ -6,7 +6,7 @@ const schema = new mongoose.Schema({
   pro_imgs:[{ type:String }],
   pro_price:{ type:Number },
   pro_address:{type:String},
-  buyflag:{type:Number,default:0}, //0未购买1已购买
+  buyflag:{type:Number,default:0}, //0未购买1已购买2已下架
   buyer:{ type: mongoose.SchemaTypes.ObjectId, ref: 'Account' },
   seller: { type: mongoose.SchemaTypes.ObjectId, ref: 'Account' },
   pro_attention: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Account' }],

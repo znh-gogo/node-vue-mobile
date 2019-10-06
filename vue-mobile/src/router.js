@@ -166,6 +166,11 @@ const router = new Router({
       component: () => import('./views/Conversation/addconversation.vue')
     },
     {
+      path:'/good-detail',
+      name:'good-detail',
+      component: () => import('./views/Home/GoodDetail.vue')
+    },
+    {
       path: '*',
       redirect: '/home'
     }

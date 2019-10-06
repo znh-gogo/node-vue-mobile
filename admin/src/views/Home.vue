@@ -106,13 +106,18 @@
       </el-dropdown>
     </el-header>
     
-    <el-main style="">
-      <div style="padding:20px;">
-        <router-view :key="$route.path"></router-view>
+    <el-main style="background-color:#f7f7f7">
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item :to="{ path: '/homepage' }">首页</el-breadcrumb-item>
+        <!-- <el-breadcrumb-item><a href="/">活动管理</a></el-breadcrumb-item> -->
+        <el-breadcrumb-item v-if="$route.meta.name">{{$route.meta.name}}</el-breadcrumb-item>
+      </el-breadcrumb>
+      <div style="padding:15px;">
+        <router-view :key="$route.path" style="background-color:#fff"></router-view>
       </div>
       
     </el-main>
-    <div style="height:50px;width:100%;background-color:#eee;line-height:60px;text-align:center;color:#666;font-size:14px;">
+    <div style="height:50px;width:100%;background-color:#ccc;line-height:60px;text-align:center;color:#666;font-size:14px;">
       All informations from node.js. 
     </div>
   </el-container>

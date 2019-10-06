@@ -13,6 +13,7 @@
   height: 100%;
   position: relative;
 }
+html,body{overflow-x:hidden;}
 // #nav {
 //   padding: 30px;
 //   a {

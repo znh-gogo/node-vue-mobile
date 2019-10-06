@@ -1,5 +1,5 @@
 <template>
-    <div class="userAdd">
+    <div class="userAdd" style="padding: 5px;min-height:500px">
         <h1 style="margin-top:0">{{id?'编辑':'添加'}}管理员</h1>
         <el-form @submit.native.prevent="save" label-width="120px">
 

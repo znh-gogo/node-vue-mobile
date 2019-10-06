@@ -24,24 +24,35 @@ const router = new Router({
         {
           path: '/homepage',
           name: 'homepage',
-          component: () => import('./views/homepage.vue')
+          component: () => import('./views/homepage.vue'),
+          meta:{name:'首页'}
         },
         //用户发售商品
         {
           path: '/selling',
           name: 'selling',
-          component: () => import('./views/Seller/seller.vue')
+          component: () => import('./views/Seller/seller.vue'),
+          meta:{name:'发售商品'}
+        },
+        {
+          path: '/editseller/:id',
+          name: 'seller',
+          component: () => import('./views/Seller/seller.vue'),
+          props:true,
+          meta:{name:'编辑商品'}
         },
         {
           path: '/myprolist',
           name: 'myprolist',
-          component: () => import('./views/Seller/myprolist.vue')
+          component: () => import('./views/Seller/myprolist.vue'),
+          meta:{name:'我的商品列表'}
         },
         // 用户
         {
           path: '/userAdd',
           name: 'userAdd',
-          component: () => import('./views/User/userAdd.vue')
+          component: () => import('./views/User/userAdd.vue'),
+          meta:{name:'我的商品列表'}
         },
         {
           path: '/userEdit/:id',
@@ -75,51 +86,60 @@ const router = new Router({
         {
           path: '/articleClassAdd',
           name: 'articleClassAdd',
-          component: () => import('./views/Article/articleClassAdd.vue')
+          component: () => import('./views/Article/articleClassAdd.vue'),
+          meta:{name:'添加文章类别'}
         },
         {
           path: '/articleClassEdit/:id',
           name: 'articleClassEdit',
           component: () => import('./views/Article/articleClassAdd.vue'),
-          props:true
+          props:true,
+          meta:{name:'修改文章类别'}
         },
         {
           path: '/articleClassList',
           name: 'articleClassList',
-          component: () => import('./views/Article/articleClassList.vue')
+          component: () => import('./views/Article/articleClassList.vue'),
+          meta:{name:'文章类别列表'}
         },
         {
           path: '/articleAdd',
           name: 'articleAdd',
-          component: () => import('./views/Article/articleAdd.vue')
+          component: () => import('./views/Article/articleAdd.vue'),
+          meta:{name:'添加文章'}
         },
         {
           path: '/articleEdit/:id',
           name: 'articleEdit',
           component: () => import('./views/Article/articleAdd.vue'),
-          props:true
+          props:true,
+          meta:{name:'修改文章'}
         },
         {
           path: '/articleList',
           name: 'articleList',
-          component: () => import('./views/Article/articleList.vue')
+          component: () => import('./views/Article/articleList.vue'),
+          meta:{name:'文章列表'}
         },
         //管理员
         {
           path: '/adminAdd',
           name: 'adminAdd',
-          component: () => import('./views/AdminUser/adminAdd.vue')
+          component: () => import('./views/AdminUser/adminAdd.vue'),
+          meta:{name:'添加管理员'}
         },
         {
           path: '/adminEdit/:id',
           name: 'adminEdit',
           component: () => import('./views/AdminUser/adminAdd.vue'),
-          props:true
+          props:true,
+          meta:{name:'修改管理员'}
         },
         {
           path: '/adminList',
           name: 'adminList',
-          component: () => import('./views/AdminUser/adminList.vue')
+          component: () => import('./views/AdminUser/adminList.vue'),
+          meta:{name:'管理员列表'}
         },
         //计划
         {
@@ -158,13 +178,15 @@ const router = new Router({
         {
           path: '/accountList',
           name: 'accountList',
-          component: () => import('./views/Account/accountList.vue')
+          component: () => import('./views/Account/accountList.vue'),
+          meta:{name:'用户列表'}
         },
         //反馈
         {
           path: '/feedbackList',
           name: 'feedbackList',
-          component: () => import('./views/Feedback/feedback.vue')
+          component: () => import('./views/Feedback/feedback.vue'),
+          meta:{name:'反馈列表'}
         },
       ]
     },

@@ -107,6 +107,26 @@ const api = {
   getAllNews(data) {
     return request('http://localhost:3000/mobile/api/getAllNews', data, 'post')
   },
+
+  //商品区
+  MobileProduct(data) {
+    return request('http://localhost:3000/mobile/api/MobileProduct', data, 'post')
+  },
+  proCategory(data) {
+    return request('http://localhost:3000/mobile/api/proCategory', data, 'post')
+  },
+  showMyProdetail(data) {
+    return request('http://localhost:3000/mobile/api/showMyProdetail', data, 'post')
+  },
+  saveProduct(data) {
+    return request('http://localhost:3000/mobile/api/saveProduct', data, 'post')
+  },
+  ProLeaving(data) {
+    return request('http://localhost:3000/mobile/api/ProLeaving', data, 'post')
+  },
+  delLeaving(data) {
+    return request('http://localhost:3000/mobile/api/delLeaving', data, 'post')
+  },
   
   
 }

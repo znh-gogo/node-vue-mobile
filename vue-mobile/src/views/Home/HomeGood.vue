@@ -1,66 +1,106 @@
 <template>
   <div style="width:100%;min-height:100%;background:#eee;padding-bottom:6rem;">
-    <div style="width:100%;padding:0.3rem 0">
-        <ul style="width:100%;overflow:hidden;padding:0 1rem">
+    <div style="width:100%;padding:0.3rem 0" ref="homeWrap">
+        <ul style="overflow:hidden;padding:0 1rem" ref="one">
           <li
           v-for="(item,index) in typelist"
           :key="index"
           @click="choosetype(item,index)"
           :class="{'current':typeIndex === index}"
-          style="float:left;margin-right:1rem;font-size:1.2rem;padding:0.5rem;">{{item}}</li>
+          style="float:left;margin-right:1rem;font-size:1.2rem;padding:0.5rem;">{{item.goodcategory}}</li>
         </ul>
     </div>
   <div class="goodbox">
-    <div class="goodcontent">
-      <img src="../../assets/n2.jpg" alt="" style="width:100%;height:auto;border-radius:0.8rem;">
-      <div style="font-weight:bold;line-height:1.2rem;height:2.4rem;overflow:hidden;">这里是白哦他内容藐视这里是白哦他内容藐视这里是白哦他内容藐视</div>
-      <div style="display:flex;justify-content:space-between;margin:1rem 0;padding:0 0.5rem;">
-        <div style="color:red;">￥<span style="font-size:1.5rem">120</span></div>
-        <div>11人关注</div>
+    <div v-for="(item,index) in productList" :key="index">
+      <div class="goodcontent" v-if="item.buyflag===0" @click="$router.push({path:'/good-detail',query:{gid:item._id}})">
+        <img src="../../assets/lose.jpg" alt="" style="width:100%;height:auto;border-radius:0.8rem;" v-if="item.pro_imgs.length === 0">
+        <img :src="item.pro_imgs[0]" alt=""  style="width:100%;height:auto;border-radius:0.8rem;" v-else>
+        <div style="font-weight:bold;line-height:1.2rem;height:2.4rem;overflow:hidden;padding:0.2rem">{{item.pro_description}}</div>
+        <div style="display:flex;justify-content:space-between;margin:1rem 0;padding:0 0.5rem;">
+          <div style="color:red;">￥<span style="font-size:1.5rem">{{item.pro_price}}</span></div>
+          <div>11人关注</div>
+        </div>
+        <div style="width:90%;height:1px;background:#eee;margin:0 auto"></div>
+        <div style="width:100%;padding:0.5rem;display:flex" v-if="item.seller">
+          <img :src="item.seller.headImg" alt="" style="width:2rem;height:2rem;border-radius:0.3rem">
+          <div style="margin-left:0.5rem;margin-top:0.2rem;">{{item.seller.nickname}}</div>
+        </div>
       </div>
-      <div style="width:90%;height:1px;background:#eee;margin:0 auto"></div>
-      <div style="width:100%;padding:0.5rem;display:flex">
-        <img src="../../assets/123.png" alt="" style="width:2rem;height:2rem;border-radius:0.3rem">
-        <div style="margin-left:0.5rem;margin-top:0.2rem;">大哥大</div>
-      </div>
     </div>
-        <div class="goodcontent">
-      <img src="../../assets/n2.jpg" alt="" style="width:100%;height:auto;border-radius:0.8rem;">
-      <div>123123</div>
-      <div>123123</div>
-      <div>123123</div>
-      <div>123123</div>
-
-      <div>123123</div>
-
-    </div>
-        <div class="goodcontent">
-      <img src="../../assets/n3.jpg" alt="" style="width:100%;height:auto;border-radius:0.8rem;">
-      <div>123123</div>
-      <div>123123</div>
-      <div>123123</div>
-    </div>
+        
   </div>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-
+import api from '../../api'
+import BScroll from 'better-scroll'
 export default {
   name: 'HomeGood',
   data(){
     return{
       typelist:['最新','水果','蔬菜','加工食品'],
-      typeIndex:0
+      typeIndex:0,
+      productList:[],
+      scroll:''
     }
   },
   methods:{
     choosetype(item,index){
+      // console.log(item._id)
         this.typeIndex = index
+        if(item._id){
+          api.MobileProduct({id:item._id}).then(res=>{
+            this.homeScroll()
+            this.productList = res.reverse()
+          })
+        } else {
+          this.homeScroll()
+          this.getProList()
+        }
+    },
+    getProList(){
+      api.MobileProduct().then(res=>{
+        this.productList = res.reverse()
+      })
+    },
+    proCategories(){
+      api.proCategory().then(res=>{
+        this.typelist = res
+        this.typelist.unshift({goodcategory:'最新'})
+        this.homeScroll()
+      })
+    },
+    homeScroll() {
+      // 默认有六个li子元素，每个子元素的宽度为120px
+      // let width = 6 * 120;
+      let count = this.typelist.length
+      let width = 6*count
+      // console.log(this.$refs.two.style.width)
+      // console.log(count)
+      this.$refs.one.style.width = width+ 1 + "rem";
+      // this.$nextTick 是一个异步函数，为了确保 DOM 已经渲染
+      this.$nextTick(() => {
+          if (!this.scroll) {
+          this.scroll = new BScroll(this.$refs.homeWrap, {
+              startX: 0,
+              click: true,
+              scrollX: true,
+              // 忽略竖直方向的滚动
+              scrollY: false,
+              // eventPassthrough: "vertical"
+          });
+          console.log(this.scroll)
+          } else {
+          this.scroll.refresh();
+          }
+      });
     }
   },
   mounted (){
+    this.proCategories()
+    this.getProList()
     // console.log(this.$route.query)
   }
 

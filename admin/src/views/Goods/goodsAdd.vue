@@ -1,5 +1,5 @@
 <template>
-    <div class="userAdd">
+    <div class="userAdd" style="padding: 5px;min-height:500px">
         <h1 style="margin-top:0">{{id?'编辑':'添加'}}商品类别</h1>
         <el-form @submit.native.prevent="save" label-width="120px">
             <!-- <el-form-item label="所属关系">
@@ -64,7 +64,7 @@ export default {
         //     this.$set(this.model,'icon',res.url)
         // },
        async save(){
-                await this.$http.post(ADMIN+'/rest/goodcategory',this.model)
+                await this.$http.post(ADMIN+'/rest/goodCategory',this.model)
                 this.$message.success('添加成功')
                 this.model = {}
                 this.fetchData()
@@ -72,12 +72,12 @@ export default {
            
         },
         fetchData(){
-            this.$http.get(ADMIN+`/rest/goodcategory`).then((res)=>{
+            this.$http.get(ADMIN+`/rest/goodCategory`).then((res)=>{
                 this.categoriesList=res.data
                 })
         },
         handleclose(id){
-            this.$http.delete(ADMIN+`/rest/goodcategory/${id}`).then(res =>{
+            this.$http.delete(ADMIN+`/rest/goodCategory/${id}`).then(res =>{
                 if(res){
                     this.$message.success('删除成功')
                     this.fetchData()

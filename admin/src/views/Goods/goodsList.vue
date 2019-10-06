@@ -7,35 +7,43 @@
     border
     style="width: 100%">
     <el-table-column
-      fixed
-      prop="_id"
-      label="id"
+      
+      prop="pro_description"
+      label="商品描述"
       >
     </el-table-column>
     <el-table-column
-      prop="name"
-      label="商品名称"
+      prop="pro_price"
+      label="商品价格"
       >
     </el-table-column>
     <el-table-column
-      prop="icon"
-      label="图标"
-      width="130px"
+      prop="buyflag"
+      label="商品状态"
+    >
+    <template slot-scope="scope">
+      <div>{{scope.row.buyflag === 0?'上架中':(scope.row.buyflag === 1)?'已售出':'已下架'}}</div>
+    </template>
+    </el-table-column>
+    <el-table-column
+      prop="seller.nickname"
+      label="售卖人"
+      
       >
-      <template slot-scope="scope">
+      <!-- <template slot-scope="scope">
         <el-image :src="scope.row.icon" alt="" style="width: 100px; height: 100px;" >
         <div slot="error" class="image-slot" style="line-height:100px;text-align:center">
           未上传图片
          </div>
         </el-image>
-      </template>
+      </template> -->
     </el-table-column>
     <el-table-column
       fixed="right"
       label="操作"
       width="150">
       <template slot-scope="scope">
-        <el-button @click="$router.push(`/goodsEdit/${scope.row._id}`)" type="primary" size="small">编辑</el-button>
+        <el-button @click="getdetail(scope.row)" type="primary" plain size="small">查看</el-button>
         <el-button @click="remove(scope.row)" type="danger" size="small">删除</el-button>
       </template>
     </el-table-column>
@@ -47,8 +55,24 @@
     :page-size="numSize"
     :page-count="tableData.BeanPage.allPages"
     :total="tableData.BeanPage.count">
-    
   </el-pagination>
+  <el-dialog
+    title="详情"
+    :visible.sync="dialogVisible"
+    width="40%"
+    :before-close="handleClose">
+    <div>
+      <p v-if="model.seller">售卖人：<span style="font-weight:bold">{{model.seller.nickname}}</span></p>
+      <p>售卖类别：<span style="font-weight:bold" v-for="(item,index) in model.pro_categories" :key="index"> {{item.goodcategory}} </span></p>
+      <p>售卖价格：<span style="font-weight:bold">￥{{model.pro_price}}</span></p>
+      <p>售卖描述：<span style="font-weight:bold">{{model.pro_description}}</span></p>
+      <p>发货地址：<span style="font-weight:bold">{{model.pro_address}}</span></p>
+    </div>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+    </span>
+  </el-dialog>
   </div>
 </template>
 
@@ -71,7 +95,7 @@ import {ADMIN} from '../../api/globol'
         })
       },
       fetchGoods(){
-          this.$http.get(ADMIN+'/rest/good'+`/${this.numPage}/${this.numSize}`).then((res)=>{
+          this.$http.get(ADMIN+'/showAllProduct'+`/${this.numPage}/${this.numSize}`).then((res)=>{
               this.tableData=res.data
               // console.log(this.tableData)
           })
@@ -80,6 +104,18 @@ import {ADMIN} from '../../api/globol'
         console.log(e)
         this.numPage=e
         this.fetchGoods()
+      },
+      getdetail(e){
+        this.model = e
+        this.dialogVisible = true
+        
+      },
+      handleClose(done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {});
       }
     },
     created(){
@@ -90,7 +126,9 @@ import {ADMIN} from '../../api/globol'
       return {
         tableData: [],
         numSize: 3,
-        numPage: 1
+        numPage: 1,
+        dialogVisible: false,
+        model:{}
       }
     }
   }
