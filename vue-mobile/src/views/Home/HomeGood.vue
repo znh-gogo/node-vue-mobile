@@ -1,4 +1,16 @@
 <template>
+<div style="overflow:scroll">
+<mt-loadmore :top-method="loadTop" :top-status.sync="topStatus" :bottom-method="loadMore" :bottom-all-loaded="allLoaded" ref="loadmore">
+    <div slot="top" class="mint-loadmore-top" style="text-align:center">
+        <div v-show="topStatus !== 'loading'" :class="{ 'rotate': topStatus === 'drop' }">
+                <div>下拉刷新 ↓</div>
+        </div>
+        <span style="display:flex;justify-content:space-around;">
+        <mt-spinner v-show="topStatus == 'loading'" color="#26a2ff" style="margin-top:1rem"></mt-spinner>
+        <span v-show="topStatus == 'loading'">加载中...</span>
+        </span>
+    </div>
+    
   <div style="width:100%;min-height:100%;background:#eee;padding-bottom:6rem;">
     <div style="width:100%;padding:0.3rem 0" ref="homeWrap">
         <ul style="overflow:hidden;padding:0 1rem" ref="one">
@@ -18,7 +30,7 @@
         <div style="font-weight:bold;line-height:1.2rem;height:2.4rem;overflow:hidden;padding:0.2rem">{{item.pro_description}}</div>
         <div style="display:flex;justify-content:space-between;margin:1rem 0;padding:0 0.5rem;">
           <div style="color:red;">￥<span style="font-size:1.5rem">{{item.pro_price}}</span></div>
-          <div>11人关注</div>
+          <div v-if="item.pro_attention">{{item.pro_attention.length}}人关注</div>
         </div>
         <div style="width:90%;height:1px;background:#eee;margin:0 auto"></div>
         <div style="width:100%;padding:0.5rem;display:flex" v-if="item.seller">
@@ -27,8 +39,17 @@
         </div>
       </div>
     </div>
-        
   </div>
+  <div v-if="allLoaded" style="wdith:100%;text-align:center">已经没有数据了</div>
+  </div>
+  <div slot="bottom" class="mint-loadmore-bottom">
+      <span v-show="bottomStatus !== 'loading'"
+      :class="{ 'is-rotate': bottomStatus === 'drop' }">↑ 上拉加载</span>
+      <span v-show="bottomStatus === 'loading'">
+      <mt-spinner type="snake"></mt-spinner>
+      </span>
+  </div>
+  </mt-loadmore>
   </div>
 </template>
 
@@ -43,27 +64,64 @@ export default {
       typelist:['最新','水果','蔬菜','加工食品'],
       typeIndex:0,
       productList:[],
-      scroll:''
+      scroll:'',
+      topStatus:'',
+      bottomStatus:'',
+      difftype:'',
+      allLoaded: false,
+      numPage:1,
+      numSize:4,
+      loadflag:true
     }
   },
   methods:{
     choosetype(item,index){
       // console.log(item._id)
         this.typeIndex = index
+        this.productList = []
+        this.allLoaded = false
         if(item._id){
+          this.difftype = item._id
           api.MobileProduct({id:item._id}).then(res=>{
             this.homeScroll()
             this.productList = res.reverse()
           })
         } else {
+          this.difftype = ''
           this.homeScroll()
           this.getProList()
         }
     },
-    getProList(){
-      api.MobileProduct().then(res=>{
-        this.productList = res.reverse()
-      })
+    getProList(id,p,s){
+      if(id){
+        api.MobileProduct({id,numPage:p,numSize:s}).then(res=>{
+          if(res.length!==0){
+            if(this.productList.length!==0){
+              for(let i =0;i<res.length;i++){
+                this.productList.push(res[i])
+              }
+            } else{
+              this.productList = res.reverse()
+            }
+            } else{
+            this.loadflag = false
+          }
+        })
+      } else{
+        api.MobileProduct({numPage:p,numSize:s}).then(res=>{
+          if(res.length!==0){
+            if(this.productList.length!==0){
+              for(let i =0;i<res.length;i++){
+                this.productList.push(res[i])
+              }
+            } else{
+              this.productList = res.reverse()
+            }
+          } else{
+            this.loadflag = false
+          }
+        })
+      }
     },
     proCategories(){
       api.proCategory().then(res=>{
@@ -96,6 +154,39 @@ export default {
           this.scroll.refresh();
           }
       });
+    },
+    handleTopChange(status) {
+        this.topStatus = status;
+    },
+    handleBottomChange(status) {
+        this.bottomStatus = status;
+    },
+    loadTop() {
+        // load more data
+        this.handleTopChange("loading");
+        setTimeout(() => {
+          // this.numPage=1
+          // this.numSize=2
+          this.getProList(this.difftype,1,2)
+          this.handleTopChange("loadingEnd")
+          this.$refs.loadmore.onTopLoaded();
+        },1500)
+    },
+    loadMore(){
+      this.handleBottomChange("loading")
+      setTimeout(() => {
+        this.numPage+=1
+        this.getProList(this.difftype,this.numPage,this.numSize)
+        this.handleBottomChange("loadingEnd")
+        
+        if(this.loadflag === false){
+          this.allLoaded = true; // 若数据已全部获取完毕
+        }
+        // this.$refs.loadmore.onTopLoaded();
+        
+        this.$refs.loadmore.onBottomLoaded();
+        },1500)
+       
     }
   },
   mounted (){

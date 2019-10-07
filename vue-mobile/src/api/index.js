@@ -1,4 +1,5 @@
 import request from './fetch.js'
+const global = 'http://localhost:3000';
 
 const api = {
 // 例子
@@ -126,6 +127,9 @@ const api = {
   },
   delLeaving(data) {
     return request('http://localhost:3000/mobile/api/delLeaving', data, 'post')
+  },
+  mySavePro(data) {
+    return request(global+'/mobile/api/mySavePro', data, 'post')
   },
   
   

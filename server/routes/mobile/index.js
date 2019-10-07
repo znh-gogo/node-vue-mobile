@@ -497,7 +497,7 @@ module.exports = app => {
     //回显我的商品详情
     router.post('/showMyProdetail',solveMobileToken,async(req,res)=>{
         const {id} = req.body
-        const model = await Product.findById(id).populate('seller pro_categories comments.relative')
+        const model = await Product.findById(id).populate('seller comments.relative')
         res.send(model)
     })
 
@@ -570,12 +570,30 @@ module.exports = app => {
 
     //mobile商品列表
     router.post('/MobileProduct',solveMobileToken,async(req,res)=>{
-        const {id} = req.body
-        if(id){
-            const model = await Product.find({pro_categories:id}).populate('seller')
+        const {id,numPage,numSize} = req.body
+        const count = await Product.countDocuments()
+        //前端传入页数
+        let Page = Number(numPage) || 1;
+        //前端传入每页条数
+        let Size = Number(numSize)|| 4;
+        //计算总页数
+        let allPages = Math.ceil(count/Size);
+        //当前页不能大于总页数
+        Page = Math.min(Page,allPages)
+        //当前页不能小于1
+        Page = Math.max(Page,1)
+        //忽略数
+        let skip = (Page-1)*Size;
+        if(numSize*numPage>count){
+            const model = []
             res.send(model)
-        } else {
-            const model = await Product.find().populate('seller')
+            return
+        } else
+        if(id){
+            const model = await Product.find({pro_categories:id}).populate('seller').skip(skip).limit(Size)
+            res.send(model)
+        }else {
+            const model = await Product.find().populate('seller').skip(skip).limit(Size)
             res.send(model)
         }
     })
@@ -608,6 +626,13 @@ module.exports = app => {
         const {id,cid} = req.body
         await Product.findByIdAndUpdate(id,{$pull:{comments:{'_id':cid}}})
         res.send({message:'删除留言成功'})
+    })
+
+    //我关注得商品
+    router.post('/mySavePro',solveMobileToken,async(req,res)=>{
+        const {id} = req.body
+        const model = await Product.find({pro_attention:id}).populate('seller')
+        res.send(model)
     })
 
     //上传文件中间处理
