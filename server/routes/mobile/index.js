@@ -471,6 +471,29 @@ module.exports = app => {
         res.send(model) 
     })
 
+    //文章添加收藏
+    router.post('/saveNews',solveMobileToken,async(req,res)=>{
+        const {id,uid} = req.body
+        const user = await Article.findById(id,{art_attention:uid})
+        // console.log(user.thinkgood[0] == userid)
+        for(let i = 0; i<user.art_attention.length;i++){
+        if(user.art_attention[i] == uid){
+            var model =  await Article.findByIdAndUpdate(id,{$pull:{art_attention:uid}})
+            res.send(model)
+            return
+        }
+        }
+        var model = await Article.findByIdAndUpdate(id,{$push:{art_attention:uid}})
+        res.send(model)
+    })
+
+    //回显我收藏的文章
+    router.post('/showmysaveNews',solveMobileToken,async(req,res)=>{
+        const {id} = req.body
+        const model = await Article.find({art_attention:id}).populate('relative')
+        res.send(model)
+    })
+
     //查询所有文章
     router.post('/getAllNews',solveMobileToken,async(req,res)=>{
         const model = await Article.find().populate('relative')
@@ -568,6 +591,13 @@ module.exports = app => {
         res.send({items,BeanPage})
     })
 
+    //admin删除商品
+    app.post('/admin/api/delGood',solveAdminToken,async(req,res)=>{
+        const {id} = req.body
+        await Product.findByIdAndDelete(id)
+        res.send({message:'删除成功'})
+    })
+
     //mobile商品列表
     router.post('/MobileProduct',solveMobileToken,async(req,res)=>{
         const {id,numPage,numSize} = req.body
@@ -575,7 +605,7 @@ module.exports = app => {
         //前端传入页数
         let Page = Number(numPage) || 1;
         //前端传入每页条数
-        let Size = Number(numSize)|| 4;
+        let Size = Number(numSize)|| 6;
         //计算总页数
         let allPages = Math.ceil(count/Size);
         //当前页不能大于总页数

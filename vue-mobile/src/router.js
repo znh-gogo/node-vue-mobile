@@ -111,6 +111,11 @@ const router = new Router({
       component: () => import('./views/Mine/mysettings/mysettings.vue')
     },
     {
+      path:'/mine/mysave',
+      name:'mysave',
+      component: () => import('./views/Mine/mysave/mysave.vue')
+    },
+    {
       path:'/mine/mycart',
       name:'mycart',
       component: () => import('./views/Mine/mycart/mycart.vue')

@@ -8,7 +8,7 @@
     style="width: 100%">
     <el-table-column
       prop="_id"
-      label="id"
+      label="反馈id"
       width="240"
       >
     </el-table-column>
@@ -21,6 +21,13 @@
       prop="feedbacktopic"
       label="反馈类型"
       >
+    </el-table-column>
+    <el-table-column
+      label="反馈时间"
+      >
+      <template slot-scope="scope">
+        {{format(scope.row.createdAt)}}
+      </template>
     </el-table-column>
     <el-table-column
       fixed="right"
@@ -68,6 +75,7 @@
 
 <script>
 import {ADMIN} from '../../api/globol'
+import format from '../../common/common'
   export default {
     methods: {
       fetchUsers(){
@@ -113,7 +121,8 @@ import {ADMIN} from '../../api/globol'
         numPage:1,
         numSize:5,
         dialogVisible: false,
-        userDetails: ''
+        userDetails: '',
+        format
       }
     }
   }

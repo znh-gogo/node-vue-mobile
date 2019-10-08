@@ -9,7 +9,7 @@
             </div> -->
         </mt-header>
         <div style="margin:1rem 0">
-            <div style="margin:0 0.8rem 0.5rem;color:#999">自动登陆控制：(仅仅是该设备生效)</div>
+            <div style="margin:0 0.8rem 0.5rem;color:#999">自动登陆控制：(仅仅是该浏览器生效)</div>
             <mt-cell title="自动登陆" style="margin:0;">
                 <mt-switch v-model="value" @change="updateAuto">{{value === false?'关闭':'开启'}}</mt-switch>
             </mt-cell>

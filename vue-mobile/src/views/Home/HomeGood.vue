@@ -94,6 +94,7 @@ export default {
     },
     getProList(id,p,s){
       if(id){
+                console.log(123)
         api.MobileProduct({id,numPage:p,numSize:s}).then(res=>{
           if(res.length!==0){
             if(this.productList.length!==0){
@@ -108,6 +109,7 @@ export default {
           }
         })
       } else{
+                console.log(456)
         api.MobileProduct({numPage:p,numSize:s}).then(res=>{
           if(res.length!==0){
             if(this.productList.length!==0){
@@ -167,7 +169,10 @@ export default {
         setTimeout(() => {
           // this.numPage=1
           // this.numSize=2
-          this.getProList(this.difftype,1,2)
+        this.productList = []
+        this.loadflag = true
+        this.allLoaded = false
+          this.getProList(this.difftype)
           this.handleTopChange("loadingEnd")
           this.$refs.loadmore.onTopLoaded();
         },1500)

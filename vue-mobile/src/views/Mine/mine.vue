@@ -17,9 +17,11 @@
                 <img slot="icon" src="../../assets/pay.png" width="24" height="24">
             </mt-cell>
         </div>
+        <div @click="$router.push('/mine/mysave')">
         <mt-cell title="我的收藏" style="border-bottom: 1px solid #eee" is-link>
             <img slot="icon" src="../../assets/box.png" width="24" height="24">
         </mt-cell>
+        </div>
         <div @click="$router.push('/mine/mycart')">
             <mt-cell title="我的购物中心" style="border-bottom: 1px solid #eee" is-link>
                 <img slot="icon" src="../../assets/shopcar1.png" width="24" height="24">

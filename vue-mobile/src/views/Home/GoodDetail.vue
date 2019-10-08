@@ -47,11 +47,11 @@
             <div style="color:#999" v-if="infoDetail.pro_attention">{{infoDetail.pro_attention.length}}人关注</div>
         </div>
         <div style="width:100%;height:0.7rem;background:#f1f1f1"></div>
-        <div v-if="infoDetail.comments">
+        <div v-if="infoDetail.comments" style="background:#fff">
             <div style="margin:1rem 0rem;padding:0 1rem;font-size:1.5rem;font-weight:700">全部留言 · {{infoDetail.comments.length}}</div>
             <div class="line"></div>
             <div v-if="infoDetail.comments.length !== 0">
-                <div v-for="(com,num) in commentList" :key="num" style="margin:0 1.5rem;">
+                <div v-for="(com,num) in commentList" :key="num" style="margin:1rem 1.5rem;">
                     <div style="width:100%;" v-if="com.relative&&infoDetail.seller">
                         <div
                         v-if="com.relative._id===accoundid||infoDetail.seller._id===accoundid"

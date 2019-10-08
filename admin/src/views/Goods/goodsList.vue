@@ -86,10 +86,10 @@ import {ADMIN} from '../../api/globol'
           cancelButtonText: '取消',
           type: 'warning'
         }).then( async() => {
-            let res = await this.$http.delete(ADMIN+`/rest/good/${row._id}`)
+            let res = await this.$http.post(ADMIN+`/delGood`,{id:row._id})
           this.$message({
             type: 'success',
-            message: '删除成功!'
+            message: res.data.message
           });
           this.fetchGoods()
         })
