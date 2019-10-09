@@ -54,6 +54,25 @@ const api = {
   recharge(data) {
     return request(global+'/mobile/api/recharge', data, 'post')
   },
+  addReAddress(data) {
+    return request(global+'/mobile/api/addReAddress', data, 'post')
+  },
+  showReAddress(data) {
+    return request(global+'/mobile/api/showReAddress', data, 'post')
+  },
+  delReAddress(data) {
+    return request(global+'/mobile/api/delReAddress', data, 'post')
+  },
+  defaultReAddress(data) {
+    return request(global+'/mobile/api/defaultReAddress', data, 'post')
+  },
+  updateReAddress(data) {
+    return request(global+'/mobile/api/updateReAddress', data, 'post')
+  },
+  
+  
+  
+  
   
   
 
@@ -106,7 +125,7 @@ const api = {
     return request(global+'/mobile/api/newsInfo', data, 'post')
   },
   getAllNews(data) {
-    return request('/mobile/api/getAllNews', data, 'post')
+    return request(global+'/mobile/api/getAllNews', data, 'post')
   },
   saveNews(data) {
     return request(global+'/mobile/api/saveNews', data, 'post')

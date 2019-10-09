@@ -125,7 +125,7 @@ import {ADMIN} from '../../api/globol'
     data() {
       return {
         tableData: [],
-        numSize: 3,
+        numSize: 4,
         numPage: 1,
         dialogVisible: false,
         model:{}

@@ -242,6 +242,53 @@ module.exports = app => {
         res.send(model)
     })
 
+    //回显个人收货地址
+    router.post('/showReAddress',solveMobileToken,async(req,res)=>{
+        const {id} = req.body
+        const model = await Account.findById(id,'rece_info')
+        res.send(model)
+    })
+
+    //添加个人收货地址
+    router.post('/addReAddress',solveMobileToken,async(req,res)=>{
+        const {id,re_name,re_phone,re_address} = req.body
+        const model = await Account.findByIdAndUpdate(id,{$push:{'rece_info':{re_name,re_phone,re_address}}})
+        res.send({message:'添加成功'})
+    })
+
+    //修改个人收货地址
+    router.post('/updateReAddress',solveMobileToken,async(req,res)=>{
+        const {rid,re_name,re_phone,re_address} = req.body
+        await Account.update({'rece_info._id':rid},{$set:{'rece_info.$.re_name':re_name,'rece_info.$.re_phone':re_phone,'rece_info.$.re_address':re_address}})
+        res.send({message:'修改成功'})
+    })
+
+     //删除个人收货地址
+     router.post('/delReAddress',solveMobileToken,async(req,res)=>{
+        const {id,rid} = req.body
+        const model = await Account.findByIdAndUpdate(id,{$pull:{'rece_info':{'_id':rid}}})
+        res.send({message:'删除成功'})
+    })
+
+    //设置为默认收货地址
+    router.post('/defaultReAddress',solveMobileToken,async(req,res)=>{
+        const {id,rid,flag} = req.body
+        if(flag===0){
+            await Account.update({'rece_info._id':rid},{$set:{'rece_info.$.checked':flag}})
+            res.send({message:'取消默认成功'})
+            return
+        }
+        const model = await Account.findById(id,'rece_info')
+        for(let i = 0;i<model.rece_info.length;i++){
+            if(model.rece_info[i].checked == 1){
+                res.send({message:'已经存在默认地址，请先取消'})
+                return
+            }
+        }
+        await Account.update({'rece_info._id':rid},{$set:{'rece_info.$.checked':1}})
+        res.send({message:'设置默认成功'})
+    })
+
     //充值
     router.post('/recharge',solveMobileToken,async(req,res)=>{
         const { id,money } = req.body
@@ -605,7 +652,7 @@ module.exports = app => {
         //前端传入页数
         let Page = Number(numPage) || 1;
         //前端传入每页条数
-        let Size = Number(numSize)|| 6;
+        let Size = Number(numSize)|| 4;
         //计算总页数
         let allPages = Math.ceil(count/Size);
         //当前页不能大于总页数

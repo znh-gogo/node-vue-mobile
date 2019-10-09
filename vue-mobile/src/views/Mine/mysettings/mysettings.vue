@@ -13,6 +13,11 @@
             <mt-cell title="自动登陆" style="margin:0;">
                 <mt-switch v-model="value" @change="updateAuto">{{value === false?'关闭':'开启'}}</mt-switch>
             </mt-cell>
+            <div @click="$router.push('/mine/receaddress')">
+            <mt-cell title="管理我的收货地址" style="margin: 1rem 0;" is-link>
+                <!-- <img slot="icon" src="../../assets/setting.png" width="24" height="24"> -->
+            </mt-cell>
+        </div>
         </div>
 
     </div>

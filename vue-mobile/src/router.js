@@ -141,6 +141,11 @@ const router = new Router({
       component: () => import('./views/Mine/myfeedback/checkmyfeedback.vue')
     },
     {
+      path:'/mine/receaddress',
+      name:'receaddress',
+      component: () => import('./views/Mine/mysettings/receaddress.vue')
+    },
+    {
       path:'/social/info',
       name:'info',
       component: () => import('./views/Social/Socialinfo/socialinfo.vue')
@@ -174,6 +179,11 @@ const router = new Router({
       path:'/good-detail',
       name:'good-detail',
       component: () => import('./views/Home/GoodDetail.vue')
+    },
+    {
+      path:'/order-detail',
+      name:'order-detail',
+      component: () => import('./views/Home/OrderDetail.vue')
     },
     {
       path: '*',

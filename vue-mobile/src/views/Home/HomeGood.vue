@@ -1,13 +1,14 @@
 <template>
 <div style="overflow:scroll">
-<mt-loadmore :top-method="loadTop" :top-status.sync="topStatus" :bottom-method="loadMore" :bottom-all-loaded="allLoaded" ref="loadmore">
+<mt-loadmore :top-method="loadTop" :top-status.sync="topStatus" ref="loadmore">
+   <!-- :bottom-method="loadMore" :bottom-all-loaded="allLoaded" -->
     <div slot="top" class="mint-loadmore-top" style="text-align:center">
         <div v-show="topStatus !== 'loading'" :class="{ 'rotate': topStatus === 'drop' }">
                 <div>下拉刷新 ↓</div>
         </div>
         <span style="display:flex;justify-content:space-around;">
         <mt-spinner v-show="topStatus == 'loading'" color="#26a2ff" style="margin-top:1rem"></mt-spinner>
-        <span v-show="topStatus == 'loading'">加载中...</span>
+        <span v-show="topStatus == 'loading'" >加载中...</span>
         </span>
     </div>
     
@@ -22,7 +23,11 @@
           style="float:left;margin-right:1rem;font-size:1.2rem;padding:0.5rem;">{{item.goodcategory}}</li>
         </ul>
     </div>
-  <div class="goodbox">
+  
+    <div style="overflow-y: auto;height:auto;">
+  <div class="goodbox" 
+  
+  >
     <div v-for="(item,index) in productList" :key="index">
       <div class="goodcontent" v-if="item.buyflag===0" @click="$router.push({path:'/good-detail',query:{gid:item._id}})">
         <img src="../../assets/lose.jpg" alt="" style="width:100%;height:auto;border-radius:0.8rem;" v-if="item.pro_imgs.length === 0">
@@ -40,15 +45,20 @@
       </div>
     </div>
   </div>
-  <div v-if="allLoaded" style="wdith:100%;text-align:center">已经没有数据了</div>
   </div>
-  <div slot="bottom" class="mint-loadmore-bottom">
+  <div class="loading-box tc" v-if="isLoading" style="display:flex;justify-content:space-around;">
+    <mt-spinner type="snake" class="loading-more" color="#26a2ff"></mt-spinner>
+    <span class="loading-more-txt" style="margin-top:0.5rem">加载中...</span>
+ </div>
+  <div v-if="loadflag" style="wdith:100%;text-align:center">已经没有数据了</div>
+  </div>
+  <!-- <div slot="bottom" class="mint-loadmore-bottom">
       <span v-show="bottomStatus !== 'loading'"
       :class="{ 'is-rotate': bottomStatus === 'drop' }">↑ 上拉加载</span>
       <span v-show="bottomStatus === 'loading'">
       <mt-spinner type="snake"></mt-spinner>
       </span>
-  </div>
+  </div> -->
   </mt-loadmore>
   </div>
 </template>
@@ -57,6 +67,11 @@
 // @ is an alias to /src
 import api from '../../api'
 import BScroll from 'better-scroll'
+
+// import Vue from 'vue'
+// import { Spinner, InfiniteScroll, Toast } from 'mint-ui'
+// Vue.use(InfiniteScroll)
+// Vue.component(Spinner.name, Spinner)
 export default {
   name: 'HomeGood',
   data(){
@@ -71,7 +86,9 @@ export default {
       allLoaded: false,
       numPage:1,
       numSize:4,
-      loadflag:true
+      loadflag:false,
+      loading:false,
+      isLoading : false,
     }
   },
   methods:{
@@ -79,7 +96,10 @@ export default {
       // console.log(item._id)
         this.typeIndex = index
         this.productList = []
-        this.allLoaded = false
+        // this.allLoaded = false
+        this.loading = false;
+        this.loadflag = false
+        this.numPage = 1
         if(item._id){
           this.difftype = item._id
           api.MobileProduct({id:item._id}).then(res=>{
@@ -94,7 +114,6 @@ export default {
     },
     getProList(id,p,s){
       if(id){
-                console.log(123)
         api.MobileProduct({id,numPage:p,numSize:s}).then(res=>{
           if(res.length!==0){
             if(this.productList.length!==0){
@@ -104,12 +123,13 @@ export default {
             } else{
               this.productList = res.reverse()
             }
+            this.loading = false;
             } else{
-            this.loadflag = false
+            this.loadflag = true
+            this.loading = true;
           }
         })
       } else{
-                console.log(456)
         api.MobileProduct({numPage:p,numSize:s}).then(res=>{
           if(res.length!==0){
             if(this.productList.length!==0){
@@ -119,8 +139,10 @@ export default {
             } else{
               this.productList = res.reverse()
             }
+            this.loading = false;
           } else{
-            this.loadflag = false
+            this.loadflag = true
+            this.loading = true;
           }
         })
       }
@@ -170,26 +192,32 @@ export default {
           // this.numPage=1
           // this.numSize=2
         this.productList = []
-        this.loadflag = true
-        this.allLoaded = false
+        this.loadflag = false
+        this.loading = false;
+        this.numPage = 1
+        // this.allLoaded = false
           this.getProList(this.difftype)
           this.handleTopChange("loadingEnd")
           this.$refs.loadmore.onTopLoaded();
         },1500)
     },
     loadMore(){
-      this.handleBottomChange("loading")
+      // this.handleBottomChange("loading")
+      this.loadflag = false;//没有更多
+      this.isLoading = true;//加载中
+      this.loading = true;
       setTimeout(() => {
         this.numPage+=1
         this.getProList(this.difftype,this.numPage,this.numSize)
-        this.handleBottomChange("loadingEnd")
+        this.isLoading = false;
+        // this.handleBottomChange("loadingEnd")
         
-        if(this.loadflag === false){
-          this.allLoaded = true; // 若数据已全部获取完毕
-        }
-        // this.$refs.loadmore.onTopLoaded();
+        // if(this.loadflag === false){
+        //   this.allLoaded = true; // 若数据已全部获取完毕
+        // }
+        // // this.$refs.loadmore.onTopLoaded();
         
-        this.$refs.loadmore.onBottomLoaded();
+        // this.$refs.loadmore.onBottomLoaded();
         },1500)
        
     }
@@ -198,8 +226,26 @@ export default {
     this.proCategories()
     this.getProList()
     // console.log(this.$route.query)
-  }
-
+  },
+  created(){
+     	window.onscroll = ()=>{
+     		//变量scrollTop是滚动条滚动时，距离顶部的距离
+     		var scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
+     		//变量windowHeight是可视区的高度
+     		var windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
+     		//变量scrollHeight是滚动条的总高度
+     		var scrollHeight = document.documentElement.scrollHeight||document.body.scrollHeight;
+        //滚动条到底部的条件
+        if(scrollTop+windowHeight==scrollHeight){
+        //写后台加载数据的函数
+        console.log("距顶部"+scrollTop+"可视区高度"+windowHeight+"滚动条总高度"+scrollHeight);
+        if(!this.loadflag){
+          this.loadMore()
+        }
+      
+      }   
+    }
+   }
 }
 </script>
 

@@ -1,10 +1,10 @@
 <template>
-    <div style="width: 100%;height: 100vh;background-color: #fafafa;">
+    <div style="width: 100%;height: 100vh;background-color: #fafafa;" @click.stop="commentFlag = false">
         <mt-header title="商品详情" style="background-color:#f1f1f1;color: #222222;font-size: 1.2rem;height:4rem">
             <mt-button icon="back" slot="left" @click="$router.go(-1)"></mt-button>
         </mt-header>
         <div class="footer">
-            <div style="padding:0.3rem;text-align:center;margin-left:2rem;margin-top:0.7rem" @click="commentFlag = !commentFlag">
+            <div style="padding:0.3rem;text-align:center;margin-left:2rem;margin-top:0.7rem" @click.stop="commentFlag = !commentFlag">
                 <img src="../../assets/留言.png" alt="" style="width:2rem;height:2rem">
                 <div style="color:#707070">留言</div>
             </div>
@@ -22,8 +22,8 @@
                     私聊
                 </mt-button>
             </div>
-            <div style="line-height:5rem;margin-left:1rem;flex:1">
-                <mt-button size="small" style="height:4rem;width:90%;background-color:orange;color:#fff">
+            <div style="line-height:5rem;margin-left:1rem;flex:1" v-if="infoDetail.seller">
+                <mt-button size="small" style="height:4rem;width:90%;background-color:orange;color:#fff" @click.native="$router.push({path:'/order-detail'})" :disabled="accoundid === infoDetail.seller._id?true:false">
                     <!-- <img src="../../assets/私聊null.png" height="20" width="20" slot="icon"> -->
                     立即购买
                 </mt-button>
@@ -69,7 +69,7 @@
             <div v-if="infoDetail.comments.length === 0" style="width:100%;text-align:center;padding:1rem 0;">
                 <img src="../../assets/沙发.png" alt="">
                 <div style="color:#999;margin: 1rem 0;">还没有人留言，还不快来抢沙发...</div>
-                <mt-button size="small" style="background-color:green;color:#000;width:5rem" @click.native="commentFlag = !commentFlag">
+                <mt-button size="small" style="background-color:green;color:#000;width:5rem" @click.stop="commentFlag = !commentFlag">
                     留言
                 </mt-button>
             </div>
