@@ -1,9 +1,9 @@
 <template>
     <div style="width: 100%;height: 100vh;background-color: #fafafa;">
         <mt-header title="我的收货地址" style="background-color:#f1f1f1;color: #222222;font-size: 1.2rem;height:4rem">
-            <router-link to="/mine/mysettings" slot="left">
-                <mt-button icon="back"></mt-button>
-            </router-link>
+            <!-- <router-link to="/mine/mysettings" slot="left"> -->
+                <mt-button icon="back" slot="left" @click="$router.go(-1)"></mt-button>
+            <!-- </router-link> -->
             <!-- <div slot="right" style="font-size:1.3rem;color:#222222" @click="change">
                 完成
             </div> -->
@@ -21,7 +21,7 @@
                         <div style="width:30%;margin-top:0.5rem;margin-right:0.5rem">
                             <a style="color:#409EFF;margin-right:0.5rem" v-if="item.checked === 0" @click.stop="setDefault(item._id)">设为默认</a>
                             <a style="font-weight:700;margin-right:0.5rem;color:#000" v-if="item.checked === 1" @click.stop="quitDefault(item._id)">取消默认</a>
-                            <a style="color:#F56C6C" @click="del(item._id)">删除</a>
+                            <a style="color:#F56C6C" @click.stop="del(item._id)">删除</a>
                             <!-- <a style="font-weight:700" v-if="item.checked === 1">已为默认</a> -->
                             <!-- <mt-button type="primary" size="small" style="width:60%">设为默认</mt-button>
                             <mt-button type="danger" size="small" style="width:40%">删除</mt-button> -->
@@ -73,6 +73,10 @@ export default {
             ||this.model.re_phone===undefined||this.model.re_phone===''
             ||this.model.re_address===undefined||this.model.re_address===''){
                 Toast('请输入完整的信息!')
+                return
+            } else
+            if(this.myReAddressList.length>4){
+                Toast('添加的收货地址不能超过5条!')
                 return
             }
             this.$set(this.model,'id',this.accoundid)

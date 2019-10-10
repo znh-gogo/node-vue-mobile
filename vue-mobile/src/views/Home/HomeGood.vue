@@ -60,6 +60,7 @@
       </span>
   </div> -->
   </mt-loadmore>
+  <div v-if="upflag" @click="gotop" style="position:fixed;right:2rem;bottom:6rem;width:3rem;height:3rem;background:#fff;border-radius:50%;border:0.1rem solid #666"><img style="width:3rem;height:3rem;line-height:3rem;margin:0 auto" src="../../assets/向上.png" alt=""></div>
   </div>
 </template>
 
@@ -89,6 +90,7 @@ export default {
       loadflag:false,
       loading:false,
       isLoading : false,
+      upflag:false
     }
   },
   methods:{
@@ -179,6 +181,9 @@ export default {
           }
       });
     },
+    gotop(){
+      window.scrollTo(0,0);
+    },
     handleTopChange(status) {
         this.topStatus = status;
     },
@@ -242,8 +247,11 @@ export default {
         if(!this.loadflag){
           this.loadMore()
         }
-      
-      }   
+      }   else if(scrollTop>300){
+        this.upflag = true
+     } else {
+       this.upflag = false
+     }
     }
    }
 }

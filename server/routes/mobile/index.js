@@ -255,7 +255,7 @@ module.exports = app => {
         const model = await Account.findByIdAndUpdate(id,{$push:{'rece_info':{re_name,re_phone,re_address}}})
         res.send({message:'添加成功'})
     })
-
+    
     //修改个人收货地址
     router.post('/updateReAddress',solveMobileToken,async(req,res)=>{
         const {rid,re_name,re_phone,re_address} = req.body
@@ -709,6 +709,40 @@ module.exports = app => {
     router.post('/mySavePro',solveMobileToken,async(req,res)=>{
         const {id} = req.body
         const model = await Product.find({pro_attention:id}).populate('seller')
+        res.send(model)
+    })
+
+    //回显订单详情
+    router.post('/orderDetail',solveMobileToken,async(req,res)=>{
+        const {uid,gid} = req.body
+        const user = await Account.findById(uid,'account nickname rece_info money')
+        const good = await Product.findById(gid,'pro_price seller pro_imgs pro_description buyflag updatedAt buyer').populate('seller')
+        res.send({user,good})
+    })
+
+    //购买商品
+    router.post('/buyGood',solveMobileToken,async(req,res)=>{
+        const {uid,gid,price,money} = req.body
+        let newmoney = parseFloat(money) - parseFloat(price)
+        await Product.findByIdAndUpdate(gid,{$set:{buyer:uid,buyflag:1}})
+        await Account.findByIdAndUpdate(uid,{$set:{money:newmoney}})
+        res.send({message:'购买成功'})
+    })
+
+    //商品退款
+    router.post('/payBack',solveMobileToken,async(req,res)=>{
+        const {uid,gid,price,money} = req.body
+        let newmoney = parseFloat(money) + parseFloat(price)
+        await Product.findByIdAndUpdate(gid,{$set:{buyflag:0,buyer:null}})
+        // await Product.findByIdAndRemove(gid,{buyer})
+        await Account.findByIdAndUpdate(uid,{$set:{money:newmoney}})
+        res.send({message:'退款成功'})
+    })
+
+    //回显我购买的商品
+    router.post('/showMyBuy',solveMobileToken,async(req,res)=>{
+        const {id} = req.body
+        const model = await Product.find({buyer:id}).populate('seller')
         res.send(model)
     })
 

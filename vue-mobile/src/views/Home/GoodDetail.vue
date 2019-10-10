@@ -23,7 +23,7 @@
                 </mt-button>
             </div>
             <div style="line-height:5rem;margin-left:1rem;flex:1" v-if="infoDetail.seller">
-                <mt-button size="small" style="height:4rem;width:90%;background-color:orange;color:#fff" @click.native="$router.push({path:'/order-detail'})" :disabled="accoundid === infoDetail.seller._id?true:false">
+                <mt-button size="small" style="height:4rem;width:90%;background-color:orange;color:#fff" @click.native="$router.push({path:'/order-detail',query:{gid:$route.query.gid}})" :disabled="accoundid === infoDetail.seller._id?true:false">
                     <!-- <img src="../../assets/私聊null.png" height="20" width="20" slot="icon"> -->
                     立即购买
                 </mt-button>

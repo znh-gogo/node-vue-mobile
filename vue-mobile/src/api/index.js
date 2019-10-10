@@ -2,13 +2,15 @@ import request from './fetch.js'
 const global = 'http://localhost:3000';
 
 const api = {
-// 例子
+// 登陆注册
   login (data) {
     return request(global+'/mobile/api/login', data, 'post')
   },
   register(data) {
     return request(global+'/mobile/api/register', data, 'post')
   },
+
+  //个人中心
   showAccount(id,data) {
     return request(global+'/mobile/api/showAccount/'+id,data, 'post')
   },
@@ -36,6 +38,8 @@ const api = {
   changeAddress(data) {
     return request(global+'/mobile/api/updateAddress', data, 'post')
   },
+
+  //反馈、收货地址、充值等功能
   Feedback(data) {
     return request(global+'/mobile/api/feedback', data, 'post')
   },
@@ -69,10 +73,6 @@ const api = {
   updateReAddress(data) {
     return request(global+'/mobile/api/updateReAddress', data, 'post')
   },
-  
-  
-  
-  
   
   
 
@@ -157,6 +157,18 @@ const api = {
   },
   mySavePro(data) {
     return request(global+'/mobile/api/mySavePro', data, 'post')
+  },
+  orderDetail(data) {
+    return request(global+'/mobile/api/orderDetail', data, 'post')
+  },
+  buyGood(data) {
+    return request(global+'/mobile/api/buyGood', data, 'post')
+  },
+  payBack(data) {
+    return request(global+'/mobile/api/payBack', data, 'post')
+  },
+  showMyBuy(data) {
+    return request(global+'/mobile/api/showMyBuy', data, 'post')
   },
   
   
