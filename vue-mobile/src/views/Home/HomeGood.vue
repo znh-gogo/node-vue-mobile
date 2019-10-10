@@ -90,7 +90,8 @@ export default {
       loadflag:false,
       loading:false,
       isLoading : false,
-      upflag:false
+      upflag:false,
+      stopflag:true
     }
   },
   methods:{
@@ -211,10 +212,13 @@ export default {
       this.loadflag = false;//没有更多
       this.isLoading = true;//加载中
       this.loading = true;
-      setTimeout(() => {
+      if(this.stopflag){
+        this.stopflag = false
+        setTimeout(() => {
         this.numPage+=1
         this.getProList(this.difftype,this.numPage,this.numSize)
         this.isLoading = false;
+        this.stopflag = true
         // this.handleBottomChange("loadingEnd")
         
         // if(this.loadflag === false){
@@ -224,6 +228,8 @@ export default {
         
         // this.$refs.loadmore.onBottomLoaded();
         },1500)
+      }
+      
        
     }
   },

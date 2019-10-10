@@ -20,11 +20,11 @@
         </div>
     </div>
 </template>
-
 <script>
 import api from '../../../api'
-import { Toast,Indicator } from 'mint-ui'
+import { Toast,Indicator,MessageBox } from 'mint-ui'
 import {location} from '../../../common/map'
+import axios from 'axios'
 export default {
     data (){
         return{
@@ -47,34 +47,63 @@ export default {
         getLocation() {
         let _that = this;
         Indicator.open('加载中...')
-        let geolocation = location.initMap("map-container"); //定位
-        AMap.event.addListener(geolocation, "complete", result => {
-            _that.lat = result.position.lat;
-            _that.lng = result.position.lng;
-            _that.province = result.addressComponent.province;
-            _that.city = result.addressComponent.city;
-            _that.district = result.addressComponent.district;
-            // console.log(_that.province,_that.city,_that.district)
-            this.address = _that.province + _that.city + _that.district
-            this.init()
-            Indicator.close()
-        });
+
+        this.test()
+        // // console.log(location)
+
+        // let geolocation = location.initMap("map-container"); //定位
+        // AMap.event.addListener(geolocation, "complete", result => {
+        //     _that.lat = result.position.lat;
+        //     _that.lng = result.position.lng;
+        //     _that.province = result.addressComponent.province;
+        //     _that.city = result.addressComponent.city;
+        //     _that.district = result.addressComponent.district;
+        //     // console.log(_that.province,_that.city,_that.district)
+        //     this.address = _that.province + _that.city + _that.district
+        //     this.init()
+        //     Indicator.close()
+        // });
+        // AMap.event.addListener(geolocation, 'error', err=>{
+        //     // console.log(err)
+        //     MessageBox('提示', err.message);
+        //     Indicator.close()
+        // });
         },
         init() {
         //步骤：定义map变量 调用 qq.maps.Map() 构造函数   获取地图显示容器
         //设置地图中心点
         // var myLatlng = new qq.maps.LatLng(39.916527,116.397128);
         var myLatlng = new qq.maps.LatLng(this.lat,this.lng);
-        console.log(myLatlng)
+        // console.log(myLatlng)
         //定义工厂模式函数
         var myOptions = {
-          zoom: 15,               //设置地图缩放级别
+          zoom: 12,               //设置地图缩放级别
           center: myLatlng,      //设置中心点样式
           mapTypeId: qq.maps.MapTypeId.ROADMAP  //设置地图样式详情参见MapType
         }
         //获取dom元素添加地图信息
         var map = new qq.maps.Map(document.getElementById("container"), myOptions);
       },
+      test(){
+        //   var geolocation = new qq.maps.Geolocation("OB4BZ-D4W3U-B7VVO-4PJWW-6TKDJ-WPB77", "myapp"); 
+        // axios.get('https://apis.map.qq.com/ws/location/v1/ip?ip=10.52.176.86&key=ZPEBZ-5XI6I-EWPGT-5XMZS-CRE43-M3FYY',{headers:{'Access-Control-Allow-Origin': '*'}}).then(res=>{
+        //     console.log(res)
+        // })
+        var geolocation = new qq.maps.Geolocation("ZPEBZ-5XI6I-EWPGT-5XMZS-CRE43-M3FYY", "test_map"); 
+        
+            var positionNum = 0;
+            var options = {timeout: 18000};
+            geolocation.getLocation(position=>{
+                console.log(position)
+                this.lat= position.lat
+                this.lng=position.lng
+                this.address = position.province + position.city
+                this.init()
+                Indicator.close()
+            }, (err)=>{
+                console.log(err)
+            }, options);
+      }
     },
     created (){
         this.address = this.$route.query.address

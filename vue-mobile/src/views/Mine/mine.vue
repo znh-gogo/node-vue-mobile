@@ -60,6 +60,7 @@ export default {
         },
         logout(){
             window.sessionStorage.clear()
+            window.localStorage.clear();
             this.$router.push('/login')
         }
     },

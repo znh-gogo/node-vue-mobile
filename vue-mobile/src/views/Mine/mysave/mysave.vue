@@ -21,7 +21,7 @@
                                 分类:<span v-for="(k,v) in item.relative" :key="v" style="font-weight:700">{{k.className}} </span>
                             </div>
                         </div>
-                        <div style="white-space:nowrap;width:30%">{{format(item.createdAt)}}</div>
+                        <div style="white-space:nowrap;width:30%" v-if="item.createdAt">{{format(item.createdAt)}}</div>
                     </div>
                     <div class="line"></div>
                 </div>

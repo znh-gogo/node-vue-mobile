@@ -10,7 +10,7 @@
                 <!-- <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image"> -->
                 <el-carousel indicator-position="none" height="220px" v-if="o.pro_imgs.length !== 0">
                     <el-carousel-item v-for="(item,index1) in o.pro_imgs" :key="index1" class="image">
-                        <img :src="item" alt="" style="width:100%">
+                        <img :src="item" alt="" style="width:100%;height:100%">
                     </el-carousel-item>
                 </el-carousel>
                 <img src="../../assets/lose.jpg" style="height:220px" class="image" v-else>

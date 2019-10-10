@@ -589,7 +589,7 @@ module.exports = app => {
     router.post('/showMyProduct',solveMobileToken,async(req,res)=>{
         const {id,numPage,numSize} = req.body
 
-        const count = await Product.countDocuments()
+        const count = await Product.countDocuments({seller:id})
         //前端传入页数
         let Page = Number(numPage) || 1;
         //前端传入每页条数
@@ -661,18 +661,18 @@ module.exports = app => {
         Page = Math.max(Page,1)
         //忽略数
         let skip = (Page-1)*Size;
-        if(numSize*numPage>count){
+        if((count+numSize)<=(numSize*numPage)){
             const model = []
             res.send(model)
-            return
-        } else
-        if(id){
-            const model = await Product.find({pro_categories:id}).populate('seller').skip(skip).limit(Size)
-            res.send(model)
-        }else {
-            const model = await Product.find().populate('seller').skip(skip).limit(Size)
-            res.send(model)
-        }
+        } else {
+            if(id){
+                const model = await Product.find({pro_categories:id}).populate('seller').skip(skip).limit(Size)
+                res.send(model)
+            }else {
+                const model = await Product.find().populate('seller').skip(skip).limit(Size)
+                res.send(model)
+            }
+        } 
     })
 
     //mobile收藏商品
@@ -722,20 +722,30 @@ module.exports = app => {
 
     //购买商品
     router.post('/buyGood',solveMobileToken,async(req,res)=>{
-        const {uid,gid,price,money} = req.body
+        const {uid,gid,price,money,sid} = req.body
         let newmoney = parseFloat(money) - parseFloat(price)
+        //商品记录
         await Product.findByIdAndUpdate(gid,{$set:{buyer:uid,buyflag:1}})
+        //买家扣钱
         await Account.findByIdAndUpdate(uid,{$set:{money:newmoney}})
+        //卖家增钱
+        const model = await Account.findById(sid,'money')
+        let sellermoney = parseFloat(model.money) + parseFloat(price)
+        await Account.findByIdAndUpdate(sid,{$set:{money:sellermoney}})
         res.send({message:'购买成功'})
     })
 
     //商品退款
     router.post('/payBack',solveMobileToken,async(req,res)=>{
-        const {uid,gid,price,money} = req.body
+        const {uid,gid,price,money,sid} = req.body
         let newmoney = parseFloat(money) + parseFloat(price)
         await Product.findByIdAndUpdate(gid,{$set:{buyflag:0,buyer:null}})
         // await Product.findByIdAndRemove(gid,{buyer})
         await Account.findByIdAndUpdate(uid,{$set:{money:newmoney}})
+
+        const model = await Account.findById(sid,'money')
+        let sellermoney = parseFloat(model.money) - parseFloat(price)
+        await Account.findByIdAndUpdate(sid,{$set:{money:sellermoney}})
         res.send({message:'退款成功'})
     })
 

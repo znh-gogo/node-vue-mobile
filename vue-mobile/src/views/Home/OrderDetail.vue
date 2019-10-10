@@ -102,6 +102,10 @@ export default {
             })
         },
         buyit(){
+            if(!this.addressflag){
+                MessageBox('提示', '请先设置默认收货地址');
+                return
+            }
             Indicator.open('交易中...')
             setTimeout(()=>{
                 if(this.userinfo.money<this.goodinfo.pro_price){
@@ -110,7 +114,8 @@ export default {
                 } else {
                     let gid = this.$route.query.gid
                     let uid = sessionStorage.id
-                    api.buyGood({uid,gid,money:this.userinfo.money,price:this.goodinfo.pro_price}).then(res=>{
+                    let sid = this.goodinfo.seller._id
+                    api.buyGood({uid,gid,sid,money:this.userinfo.money,price:this.goodinfo.pro_price}).then(res=>{
                         Indicator.close()
                         MessageBox('提示', res.message);
                         this.getProdetail()
@@ -123,10 +128,12 @@ export default {
             setTimeout(()=>{
                     let gid = this.$route.query.gid
                     let uid = sessionStorage.id
-                    api.payBack({uid,gid,money:this.userinfo.money,price:this.goodinfo.pro_price}).then(res=>{
+                    let sid = this.goodinfo.seller._id
+                    api.payBack({uid,gid,sid,money:this.userinfo.money,price:this.goodinfo.pro_price}).then(res=>{
                         Indicator.close()
                         MessageBox('提示', res.message);
-                        this.getProdetail()
+                        // this.getProdetail()
+                        this.$router.push('/home/good')
                     })
             },1500)
         }
