@@ -603,7 +603,7 @@ module.exports = app => {
         //忽略数
         let skip = (Page-1)*Size;
 
-        const items = await Product.find({seller:id}).populate('pro_categories').skip(skip).limit(Size)
+        const items = await Product.find({seller:id}).populate('pro_categories buyer').skip(skip).limit(Size)
         BeanPage = {
             count,
             Page,
