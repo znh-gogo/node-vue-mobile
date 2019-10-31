@@ -8,7 +8,7 @@
                 完成
             </div>
         </mt-header>
-        <mt-field placeholder="请输入名称" v-model="address"></mt-field>
+        <mt-field placeholder="请输入名称" type="textarea" rows="3" v-model="address"></mt-field>
         <div style="width:100%;text-align:center;margin-top:1.5rem;">
             <mt-button type="primary" @click="getLocation" style="width: 90%;">
                 <img src="../../../assets/定位.png" alt="" slot="icon">
@@ -48,26 +48,26 @@ export default {
         let _that = this;
         Indicator.open('加载中...')
 
-        this.test()
+        // this.test()
         // // console.log(location)
 
-        // let geolocation = location.initMap("map-container"); //定位
-        // AMap.event.addListener(geolocation, "complete", result => {
-        //     _that.lat = result.position.lat;
-        //     _that.lng = result.position.lng;
-        //     _that.province = result.addressComponent.province;
-        //     _that.city = result.addressComponent.city;
-        //     _that.district = result.addressComponent.district;
-        //     // console.log(_that.province,_that.city,_that.district)
-        //     this.address = _that.province + _that.city + _that.district
-        //     this.init()
-        //     Indicator.close()
-        // });
-        // AMap.event.addListener(geolocation, 'error', err=>{
-        //     // console.log(err)
-        //     MessageBox('提示', err.message);
-        //     Indicator.close()
-        // });
+        let geolocation = location.initMap("map-container"); //定位
+        AMap.event.addListener(geolocation, "complete", result => {
+            _that.lat = result.position.lat;
+            _that.lng = result.position.lng;
+            _that.province = result.addressComponent.province;
+            _that.city = result.addressComponent.city;
+            _that.district = result.addressComponent.district;
+            console.log(result)
+            this.address = result.formattedAddress
+            this.init()
+            Indicator.close()
+        });
+        AMap.event.addListener(geolocation, 'error', err=>{
+            // console.log(err)
+            MessageBox('提示', err.message);
+            Indicator.close()
+        });
         },
         init() {
         //步骤：定义map变量 调用 qq.maps.Map() 构造函数   获取地图显示容器
@@ -77,7 +77,7 @@ export default {
         // console.log(myLatlng)
         //定义工厂模式函数
         var myOptions = {
-          zoom: 12,               //设置地图缩放级别
+          zoom: 15,               //设置地图缩放级别
           center: myLatlng,      //设置中心点样式
           mapTypeId: qq.maps.MapTypeId.ROADMAP  //设置地图样式详情参见MapType
         }

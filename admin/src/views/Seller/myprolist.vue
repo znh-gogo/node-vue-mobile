@@ -30,7 +30,8 @@
                     <time class="time">{{ format(o.updatedAt) }}</time>
                     <div>
                         <el-button type="text" class="button" @click="$router.push(`/editseller/${o._id}`)">编辑</el-button>
-                        <el-button type="text" style="color:red;margin-right:6px" class="button" @click="delproduct(o._id)">删除</el-button>
+                        <el-button type="text" class="button" style="color:#303133;" @click="showBuyer(o.buyer,o._id)" v-if="o.buyflag === 1">查看详情</el-button>
+                        <el-button type="text" style="color:red;margin-right:6px" class="button" @click="delproduct(o._id)" v-if="o.buyflag !== 1">删除</el-button>
                     </div>
                     </div>
                 </div>
@@ -45,6 +46,31 @@
             :page-count="pageList.allPages"
             :total="pageList.count">
         </el-pagination>
+        <el-dialog
+            title="买家详情"
+            :visible.sync="dialogVisible"
+            width="40%"
+            :before-close="handleClose">
+            <div style="display:flex;">
+                <div style="margin-left:2rem"><img :src="buyerInfo.headImg" alt="" style="width:8rem;height:8rem;"></div>
+                <div style="margin-left:1rem">
+                    <p>名称：<span>{{buyerInfo.nickname}}</span></p>
+                    <p>账号：<span>{{buyerInfo.account}}</span></p>
+                    <p>电话：<span>{{buyerInfo.telephone}}</span></p>
+                    <p>邮箱：<span>{{buyerInfo.email}}</span></p>
+                    <p>订单号：<span>{{buyerInfo.order}}</span></p>
+                    <div v-for="(item,index) in buyerInfo.rece_info" :key="index">
+                        <p v-if="item.checked===1">邮寄地址：<span>{{item.re_address}}</span></p>
+                        <p v-if="item.checked===1">收件人：<span>{{item.re_name}}</span></p>
+                        <p v-if="item.checked===1">收件人电话：<span>{{item.re_phone}}</span></p>
+                    </div>
+                </div>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -59,7 +85,9 @@ export default {
             format,
             numSize: 4,
             numPage: 1,
-            pageList:[]
+            pageList:[],
+            buyerInfo:{},
+            dialogVisible: false
         }
     },
     methods:{
@@ -94,6 +122,18 @@ export default {
             this.numPage=e
             this.getMyGoods()
       },
+      showBuyer(b,id){
+        this.buyerInfo = b
+        this.$set(this.buyerInfo,'order',id)
+        this.dialogVisible = true
+      },
+      handleClose(done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {});
+      }
     },
     mounted(){
         this.getMyGoods()
@@ -117,6 +157,7 @@ export default {
   .button {
     padding: 0;
     float: right;
+    text-decoration: underline;
   }
 
   .image {
