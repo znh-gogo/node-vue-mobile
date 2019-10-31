@@ -164,12 +164,34 @@ const api = {
   buyGood(data) {
     return request(global+'/mobile/api/buyGood', data, 'post')
   },
+  sureReceive(data) {
+    return request(global+'/mobile/api/sureReceive', data, 'post')
+  },
   payBack(data) {
     return request(global+'/mobile/api/payBack', data, 'post')
   },
   showMyBuy(data) {
     return request(global+'/mobile/api/showMyBuy', data, 'post')
   },
+  paybackApply(data) {
+    return request(global+'/mobile/api/paybackApply', data, 'post')
+  },
+  setPaypassword(data) {
+    return request(global+'/mobile/api/setPaypassword', data, 'post')
+  },
+  showIfPaypassword(data) {
+    return request(global+'/mobile/api/showIfPaypassword', data, 'post')
+  },
+  updatePaypassword(data) {
+    return request(global+'/mobile/api/updatePaypassword', data, 'post')
+  },
+  checkPaypassword(data) {
+    return request(global+'/mobile/api/checkPaypassword', data, 'post')
+  },
+  searchProduct(data) {
+    return request(global+'/mobile/api/searchProduct', data, 'post')
+  },
+  
   
   
 }

@@ -5,12 +5,21 @@
             <button type="button" class="btn" style="background:#E8EB12">欢迎使用</button>
         </div>
         <div style="height:100%;width:100%;">
-            <mt-search
+            <!-- <mt-search
             style="height:100%;display:inline-block;width:100%;border-radius:2rem"
             v-model="result"
             cancel-text="取消"
             placeholder="搜索">
-            </mt-search>
+            </mt-search> -->
+            <van-search
+            v-model="result"
+            placeholder="请输入搜索关键词"
+            show-action
+            shape="round"
+            @search="onSearch"
+            >
+            <div slot="action" @click="onSearch">搜索</div>
+            </van-search>
             <!-- <mt-button type="primary" size="small" style="width:20%;height:100%;display:inline-block;vertical-align: top;">搜索</mt-button> -->
         </div>
         <div style="width:100%">
@@ -45,6 +54,7 @@
 </template>
 
 <script>
+import { Toast } from 'mint-ui';
 export default {
     data(){
         return{
@@ -57,6 +67,20 @@ export default {
             },
             result:''
         }
+    },
+    methods:{
+        onSearch(){
+            if(this.result === ''){
+                Toast('搜索的关键词为空')
+                return
+            }
+            this.$router.push({path:'/home/good',query:{}})
+            this.$router.push({path:'/home/good',query:{key:this.result}})
+            this.result = ''
+        }
+    },
+    mounted(){
+        this.$router.push({path:'/home/good',query:{}})
     }
 }
 </script>

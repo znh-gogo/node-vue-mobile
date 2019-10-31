@@ -4,6 +4,7 @@
             <router-link to="/mine" slot="left">
                 <mt-button icon="back"></mt-button>
             </router-link>
+            <mt-button icon="more" slot="right" @click="$router.push('/mine/mypay/setpaypassword')"></mt-button>
             <!-- <div slot="right" style="font-size:1.3rem;color:#222222" @click="change">
                 完成
             </div> -->
@@ -14,7 +15,7 @@
             <div style="font-size:3rem;font-weight:bold;margin-top:1.5rem">￥{{money}}</div>
             <mt-button type="primary" style="width: 30%;margin-top:5rem;" @click="$router.push('/mine/mypay/recharge')">充值</mt-button>
         </div>
-    </div>    
+    </div>
 </template>
 
 <script>

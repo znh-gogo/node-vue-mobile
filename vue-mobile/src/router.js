@@ -131,6 +131,11 @@ const router = new Router({
       component: () => import('./views/Mine/mypay/mypay.vue')
     },
     {
+      path:'/mine/mypay/setpaypassword',
+      name:'setpaypassword',
+      component: () => import('./views/Mine/mypay/setpaypassword.vue')
+    },
+    {
       path:'/mine/mypay/recharge',
       name:'recharge',
       component: () => import('./views/Mine/mypay/recharge.vue')

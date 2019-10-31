@@ -4,25 +4,25 @@
             <mt-button icon="back" slot="left" @click="$router.go(-1)"></mt-button>
         </mt-header>
         <div class="footer">
-            <div style="padding:0.3rem;text-align:center;margin-left:2rem;margin-top:0.7rem" @click.stop="commentFlag = !commentFlag">
+            <div style="padding:0.3rem;text-align:center;" @click.stop="commentFlag = !commentFlag">
                 <img src="../../assets/留言.png" alt="" style="width:2rem;height:2rem">
                 <div style="color:#707070">留言</div>
             </div>
-            <div style="padding:0.3rem;text-align:center;margin-left:1rem;margin-top:0.7rem" @click="savePro" v-if="saveFlag">
+            <div style="padding:0.3rem;text-align:center;" @click="savePro" v-if="saveFlag">
                 <img src="../../assets/save-null.png" alt="" style="width:2rem;height:2rem">
                 <div style="color:#707070">收藏</div>
             </div>
-            <div style="padding:0.3rem;text-align:center;margin-left:1rem;margin-top:0.7rem" @click="savePro" v-if="!saveFlag">
+            <div style="padding:0.3rem;text-align:center;" @click="savePro" v-if="!saveFlag">
                 <img src="../../assets/save-full.png" alt="" style="width:2rem;height:2rem">
                 <div style="color:#707070">取消收藏</div>
             </div>
-            <div style="line-height:5rem;margin-left:1rem" v-if="infoDetail.seller">
+            <div style="" v-if="infoDetail.seller">
                 <mt-button type="primary" size="small" style="height:4rem;" @click="sendMsg" :disabled="accoundid === infoDetail.seller._id?true:false">
                     <img src="../../assets/私聊null.png" height="20" width="20" slot="icon">
                     私聊
                 </mt-button>
             </div>
-            <div style="line-height:5rem;margin-left:1rem;flex:1" v-if="infoDetail.seller">
+            <div style="width:8rem;" v-if="infoDetail.seller">
                 <mt-button size="small" style="height:4rem;width:90%;background-color:orange;color:#fff" @click.native="$router.push({path:'/order-detail',query:{gid:$route.query.gid}})" :disabled="accoundid === infoDetail.seller._id?true:false">
                     <!-- <img src="../../assets/私聊null.png" height="20" width="20" slot="icon"> -->
                     立即购买
@@ -172,6 +172,8 @@ export default {
     height: 5rem;
     background-color: #eee;
     display: flex;
+    align-items: center;
+    justify-content: space-around;
     z-index: 30;
 }
 .header{

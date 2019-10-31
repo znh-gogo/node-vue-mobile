@@ -306,6 +306,53 @@ module.exports = app => {
         }
     })
 
+    //回显是否已经设置支付密码标识
+    router.post('/showIfPaypassword',solveMobileToken,async(req,res)=>{
+        const {id} = req.body
+        const model = await Account.findById(id,'paypassword')
+        if(model.paypassword){
+            res.send({paypasswordflag:true})
+        } else{
+            res.send({paypasswordflag:false})
+        }
+    })
+
+    //设置支付密码
+    router.post('/setPaypassword',solveMobileToken,async(req,res)=>{
+        const {id,paypassword} = req.body
+        await Account.findByIdAndUpdate(id,{$set:{paypassword}})
+        res.send({message:'设置支付密码成功'})
+    })
+
+    //修改支付密码
+    router.post('/updatePaypassword',solveMobileToken,async(req,res)=>{
+        const {oldpaypassword,newpaypassword,id} = req.body
+        const model = await Account.findById(id,'paypassword')
+        if(oldpaypassword === model.paypassword){
+            await Account.findByIdAndUpdate(id,{$set:{paypassword:newpaypassword}})
+            res.send({message:'支付密码修改成功',status:200})
+        } else {
+            res.send({message:'原支付密码错误',status:401})
+        }
+    })
+
+    //验证支付密码
+    router.post('/checkPaypassword',solveMobileToken,async(req,res)=>{
+        const {id,paypassword} = req.body
+        const model = await Account.findById(id,'paypassword')
+        if(paypassword === model.paypassword){
+            res.send({
+                message:'支付密码正确',
+                status:200
+            })
+        } else {
+            res.send({
+                message:'支付密码错误',
+                status:401
+            })
+        }
+    })
+
     const Topic = require('../../models/mobile/Topic')
     const Comment = require('../../models/mobile/Comment')
     //发表话题
@@ -578,6 +625,13 @@ module.exports = app => {
         res.send({message:'修改成功'})
     })
 
+    //商家发货
+    router.post('/sendOrderList',solveMobileToken,async(req,res)=>{
+        const {id,sendOrderList} = req.body
+        await Product.findByIdAndUpdate(id,{$set:{sendOrderList}})
+        res.send({message:'操作成功'})
+    })
+
     //删除我的商品
     router.post('/delProduct',solveMobileToken,async(req,res)=>{
         const {id} = req.body
@@ -643,6 +697,45 @@ module.exports = app => {
         const {id} = req.body
         await Product.findByIdAndDelete(id)
         res.send({message:'删除成功'})
+    })
+
+    //admin首页数据回显
+    app.post('/admin/api/showData',solveAdminToken,async(req,res)=>{
+        //用户数量
+        const usernum = await Account.countDocuments()
+        //商品数量
+        const productnum = await Product.countDocuments()
+        //文章数量
+        const articlenum = await Article.countDocuments()
+        //话题数量
+        const topicnum = await Topic.countDocuments()
+        //商品交易额
+        const model = await Product.find({buyflag:2})
+        var buynum = 0
+        model.map((item)=>{
+            buynum = buynum + item.pro_price
+        })
+        var productcharts = []
+        var categorycharts = []
+        //商品类型及对应数量
+        
+        const productcategory = await GoodCategory.find()
+        productcategory.forEach(async(item)=>{
+            const value =await Product.find({pro_categories:item._id})
+            const num =await parseInt(value.length)
+            
+            productcharts.push({
+                value:num,
+                name:item.goodcategory
+            })
+            categorycharts.push(item.goodcategory)
+            
+        })
+        // console.log(key)
+        
+        setTimeout(()=>{
+            res.send({usernum,productnum,articlenum,topicnum,buynum,productcharts,categorycharts})
+        },200)
     })
 
     //mobile商品列表
@@ -716,11 +809,11 @@ module.exports = app => {
     router.post('/orderDetail',solveMobileToken,async(req,res)=>{
         const {uid,gid} = req.body
         const user = await Account.findById(uid,'account nickname rece_info money')
-        const good = await Product.findById(gid,'pro_price seller pro_imgs pro_description buyflag updatedAt buyer').populate('seller')
+        const good = await Product.findById(gid,'pro_price seller pro_imgs pro_description buyflag updatedAt buyer sendOrderList paybackflag').populate('seller')
         res.send({user,good})
     })
 
-    //购买商品
+    //购买商品 买家扣钱
     router.post('/buyGood',solveMobileToken,async(req,res)=>{
         const {uid,gid,price,money,sid} = req.body
         let newmoney = parseFloat(money) - parseFloat(price)
@@ -729,17 +822,36 @@ module.exports = app => {
         //买家扣钱
         await Account.findByIdAndUpdate(uid,{$set:{money:newmoney}})
         //卖家增钱
+        // const model = await Account.findById(sid,'money')
+        // let sellermoney = parseFloat(model.money) + parseFloat(price)
+        // await Account.findByIdAndUpdate(sid,{$set:{money:sellermoney}})
+        res.send({message:'购买成功'})
+    })
+
+    //确认收货 卖家收钱
+    router.post('/sureReceive',solveMobileToken,async(req,res)=>{
+        const {gid,sid,price} = req.body
+        //商品记录
+        await Product.findByIdAndUpdate(gid,{$set:{buyflag:2}})
+        //卖家增钱
         const model = await Account.findById(sid,'money')
         let sellermoney = parseFloat(model.money) + parseFloat(price)
         await Account.findByIdAndUpdate(sid,{$set:{money:sellermoney}})
-        res.send({message:'购买成功'})
+        res.send({message:'收货成功'})
+    })
+
+    //商品退款申请
+    router.post('/paybackApply',solveMobileToken,async(req,res)=>{
+        const {gid,paybackflag} = req.body
+        await Product.findByIdAndUpdate(gid,{$set:{paybackflag}})
+        res.send({message:'发起退款申请中'})
     })
 
     //商品退款
     router.post('/payBack',solveMobileToken,async(req,res)=>{
         const {uid,gid,price,money,sid} = req.body
         let newmoney = parseFloat(money) + parseFloat(price)
-        await Product.findByIdAndUpdate(gid,{$set:{buyflag:0,buyer:null}})
+        await Product.findByIdAndUpdate(gid,{$set:{buyflag:0,buyer:null,paybackflag:0,sendOrderList:null}})
         // await Product.findByIdAndRemove(gid,{buyer})
         await Account.findByIdAndUpdate(uid,{$set:{money:newmoney}})
 
@@ -754,6 +866,33 @@ module.exports = app => {
         const {id} = req.body
         const model = await Product.find({buyer:id}).populate('seller')
         res.send(model)
+    })
+
+    //搜索商家、商品名
+    router.post('/searchProduct',solveMobileToken,async(req,res)=>{
+        const {key} = req.body
+        const reg = new RegExp(key, 'i')
+        const model = await Product.find({
+            $or : [ //多条件，数组
+                {pro_description : {$regex : reg}},
+                {'seller.nickname' : {$regex : reg}}
+            ]
+        }).populate('seller')
+        res.send(model)
+    })
+
+    //admin回显退款的个数通知
+    router.post('/notifyPayback',solveMobileToken,async(req,res)=>{
+        const {id} = req.body
+        const model = await Product.find({seller:id})
+        var i = 0;
+        model.map((item)=>{
+            if(item.paybackflag===1){
+                i++
+            }
+        })
+        // const paybacknum = model.length
+        res.send({paybacknum:i})
     })
 
     //上传文件中间处理

@@ -22,7 +22,7 @@
       label="商品状态"
     >
     <template slot-scope="scope">
-      <div>{{scope.row.buyflag === 0?'上架中':(scope.row.buyflag === 1)?'已售出':'已下架'}}</div>
+      <div style="font-weight:700">{{scope.row.buyflag === 0?'上架中':(scope.row.buyflag === 1)?'已售出':(scope.row.buyflag === 2?'交易完成':'已下架')}}</div>
     </template>
     </el-table-column>
     <el-table-column
