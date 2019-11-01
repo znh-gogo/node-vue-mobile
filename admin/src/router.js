@@ -18,7 +18,7 @@ const router = new Router({
       path: '/',
       name: 'home',
       component: Home,
-      redirect:'/homepage',
+      redirect:sessionStorage.authflag==='1'?'/homepage':'/sellerpage',
       children:[
         //首页
         {
@@ -75,18 +75,21 @@ const router = new Router({
         {
           path: '/goodsAdd',
           name: 'goodsAdd',
-          component: () => import('./views/Goods/goodsAdd.vue')
+          component: () => import('./views/Goods/goodsAdd.vue'),
+          meta:{name:'编辑商品'}
         },
         {
           path: '/goodsEdit/:id',
           name: 'goodsEdit',
           component: () => import('./views/Goods/goodsAdd.vue'),
-          props:true
+          props:true,
+          meta:{name:'编辑商品'}
         },
         {
           path: '/goodsList',
           name: 'goodsList',
-          component: () => import('./views/Goods/goodsList.vue')
+          component: () => import('./views/Goods/goodsList.vue'),
+          meta:{name:'商品列表'}
         },
         //文章
         {

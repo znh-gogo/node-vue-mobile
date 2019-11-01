@@ -1,14 +1,25 @@
 <template>
   <div class="home">
-    <el-container style="height: 100vh; ">
+    <el-container style="min-height: 100vh; ">
       
-  <el-aside width="200px" style="background-color: #EBEEF5">
-    <div style="height:60px;line-height:60px;text-align:center;font-size:18px;padding:0 10px;color: #439057;">
-      农商产品信息服务后台管理系统
+  <el-aside style="background-color: #002140;width:auto;max-width:201px">
+    <div style="text-align:center;height:60px;" v-if="!isCollapse"><img src="../assets/title.jpg" style="width:100%;height:100%;background-size:100%;" alt=""></div>
+    <div style="height:60px;line-height:60px;text-align:center;font-size:18px;padding:0 10px;color: #fff;" v-else>
+      农产
     </div>
-    <el-menu router :default-active="$route.path" unique-opened >
+    <el-menu
+    class="el-menu-vertical-demo"
+    router
+    :default-active="$route.path"
+    unique-opened
+    @open="handleOpen"
+    @close="handleClose"
+    :collapse="isCollapse"
+    background-color="#001529"
+    text-color="#fff"
+    active-text-color="#ffd04b">
       <el-submenu index="0">
-        <template slot="title"><i class="el-icon-eleme"></i>首页</template>
+        <template slot="title"><i class="el-icon-eleme"></i><span>首页</span></template>
         <el-menu-item-group>
           <el-menu-item index="/homepage" v-if="authflag === 1">首页</el-menu-item>
           <el-menu-item index="/sellerpage" v-if="authflag === 0">首页</el-menu-item>
@@ -16,7 +27,7 @@
       </el-submenu>
 
       <el-submenu index="1" v-if="authflag === 1">
-        <template slot="title"><i class="el-icon-user"></i>用户管理</template>
+        <template slot="title"><i class="el-icon-user"></i><span>用户管理</span></template>
         <el-menu-item-group>
           <template slot="title">用户</template>
           <el-menu-item index="/userList">用户列表</el-menu-item>
@@ -25,7 +36,7 @@
       </el-submenu>
 
       <el-submenu index="2"  v-if="authflag === 1">
-        <template slot="title"><i class="el-icon-s-shop"></i>商品管理</template>
+        <template slot="title"><i class="el-icon-s-shop"></i><span>商品管理</span></template>
         <el-menu-item-group>
           <template slot="title">商品</template>
           <el-menu-item index="/goodsList">商品列表</el-menu-item>
@@ -34,7 +45,7 @@
       </el-submenu>
 
       <el-submenu index="3"  v-if="authflag === 1">
-        <template slot="title"><i class="el-icon-notebook-2"></i>文章管理</template>
+        <template slot="title"><i class="el-icon-notebook-2"></i><span>文章管理</span></template>
         <el-menu-item-group>
           <template slot="title">文章</template>
           <el-menu-item index="/articleClassAdd">新建文章分类</el-menu-item>
@@ -44,7 +55,7 @@
         </el-menu-item-group>
       </el-submenu>
       <el-submenu index="4"  v-if="authflag === 1">
-        <template slot="title"><i class="el-icon-collection"></i>计划管理</template>
+        <template slot="title"><i class="el-icon-collection"></i><span>计划管理</span></template>
         <el-menu-item-group>
           <template slot="title">计划</template>
           <el-menu-item index="/planAdd">添加计划</el-menu-item>
@@ -55,7 +66,7 @@
       </el-submenu>
 
       <el-submenu index="5" v-if="authflag === 1">
-        <template slot="title"><i class="el-icon-user-solid"></i>管理员管理</template>
+        <template slot="title"><i class="el-icon-user-solid"></i><span>管理员管理</span></template>
         <el-menu-item-group>
           <template slot="title">管理员</template>
           <el-menu-item index="/adminList">管理员列表</el-menu-item>
@@ -64,7 +75,7 @@
       </el-submenu>
 
       <el-submenu index="6"  v-if="authflag === 1">
-        <template slot="title"><i class="el-icon-s-custom"></i>账户管理</template>
+        <template slot="title"><i class="el-icon-s-custom"></i><span>账户管理</span></template>
         <el-menu-item-group>
           <!-- <template slot="title">管理员</template> -->
           <el-menu-item index="/accountList">账户列表</el-menu-item>
@@ -73,7 +84,7 @@
       </el-submenu>
 
       <el-submenu index="7"  v-if="authflag === 1">
-        <template slot="title"><i class="el-icon-edit-outline"></i>反馈管理</template>
+        <template slot="title"><i class="el-icon-edit-outline"></i><span>反馈管理</span></template>
         <el-menu-item-group>
           <!-- <template slot="title">管理员</template> -->
           <el-menu-item index="/feedbackList">反馈列表</el-menu-item>
@@ -82,7 +93,7 @@
       </el-submenu>
 
       <el-submenu index="8"  v-if="authflag === 0">
-        <template slot="title"><i class="el-icon-s-shop"></i>商品管理</template>
+        <template slot="title"><i class="el-icon-s-shop"></i><span>商品管理</span></template>
         <el-menu-item-group>
           <!-- <template slot="title">管理员</template> -->
           <el-menu-item index="/selling">商品发售</el-menu-item>
@@ -95,18 +106,23 @@
     
      
   <el-container>
-    <el-header style="text-align: right; font-size: 12px">
-      <span style="margin-right:15px">{{username}}</span>
-      <!-- <span  style="margin-left:15px">退出登陆</span> -->
-      <el-dropdown>
-        <i class="el-icon-setting" style="margin-right: 15px;color:#fff">设置<el-badge is-dot class="item" v-if="authflag === 0&&paybacknum!==0"/></i>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>查看</el-dropdown-item>
-          <el-dropdown-item v-if="authflag === 0" @click.native="paybackapply">退款申请<el-badge class="mark" :value="paybacknum" v-if="paybacknum!==0" /></el-dropdown-item>
-          <el-dropdown-item @click.native="logout">退出登陆</el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
+    <el-header class="header">
+      <el-button type="text" :icon="isCollapse?'el-icon-s-unfold':'el-icon-s-fold'" @click="isCollapse = !isCollapse" style="font-size:20px;color:666;outline:none"></el-button>
+      <div style="align-items:center;display:flex;">
+        <img :src="headimg" style="width:30px;height:30px;border-radius:50%;" v-if="headimg!==''"/>
+        <img src="../assets/head.jpg" style="width:30px;height:30px;border-radius:50%;" v-else/>
+        <span style="margin:0 15px">{{username}}</span>
+        <el-dropdown style="cursor: pointer;">
+          <i class="el-icon-setting" style="margin-right: 15px;color:#666">设置<el-badge is-dot class="item" v-if="authflag === 0&&paybacknum!==0"/></i>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item>查看</el-dropdown-item>
+            <el-dropdown-item v-if="authflag === 0" @click.native="paybackapply">退款申请<el-badge class="mark" :value="paybacknum" v-if="paybacknum!==0" /></el-dropdown-item>
+            <el-dropdown-item @click.native="logout">退出登陆</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
     </el-header>
+      
     
     <el-main style="background-color:#f7f7f7">
       <el-breadcrumb separator="/">
@@ -120,7 +136,7 @@
       
     </el-main>
     <div style="height:50px;width:100%;background-color:#ccc;line-height:60px;text-align:center;color:#666;font-size:14px;">
-      All informations from node.js. 
+      Copyright © 2019 All informations from Vue.js. 
     </div>
   </el-container>
 </el-container>
@@ -137,7 +153,9 @@ export default {
       return {
         username:'',
         authflag:'',
-        paybacknum:0
+        paybacknum:0,
+        isCollapse: false,
+        headimg:''
       }
     },
     methods:{
@@ -161,11 +179,20 @@ export default {
         } else {
           this.$message.warning(`您收到了${this.paybacknum}条退款通知，去商品列表中处理吧！`)
         }
+      },
+      handleOpen(key, keyPath) {
+        console.log(key, keyPath);
+      },
+      handleClose(key, keyPath) {
+        console.log(key, keyPath);
       }
     },
     mounted(){
       this.username = sessionStorage.username
       this.getInfo()
+      if(sessionStorage.headimg){
+        this.headimg = sessionStorage.headimg
+      }
     }
 
 }
@@ -177,7 +204,13 @@ export default {
     color: #fff;
     line-height: 60px;
   }
-  
+  .header{
+    font-size: 12px;
+    background-color: #fff;
+    color:#666;
+    display: flex;
+    justify-content: space-between;
+  }
   .el-aside {
     color: #333;
     
@@ -186,4 +219,9 @@ export default {
   /* margin-top: 10px; */
   /* margin-right: 40px; */
 }
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+    width: 200px;
+    min-height: 400px;
+    /* overflow-x: hidden; */
+  }
 </style>

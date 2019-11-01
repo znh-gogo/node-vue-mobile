@@ -30,6 +30,7 @@
 <script>
 import axios from 'axios'
 import {ADMIN,MOBILE} from '../api/globol'
+import { Notification } from 'element-ui';
 export default {
     data (){
         return{
@@ -55,8 +56,15 @@ export default {
                 sessionStorage.username = res.data.user.nickname
                 sessionStorage.authflag = res.data.user.authflag
                 sessionStorage.id = res.data.user._id
+                sessionStorage.headimg = res.data.user.headImg
                 this.$router.push('/')
-                this.$message.success('登陆成功')
+                // this.$message.success('登陆成功')
+                Notification({
+                    title:'您好,登陆成功',
+                    message:'希望您能拥有美好的一天，加油！',
+                    type:'success',
+                    duration: 3000
+                })
                 })
             } else if(this.value === 1){
                 this.$http.post(ADMIN+'/login',this.model).then((res)=>{
@@ -64,7 +72,13 @@ export default {
                 sessionStorage.username = res.data.user.adminName
                 sessionStorage.authflag = res.data.user.authflag
                 this.$router.push('/')
-                this.$message.success('登陆成功')
+                // this.$message.success('登陆成功')
+                Notification({
+                        title:'您好,登陆成功',
+                        message:'希望您能拥有美好的一天，加油！',
+                        type:'success',
+                        duration: 3000
+                    })
                 })
             }   
         }
