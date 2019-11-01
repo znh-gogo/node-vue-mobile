@@ -718,7 +718,6 @@ module.exports = app => {
         var productcharts = []
         var categorycharts = []
         //商品类型及对应数量
-        
         const productcategory = await GoodCategory.find()
         productcategory.forEach(async(item)=>{
             const value =await Product.find({pro_categories:item._id})
@@ -731,10 +730,22 @@ module.exports = app => {
             categorycharts.push(item.goodcategory)
             
         })
-        // console.log(key)
+        //文章类型及对应数量
+        var articlecategory = []
+        var articlecharts = []
+        const modelcategory = await ArticleClass.find()
+        modelcategory.forEach(async(item)=>{
+            const value1 = await Article.find({relative:item._id})
+            const num1 = await parseInt(value1.length)
+            articlecharts.push({
+                value:num1,
+                name:item.className
+            })
+            articlecategory.push(item.className)
+        })
         
         setTimeout(()=>{
-            res.send({usernum,productnum,articlenum,topicnum,buynum,productcharts,categorycharts})
+            res.send({usernum,productnum,articlenum,topicnum,buynum,productcharts,categorycharts,articlecategory,articlecharts})
         },200)
     })
 
