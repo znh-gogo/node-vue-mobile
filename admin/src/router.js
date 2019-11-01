@@ -27,6 +27,12 @@ const router = new Router({
           component: () => import('./views/homepage.vue'),
           meta:{name:'首页'}
         },
+        {
+          path: '/sellerpage',
+          name: 'sellerpage',
+          component: () => import('./views/sellerpage.vue'),
+          meta:{name:'首页'}
+        },
         //用户发售商品
         {
           path: '/selling',

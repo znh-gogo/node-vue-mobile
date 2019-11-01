@@ -10,7 +10,8 @@
       <el-submenu index="0">
         <template slot="title"><i class="el-icon-eleme"></i>首页</template>
         <el-menu-item-group>
-          <el-menu-item index="/homepage">首页</el-menu-item>
+          <el-menu-item index="/homepage" v-if="authflag === 1">首页</el-menu-item>
+          <el-menu-item index="/sellerpage" v-if="authflag === 0">首页</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
 
@@ -98,9 +99,10 @@
       <span style="margin-right:15px">{{username}}</span>
       <!-- <span  style="margin-left:15px">退出登陆</span> -->
       <el-dropdown>
-        <i class="el-icon-setting" style="margin-right: 15px;color:#fff"></i>
+        <i class="el-icon-setting" style="margin-right: 15px;color:#fff">设置<el-badge is-dot class="item" v-if="authflag === 0&&paybacknum!==0"/></i>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>查看</el-dropdown-item>
+          <el-dropdown-item v-if="authflag === 0" @click.native="paybackapply">退款申请<el-badge class="mark" :value="paybacknum" v-if="paybacknum!==0" /></el-dropdown-item>
           <el-dropdown-item @click.native="logout">退出登陆</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -128,24 +130,42 @@
 <script>
 // @ is an alias to /src
 
-
+import {MOBILE} from '../api/globol'
 export default {
   name: 'home',
   data() {
       return {
         username:'',
-        authflag:''
+        authflag:'',
+        paybacknum:0
       }
     },
     methods:{
       logout(){
         sessionStorage.clear()
         this.$router.push('/login')
+      },
+      getInfo(){
+        this.authflag = parseInt(sessionStorage.authflag)
+          let id = sessionStorage.id
+          if(this.authflag ===0){
+            this.$http.post(MOBILE+'/notifyPayback',{id}).then(res=>{
+                this.paybacknum = res.data.paybacknum
+                // console.log(res.data.paybacknum)
+            })
+          }
+      },
+      paybackapply(){
+        if(this.paybacknum===0){
+          this.$message.success('您未收到任何退款通知')
+        } else {
+          this.$message.warning(`您收到了${this.paybacknum}条退款通知，去商品列表中处理吧！`)
+        }
       }
     },
     mounted(){
       this.username = sessionStorage.username
-      this.authflag = parseInt(sessionStorage.authflag)
+      this.getInfo()
     }
 
 }
@@ -162,4 +182,8 @@ export default {
     color: #333;
     
   }
+  .item {
+  /* margin-top: 10px; */
+  /* margin-right: 40px; */
+}
 </style>

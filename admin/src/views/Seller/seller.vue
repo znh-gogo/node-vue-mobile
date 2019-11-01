@@ -33,7 +33,7 @@
             <el-form-item label="售卖初始状态:" prop="buyflag">
                 <el-select v-model="model.buyflag" placeholder="请选择">
                     <el-option label="上架中" :value="parseInt(0)" :key="parseInt(0)"></el-option>
-                    <el-option label="下架中" :value="parseInt(2)" :key="parseInt(2)"></el-option>
+                    <el-option label="下架中" :value="parseInt(3)" :key="parseInt(3)"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="上传商品图片:">

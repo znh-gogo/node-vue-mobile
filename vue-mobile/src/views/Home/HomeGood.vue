@@ -70,7 +70,7 @@ import api from '../../api'
 import BScroll from 'better-scroll'
 
 // import Vue from 'vue'
-// import { Spinner, InfiniteScroll, Toast } from 'mint-ui'
+import { Toast } from 'mint-ui'
 // Vue.use(InfiniteScroll)
 // Vue.component(Spinner.name, Spinner)
 export default {
@@ -94,9 +94,13 @@ export default {
       stopflag:true
     }
   },
+  watch:{
+    $route:'checkroute'
+  },
   methods:{
     choosetype(item,index){
       // console.log(item._id)
+      this.$router.push({path:'/home/good',query:{}})
         this.typeIndex = index
         this.productList = []
         // this.allLoaded = false
@@ -114,6 +118,18 @@ export default {
           this.homeScroll()
           this.getProList()
         }
+    },
+    checkroute(){
+      if(this.$route.query.key !== '' &&this.$route.query.key ){
+        console.log(this.$route.query.key)
+        api.searchProduct({key:this.$route.query.key}).then(res=>{
+          if(res.length!==0){
+            this.productList = res
+          } else {
+            Toast('搜索结果为空')
+          }
+        })
+      }
     },
     getProList(id,p,s){
       if(id){
@@ -197,6 +213,7 @@ export default {
         setTimeout(() => {
           // this.numPage=1
           // this.numSize=2
+          this.$router.push({path:'/home/good',query:{}})
         this.productList = []
         this.loadflag = false
         this.loading = false;
@@ -250,9 +267,11 @@ export default {
         if(scrollTop+windowHeight==scrollHeight){
         //写后台加载数据的函数
         console.log("距顶部"+scrollTop+"可视区高度"+windowHeight+"滚动条总高度"+scrollHeight);
-        if(!this.loadflag){
+      if(!this.$route.query.key){
+          if(!this.loadflag){
           this.loadMore()
         }
+      }
       }   else if(scrollTop>300){
         this.upflag = true
      } else {

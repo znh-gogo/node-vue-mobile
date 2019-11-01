@@ -5,9 +5,11 @@ import store from './store'
 import element from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css';
 import http from './api/http'
+// import echarts from 'echarts'
 Vue.use(element)
 Vue.config.productionTip = false
 Vue.prototype.$http=http
+// Vue.prototype.$echarts = echarts
 
 new Vue({
   router,

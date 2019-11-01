@@ -6,7 +6,9 @@ const schema = new mongoose.Schema({
   pro_imgs:[{ type:String }],
   pro_price:{ type:Number },
   pro_address:{type:String},
-  buyflag:{type:Number,default:0}, //0未购买1已购买2已下架
+  paybackflag:{type:Number,default:0}, //退款申请标识 0正常1退款申请2同意退款3拒绝
+  sendOrderList:{type:String},//快递订单
+  buyflag:{type:Number,default:0}, //0未购买1已购买2交易完成3已下架
   buyer:{ type: mongoose.SchemaTypes.ObjectId, ref: 'Account' },
   seller: { type: mongoose.SchemaTypes.ObjectId, ref: 'Account' },
   pro_attention: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Account' }],

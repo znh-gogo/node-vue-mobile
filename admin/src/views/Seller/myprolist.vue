@@ -6,7 +6,7 @@
         </div>
         <el-row v-else>
             <el-col :span="5" v-for="(o, index) in myproductlist" :key="index" style="margin-bottom:10px;margin-left:30px">
-                <el-card :body-style="{ padding: '0px' }">
+                <el-card :body-style="{ padding: '0px' }" style="position:relative">
                 <!-- <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image"> -->
                 <el-carousel indicator-position="none" height="220px" v-if="o.pro_imgs.length !== 0">
                     <el-carousel-item v-for="(item,index1) in o.pro_imgs" :key="index1" class="image">
@@ -24,20 +24,66 @@
                         <div style="font-size:13px;color:#999">售卖状态</div>
                         <div style="color:#E6A23C" v-if="o.buyflag === 0">上架中</div>
                         <div style="color:#67C23A" v-if="o.buyflag === 1">已售出</div>
-                        <div style="color:#F56C6C" v-if="o.buyflag === 2">已下架</div>
+                        <div style="color:#67C23A" v-if="o.buyflag === 2">交易完成</div>
+                        <div style="color:#F56C6C" v-if="o.buyflag === 3">已下架</div>
                     </div>
                     <div class="bottom clearfix">
                     <time class="time">{{ format(o.updatedAt) }}</time>
                     <div>
+<<<<<<< HEAD
                         <el-button type="text" class="button" @click="$router.push(`/editseller/${o._id}`)">编辑</el-button>
                         <el-button type="text" class="button" style="color:#303133;" @click="showBuyer(o.buyer,o._id)" v-if="o.buyflag === 1">查看详情</el-button>
                         <el-button type="text" style="color:red;margin-right:6px" class="button" @click="delproduct(o._id)" v-if="o.buyflag !== 1">删除</el-button>
+=======
+                        <el-button type="text" class="button" @click="$router.push(`/editseller/${o._id}`)" v-if="o.buyflag === 0||o.buyflag === 3">编辑</el-button>
+                        <el-button type="text" style="color:red;margin-right:6px" class="button" @click="delproduct(o._id,o.buyflag)" v-if="o.buyflag === 0 ||o.buyflag === 3">删除</el-button>
+                        <el-button type="text" class="button" @click="checkBuyer(o,o.buyer,o._id)" v-if="o.buyflag === 1||o.buyflag === 2">查看详情</el-button>
+>>>>>>> 424a691a652ed586b123b672477fa794d1628af2
                     </div>
+                    </div>
+                </div>
+                <div style="" class="paybackmask" v-if="o.paybackflag === 1">
+                    <div>
+                        <div style="text-align:center;margin-bottom:1rem;font-size:1.2rem;color:#fff;">买家申请退款</div>
+                        <el-button type="danger" @click="surePay(o._id,2)">同意退款</el-button>
+                        <el-button type="info" @click="surePay(o._id,3)">不同意退款</el-button>
                     </div>
                 </div>
                 </el-card>
             </el-col>
         </el-row>
+        <el-dialog
+            title="买家信息"
+            :visible.sync="dialogVisible"
+            width="30%"
+            :before-close="handleClose">
+            <div style="display:flex">
+                <div style="width:7rem;text-align:right">
+                    <p>买家账号：</p>
+                    <p>买家用户名：</p>
+                    <p>买家电话：</p>
+                    <p>买家邮箱：</p>
+                    <p style="font-weight:700">收货人姓名：</p>
+                    <p style="font-weight:700">收货人电话：</p>
+                    <p style="font-weight:700">收货人地址：</p>
+                </div>
+                <div style="flex:1">
+                    <p>{{buyerInfo.account}}</p>
+                    <p>{{buyerInfo.nickname}}</p>
+                    <p>{{buyerInfo.telephone}}</p>
+                    <p>{{buyerInfo.email}}</p>
+                    <p v-if="buyerInfo.rece_info">{{buyerInfo.rece_info.re_name}}</p>
+                    <p v-if="buyerInfo.rece_info">{{buyerInfo.rece_info.re_phone}}</p>
+                    <p v-if="buyerInfo.rece_info">{{buyerInfo.rece_info.re_address}}</p>
+                </div>
+            </div>
+            <el-divider></el-divider>
+            <div style="margin-top:2rem;padding:0 2rem;"><span>快递运单号：</span><el-input style="width:70%" :disabled="buyerInfo.buyflag===2" v-model="buyerInfo.sendOrderList" placeholder="请输入运单号"></el-input></div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="sureSendingOrder">确 定</el-button>
+            </span>
+        </el-dialog>
         <el-pagination
             v-if="pageList"
             layout="prev, pager, next"
@@ -86,8 +132,14 @@ export default {
             numSize: 4,
             numPage: 1,
             pageList:[],
+<<<<<<< HEAD
             buyerInfo:{},
             dialogVisible: false
+=======
+            dialogVisible: false,
+            buyerInfo:{},
+            pid:''
+>>>>>>> 424a691a652ed586b123b672477fa794d1628af2
         }
     },
     methods:{
@@ -98,12 +150,19 @@ export default {
                 this.pageList = res.data.BeanPage
             })
         },
-        delproduct(id){
+        delproduct(id,buyflag){
             this.$confirm('删除该商品, 是否继续?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
                 }).then(() => {
+                    if(buyflag === 0){
+                        this.$message({
+                            type: 'warning',
+                            message: '该商品正在上架中，请下架后再作操作！'
+                        });  
+                        return;
+                    }
                     this.$http.post(MOBILE+'/delProduct',{id}).then(res =>{
                     if(res){
                         this.$message.success(res.data.message)
@@ -116,6 +175,39 @@ export default {
                     message: '已取消删除'
                 });          
             });
+        },
+        checkBuyer(o,e,id){
+            this.dialogVisible = true
+            this.pid = id
+            this.buyerInfo = e
+            this.$set(this.buyerInfo,'sendOrderList',o.sendOrderList)
+            this.$set(this.buyerInfo,'buyflag',o.buyflag)
+            for (let i =0;i<e.rece_info.length;i++){
+                if(e.rece_info[i].checked === 1){
+                    this.$set(this.buyerInfo,'rece_info',e.rece_info[i])
+                }
+            }
+            console.log(this.buyerInfo)
+        },
+        sureSendingOrder(){
+            this.$http.post(MOBILE+'/sendOrderList',{id:this.pid,sendOrderList:this.buyerInfo.sendOrderList}).then(res=>{
+                this.$message.success(res.data.message)
+            })
+            this.dialogVisible = false
+        },
+        surePay(gid,num){
+            // console.log(id,num)
+            this.$http.post(MOBILE+'/paybackApply',{paybackflag:num,gid}).then(res=>{
+                this.$message.success('操作成功')
+                this.getMyGoods()
+            })
+        },
+        handleClose(done) {
+            this.$confirm('确认关闭？')
+            .then(_ => {
+                done();
+            })
+            .catch(_ => {});
         },
         changePage(e){
             console.log(e)
@@ -175,5 +267,17 @@ export default {
   
   .clearfix:after {
       clear: both
+  }
+  .paybackmask{
+      position:absolute;
+      top:0;
+      left:0;
+      background: rgba(0, 0, 0, 0.5);
+      width: 100%;
+      height: 100%;
+      z-index: 50;
+      display: flex;
+      justify-content: center;
+      align-items: center;
   }
 </style>
