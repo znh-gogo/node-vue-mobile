@@ -52,6 +52,7 @@ export default {
   min-height:100%;
   background:#eee;
   padding-bottom:6rem;
+  overflow: hidden;
 }
 .goodbox{
   padding:2%;

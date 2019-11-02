@@ -71,6 +71,7 @@ export default {
                 sessionStorage.token=res.data.token
                 sessionStorage.username = res.data.user.adminName
                 sessionStorage.authflag = res.data.user.authflag
+                // console.log(sessionStorage.authflag+'1')
                 this.$router.push('/')
                 // this.$message.success('登陆成功')
                 Notification({

@@ -906,6 +906,30 @@ module.exports = app => {
         res.send({paybacknum:i})
     })
 
+    //admin 回显商家首页信息
+    router.post('/showSellerInfo',solveMobileToken,async(req,res)=>{
+        const { id } = req.body
+        //返回个人信息
+        const user = await Account.findById(id)
+        //返回商品信息、出售商品的总数量、总价值、已卖出数量、总盈利
+        const product = await Product.find({seller:id})
+        const productnum = product.length
+        var productallprice = 0
+        var soldnum = 0
+        var salary = 0
+        product.forEach(item=>{
+            productallprice = productallprice + item.pro_price
+            if(item.buyflag===1 || item.buyflag===2){
+                soldnum = soldnum + 1
+                salary = salary + item.pro_price
+            }
+        })
+        setTimeout(()=>{
+            res.send({user,productnum,productallprice,soldnum,salary})
+        },200)
+
+    })
+
     //上传文件中间处理
     const multer = require('multer') //上传文件所需的中间件，帮忙做了很多处理
     const upload = multer({dest:__dirname + '/../../uploads'})

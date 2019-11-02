@@ -75,6 +75,12 @@ import { Toast } from 'mint-ui'
 // Vue.component(Spinner.name, Spinner)
 export default {
   name: 'HomeGood',
+  props:{
+    result:{
+      type:String,
+      default:''
+    }
+  },
   data(){
     return{
       typelist:['最新','水果','蔬菜','加工食品'],
@@ -91,16 +97,17 @@ export default {
       loading:false,
       isLoading : false,
       upflag:false,
-      stopflag:true
+      stopflag:true,
+      
     }
   },
   watch:{
-    $route:'checkroute'
+    result:'checkroute'
   },
   methods:{
     choosetype(item,index){
       // console.log(item._id)
-      this.$router.push({path:'/home/good',query:{}})
+      // this.$router.push({path:'/home/good',query:{}})
         this.typeIndex = index
         this.productList = []
         // this.allLoaded = false
@@ -120,13 +127,18 @@ export default {
         }
     },
     checkroute(){
-      if(this.$route.query.key !== '' &&this.$route.query.key ){
-        console.log(this.$route.query.key)
-        api.searchProduct({key:this.$route.query.key}).then(res=>{
+      if(this.result !== ''){
+        console.log(this.result)
+        // let result = sessionStorage.result
+        api.searchProduct({key:this.result}).then(res=>{
           if(res.length!==0){
             this.productList = res
+            // this.result = ''
+            // sessionStorage.removeItem('result')
           } else {
             Toast('搜索结果为空')
+            // this.result = ''
+            // sessionStorage.removeItem('result')
           }
         })
       }
@@ -213,7 +225,7 @@ export default {
         setTimeout(() => {
           // this.numPage=1
           // this.numSize=2
-          this.$router.push({path:'/home/good',query:{}})
+          
         this.productList = []
         this.loadflag = false
         this.loading = false;
@@ -264,10 +276,12 @@ export default {
      		//变量scrollHeight是滚动条的总高度
      		var scrollHeight = document.documentElement.scrollHeight||document.body.scrollHeight;
         //滚动条到底部的条件
-        if(scrollTop+windowHeight==scrollHeight){
+  // console.log(11);
+        if(scrollTop+windowHeight>=scrollHeight){
         //写后台加载数据的函数
         console.log("距顶部"+scrollTop+"可视区高度"+windowHeight+"滚动条总高度"+scrollHeight);
-      if(!this.$route.query.key){
+        // console.log(sessionStorage.result)
+      if(this.result === ''){
           if(!this.loadflag){
           this.loadMore()
         }

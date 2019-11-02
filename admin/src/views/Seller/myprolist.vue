@@ -28,17 +28,11 @@
                         <div style="color:#F56C6C" v-if="o.buyflag === 3">已下架</div>
                     </div>
                     <div class="bottom clearfix">
-                    <time class="time">{{ format(o.updatedAt) }}</time>
+                    <div class="time">{{ format(o.updatedAt) }}</div>
                     <div>
-<<<<<<< HEAD
-                        <el-button type="text" class="button" @click="$router.push(`/editseller/${o._id}`)">编辑</el-button>
-                        <el-button type="text" class="button" style="color:#303133;" @click="showBuyer(o.buyer,o._id)" v-if="o.buyflag === 1">查看详情</el-button>
-                        <el-button type="text" style="color:red;margin-right:6px" class="button" @click="delproduct(o._id)" v-if="o.buyflag !== 1">删除</el-button>
-=======
                         <el-button type="text" class="button" @click="$router.push(`/editseller/${o._id}`)" v-if="o.buyflag === 0||o.buyflag === 3">编辑</el-button>
                         <el-button type="text" style="color:red;margin-right:6px" class="button" @click="delproduct(o._id,o.buyflag)" v-if="o.buyflag === 0 ||o.buyflag === 3">删除</el-button>
                         <el-button type="text" class="button" @click="checkBuyer(o,o.buyer,o._id)" v-if="o.buyflag === 1||o.buyflag === 2">查看详情</el-button>
->>>>>>> 424a691a652ed586b123b672477fa794d1628af2
                     </div>
                     </div>
                 </div>
@@ -92,31 +86,6 @@
             :page-count="pageList.allPages"
             :total="pageList.count">
         </el-pagination>
-        <el-dialog
-            title="买家详情"
-            :visible.sync="dialogVisible"
-            width="40%"
-            :before-close="handleClose">
-            <div style="display:flex;">
-                <div style="margin-left:2rem"><img :src="buyerInfo.headImg" alt="" style="width:8rem;height:8rem;"></div>
-                <div style="margin-left:1rem">
-                    <p>名称：<span>{{buyerInfo.nickname}}</span></p>
-                    <p>账号：<span>{{buyerInfo.account}}</span></p>
-                    <p>电话：<span>{{buyerInfo.telephone}}</span></p>
-                    <p>邮箱：<span>{{buyerInfo.email}}</span></p>
-                    <p>订单号：<span>{{buyerInfo.order}}</span></p>
-                    <div v-for="(item,index) in buyerInfo.rece_info" :key="index">
-                        <p v-if="item.checked===1">邮寄地址：<span>{{item.re_address}}</span></p>
-                        <p v-if="item.checked===1">收件人：<span>{{item.re_name}}</span></p>
-                        <p v-if="item.checked===1">收件人电话：<span>{{item.re_phone}}</span></p>
-                    </div>
-                </div>
-            </div>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-            </span>
-        </el-dialog>
     </div>
 </template>
 
@@ -132,14 +101,9 @@ export default {
             numSize: 4,
             numPage: 1,
             pageList:[],
-<<<<<<< HEAD
-            buyerInfo:{},
-            dialogVisible: false
-=======
             dialogVisible: false,
             buyerInfo:{},
             pid:''
->>>>>>> 424a691a652ed586b123b672477fa794d1628af2
         }
     },
     methods:{

@@ -38,23 +38,28 @@
         </div>
         <div class=" pt-3 pb-2" style="background:#ccc">
             <div class="nav d-flex jc-around pb-1" style="font-size:1.5rem;line-height:1.5rem">
-                <div class="nav-item">
-                    <router-link class="nav-link p-2" tag="div" to="/home/good">最新发布</router-link>
+                <div :class="[{'nav-item':chooseflag===false},{'active':chooseflag===true}]">
+                    <div class="p-2" @click="chooseflag = true">最新发布</div>
                 </div>
-                <div class="nav-item">
-                    <router-link class="nav-link p-2" tag="div" to="/about">我的关注</router-link>
+                <div :class="[{'nav-item':chooseflag===true},{'active':chooseflag===false}]">
+                    <div class="p-2" @click="chooseflag = false">我的关注</div>
                 </div>
-                <!-- <div class="nav-item">
-                    <router-link class="nav-link" tag="div" to="/">赛事中心</router-link>
-                </div> -->
             </div> 
         </div>
-        <router-view></router-view>
+        <!-- <router-view></router-view> -->
+        <div v-if="chooseflag">
+            <HomeGood :result="tflag"></HomeGood>
+        </div>
+        <div v-else>
+            <About></About>
+        </div>
     </div>
 </template>
 
 <script>
 import { Toast } from 'mint-ui';
+import HomeGood from './HomeGood'
+import About from './About'
 export default {
     data(){
         return{
@@ -65,8 +70,14 @@ export default {
                 el:".pagination-home",
                 }
             },
-            result:''
+            chooseflag:true,
+            result:'',
+            tflag:''
         }
+    },
+    components:{
+        HomeGood,
+        About
     },
     methods:{
         onSearch(){
@@ -74,13 +85,31 @@ export default {
                 Toast('搜索的关键词为空')
                 return
             }
-            this.$router.push({path:'/home/good',query:{}})
-            this.$router.push({path:'/home/good',query:{key:this.result}})
+            // this.$router.push({path:'/'})
+            // this.$router.push({path:'/home/good',query:{key:this.result}})
+            this.tflag = this.result
             this.result = ''
         }
     },
     mounted(){
-        this.$router.push({path:'/home/good',query:{}})
+        // this.$router.push({path:'/'})
     }
 }
 </script>
+
+<style lang="scss" scoped>
+
+.nav{
+
+}
+    .nav-item{
+        border-bottom:2px solid transparent; 
+        // padding: 3px;
+        // padding-bottom: 0.2rem;
+    }
+    .active{
+        // padding: 3px;
+        font-weight: bold;
+        border-bottom:2px solid rgb(48, 8, 121); 
+    }
+</style>

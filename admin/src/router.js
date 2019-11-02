@@ -18,7 +18,10 @@ const router = new Router({
       path: '/',
       name: 'home',
       component: Home,
-      redirect:sessionStorage.authflag==='1'?'/homepage':'/sellerpage',
+      redirect:(item)=>{
+        // console.log(item,sessionStorage.authflag)
+       return sessionStorage.authflag==='1'?'/homepage':'/sellerpage'
+      },
       children:[
         //首页
         {

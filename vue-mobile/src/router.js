@@ -33,19 +33,19 @@ const router = new Router({
           path:'/home',
           name:'home',
           component:Home,
-          redirect:'/home/good',
-          children:[
-            {
-              path: '/home/good',
-              name: 'good',
-              component: () => import('./views/Home/HomeGood.vue')
-            },
-            {
-              path: '/about',
-              name: 'about',
-              component: () => import('./views/Home/About.vue')
-            }
-          ]
+          // redirect:'/home/good',
+          // children:[
+          //   {
+          //     path: '/home/good',
+          //     name: 'good',
+          //     component: () => import('./views/Home/HomeGood.vue')
+          //   },
+          //   {
+          //     path: '/about',
+          //     name: 'about',
+          //     component: () => import('./views/Home/About.vue')
+          //   }
+          // ]
         },
         {
           path: '/conversation',

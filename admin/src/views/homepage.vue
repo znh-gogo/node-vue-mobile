@@ -33,7 +33,7 @@
                 <img src="../assets/home-buy.png" alt="" style="width:64px;height:64px">
                 <div style="text-align:center">
                     <div style="margin-bottom:10px;font-weight:700">交易额</div>
-                    <div>{{model.buynum}}</div>
+                    <div>￥{{model.buynum}}</div>
                 </div>
             </div>
         </div>
