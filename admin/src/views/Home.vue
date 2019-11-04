@@ -19,14 +19,14 @@
     text-color="#fff"
     active-text-color="#ffd04b">
       <el-submenu index="0">
-        <template slot="title"><i class="el-icon-eleme"></i><span>首页</span></template>
+        <template slot="title"><i class="el-icon-s-home"></i><span>首页</span></template>
         <el-menu-item-group>
           <el-menu-item index="/homepage" v-if="authflag === 1">首页</el-menu-item>
           <el-menu-item index="/sellerpage" v-if="authflag === 0">首页</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
 
-      <el-submenu index="1" v-if="authflag === 1">
+      <el-submenu index="1" v-if="authflag === 2">
         <template slot="title"><i class="el-icon-user"></i><span>用户管理</span></template>
         <el-menu-item-group>
           <template slot="title">用户</template>
@@ -66,7 +66,7 @@
       </el-submenu>
 
       <el-submenu index="5" v-if="authflag === 1">
-        <template slot="title"><i class="el-icon-user-solid"></i><span>管理员管理</span></template>
+        <template slot="title"><i class="el-icon-user"></i><span>管理员管理</span></template>
         <el-menu-item-group>
           <template slot="title">管理员</template>
           <el-menu-item index="/adminList">管理员列表</el-menu-item>
@@ -101,6 +101,15 @@
         </el-menu-item-group>
       </el-submenu>
 
+      <el-submenu index="9"  v-if="authflag === 1">
+        <template slot="title"><i class="el-icon-s-marketing"></i><span>广告管理</span></template>
+        <el-menu-item-group>
+          <!-- <template slot="title">管理员</template> -->
+          <el-menu-item index="/setAd">广告价格与时长</el-menu-item>
+          <el-menu-item index="/Adlist">广告申请列表</el-menu-item>
+        </el-menu-item-group>
+      </el-submenu>
+
     </el-menu>
   </el-aside>
     
@@ -126,7 +135,7 @@
     
     <el-main style="background-color:#f7f7f7">
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{ path: '/homepage' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path:authflag ===1? '/homepage':'sellerpage' }">首页</el-breadcrumb-item>
         <!-- <el-breadcrumb-item><a href="/">活动管理</a></el-breadcrumb-item> -->
         <el-breadcrumb-item v-if="$route.meta.name">{{$route.meta.name}}</el-breadcrumb-item>
       </el-breadcrumb>

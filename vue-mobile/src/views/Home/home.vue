@@ -48,7 +48,7 @@
         </div>
         <!-- <router-view></router-view> -->
         <div v-if="chooseflag">
-            <HomeGood :result="tflag"></HomeGood>
+            <HomeGood :result="tflag" @setFlag="setnull"></HomeGood>
         </div>
         <div v-else>
             <About></About>
@@ -89,6 +89,9 @@ export default {
             // this.$router.push({path:'/home/good',query:{key:this.result}})
             this.tflag = this.result
             this.result = ''
+        },
+        setnull(){
+            this.tflag = ''
         }
     },
     mounted(){

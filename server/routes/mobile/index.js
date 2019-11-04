@@ -910,7 +910,7 @@ module.exports = app => {
     router.post('/showSellerInfo',solveMobileToken,async(req,res)=>{
         const { id } = req.body
         //返回个人信息
-        const user = await Account.findById(id)
+        const user = await Account.findById(id,'+money')
         //返回商品信息、出售商品的总数量、总价值、已卖出数量、总盈利
         const product = await Product.find({seller:id})
         const productnum = product.length
@@ -927,7 +927,93 @@ module.exports = app => {
         setTimeout(()=>{
             res.send({user,productnum,productallprice,soldnum,salary})
         },200)
+    })
 
+    const Ad = require('../../models/Ad')
+    const AdPrice = require('../../models/AdPrice')
+    //admin 商家申请广告位
+    router.post('/applyAd',solveMobileToken,async(req,res)=>{
+        await Ad.create(req.body)
+        res.send({message:'广告位申请成功'})
+    })
+
+    //admin 商家修改广告位
+    router.post('/editAd',solveMobileToken,async(req,res)=>{
+        const {id} = req.body
+        await Ad.findByIdAndUpdate(id,req.body)
+        res.send({message:'修改成功'})
+    })
+
+    //admin 商家删除广告位
+    router.post('/delAd',solveMobileToken,async(req,res)=>{
+        const {id} = req.body
+        await Ad.findByIdAndDelete(id)
+        res.send({message:'删除成功'})
+    })
+
+    //admin 判断是否已申请了广告位
+    router.post('/ifApplyAd',solveMobileToken,async(req,res)=>{
+        const {id} = req.body
+        const model = await find({relative:id})
+        if(model){
+            res.send({ifAdflag:true})
+        } else {
+            res.send({ifAdflag:false})
+        }
+    })
+
+    //admin 回显申请的广告位
+    router.post('/showAppliedAd',solveMobileToken,async(req,res)=>{
+        const {id} = req.body
+        const model = await Ad.find({relative:id})
+        res.send(model)
+    })
+
+    //admin 管理端 回显所有广告申请
+    app.get('/admin/api/showAllAd/:numPage/:numSize',solveAdminToken,async(req,res)=>{
+        const count = await Ad.countDocuments()
+        //前端传入页数
+        let Page = Number(req.params.numPage) || 1;
+        //前端传入每页条数
+        let Size = Number(req.params.numSize)|| 1;
+        //计算总页数
+        let allPages = Math.ceil(count/Size);
+        //当前页不能大于总页数
+        Page = Math.min(Page,allPages)
+        //当前页不能小于1
+        Page = Math.max(Page,1)
+        //忽略数
+        let skip = (Page-1)*Size;
+        const items = await Ad.find().populate('relative').skip(skip).limit(Size)
+        BeanPage = {
+            count,
+            Page,
+            Size,
+            allPages
+        }
+        res.send({items,BeanPage})
+    })
+
+    //admin管理端 同意商家广告
+    app.post('/admin/api/manageAdApply',solveAdminToken,async(req,res)=>{
+        const {id,flag} = req.body
+        await Ad.findByIdAndUpdate(id,{$set:{ad_flag:flag,ad_timestart:Date.now()}})
+        res.send({message:'操作成功'})
+    })
+
+    //admin管理端 管理员设置广告价格与时长 和删除
+    app.post('/admin/api/setAd',solveAdminToken,async(req,res)=>{
+        await AdPrice.create(req.body)
+        res.send({message:'设置成功'})
+    })
+    app.post('/admin/api/delAd',solveAdminToken,async(req,res)=>{
+        const {id} = req.body
+        await AdPrice.findByIdAndDelete(id)
+        res.send({message:'删除成功'})
+    })
+    app.post('/admin/api/showAd',solveAdminToken,async(req,res)=>{
+        const model = await AdPrice.find()
+        res.send(model)
     })
 
     //上传文件中间处理

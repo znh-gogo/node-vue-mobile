@@ -108,6 +108,7 @@ export default {
     choosetype(item,index){
       // console.log(item._id)
       // this.$router.push({path:'/home/good',query:{}})
+        this.$emit('setFlag')
         this.typeIndex = index
         this.productList = []
         // this.allLoaded = false
@@ -133,11 +134,11 @@ export default {
         api.searchProduct({key:this.result}).then(res=>{
           if(res.length!==0){
             this.productList = res
-            // this.result = ''
+            
             // sessionStorage.removeItem('result')
           } else {
             Toast('搜索结果为空')
-            // this.result = ''
+          
             // sessionStorage.removeItem('result')
           }
         })
@@ -225,7 +226,7 @@ export default {
         setTimeout(() => {
           // this.numPage=1
           // this.numSize=2
-          
+          this.$emit('setFlag')
         this.productList = []
         this.loadflag = false
         this.loading = false;

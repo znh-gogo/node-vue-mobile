@@ -200,6 +200,19 @@ const router = new Router({
           component: () => import('./views/Feedback/feedback.vue'),
           meta:{name:'反馈列表'}
         },
+        //广告
+        {
+          path: '/setAd',
+          name: 'setAd',
+          component: () => import('./views/Ad/adEdit.vue'),
+          meta:{name:'广告价钱与时长管理'}
+        },
+        {
+          path: '/Adlist',
+          name: 'Adlist',
+          component: () => import('./views/Ad/adList.vue'),
+          meta:{name:'广告申请列表管理'}
+        },
       ]
     },
 

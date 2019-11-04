@@ -20,6 +20,8 @@
                         <div class="items-content">￥{{model.salary}}</div>
                     </div>
                 </div>
+                <div v-if="model.user" style="margin:10px;font-size:20px;">个人账户余额：{{model.user.money}}元</div>
+                <div v-if="model.user" style="margin:10px;font-size:20px;">个人账户变动时间：{{format(model.user.updatedAt)}}</div>
             </el-tab-pane>
             <el-tab-pane label="基本信息" name="second">
                 <div class="baseinfo-box">
@@ -91,16 +93,16 @@ export default {
     justify-content: space-around;
 }
 .one{
-    background: linear-gradient(top left, #3366FF,#CC99FF);
+    background: linear-gradient(to top left, #3366FF,#CC99FF);
 }
 .two{
-    background: linear-gradient(top left, #FF0066,#FF99FF);
+    background: linear-gradient(to top left, #FF0066,#FF99FF);
 }
 .three{
-    background: linear-gradient(top left, #FF6600,#FFFFaa);
+    background: linear-gradient(to top left, #FF6600,#FFFFaa);
 }
 .four{
-    background: linear-gradient(top left, green,#99FF99);
+    background: linear-gradient(to top left, green,#99FF99);
 }
 .info-items{
     width:18%;
