@@ -213,6 +213,25 @@ const router = new Router({
           component: () => import('./views/Ad/adList.vue'),
           meta:{name:'广告申请列表管理'}
         },
+        {
+          path: '/Adapply',
+          name: 'Adapply',
+          component: () => import('./views/Ad-seller/adApply.vue'),
+          meta:{name:'广告申请'}
+        },
+        {
+          path: '/Adapplyedit/:id',
+          name: 'Adapplyedit',
+          component: () => import('./views/Ad-seller/adApply.vue'),
+          meta:{name:'广告申请修改'},
+          props:true
+        },
+        {
+          path: '/myAdList',
+          name: 'myAdList',
+          component: () => import('./views/Ad-seller/myAdList.vue'),
+          meta:{name:'我的广告列表'}
+        },
       ]
     },
 

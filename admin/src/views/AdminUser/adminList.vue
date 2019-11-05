@@ -1,10 +1,10 @@
 <template>
-<div style="padding: 5px;min-height:500px">
+<div style="padding:20px 10px;min-height:500px">
   <h1 style="margin-top:0">管理员列表</h1>
   <el-table
     height="500"
     :data="tableData"
-    border
+    :header-cell-style="{background:'#eef1f6',color:'#606266'}"
     style="width: 100%">
     <el-table-column
       fixed

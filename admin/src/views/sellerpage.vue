@@ -47,7 +47,11 @@
                     <div v-if="model.user" style="margin-left:60px"><img :src="model.user.headImg" alt="" style="width:200px;height:200px;"></div>
                 </div>
             </el-tab-pane>
-            <el-tab-pane label="广告位申请" name="third">开发中</el-tab-pane>
+            <el-tab-pane label="广告位申请" name="third">
+                <div style="">
+                    
+                </div>
+            </el-tab-pane>
             <!-- <el-tab-pane label="定时任务补偿" name="fourth">定时任务补偿</el-tab-pane> -->
         </el-tabs>
     </div>
@@ -59,22 +63,56 @@ import format from '../common/common'
 export default {
     data() {
       return {
+        MOBILE,
         activeName: 'first',
         model:{},
-        format
+        format,
+        delflag:false,
+        ruleForm: {
+          ad_name: '',
+          ad_description: '',
+          ad_price:'',
+          ad_timelong:'',
+          ad_showflag:1,
+          ad_img:''
+        },
+        rules: {
+          ad_name: [
+            { required: true, message: '请输入广告名称', trigger: 'blur' }
+          ],
+          ad_description: [
+            { required: true, message: '请输入广告描述', trigger: 'blur' }
+          ],
+          ad_price: [
+            { required: true, message: '请选择广告价格期限', trigger: 'change' }
+          ],
+          ad_showflag: [
+            { required: true, message: '请选择是否显示', trigger: 'change' }
+          ],
+          ad_img: [
+            { required: true, message: '请上传广告位图片', trigger: 'change' }
+          ]
+        },
+        nowIndex:-1,
+        nowIndex1:-1,
+        priceList:[]
       };
     },
     methods: {
       handleClick(tab) {
         // console.log(tab.name);
         sessionStorage.tabsname = tab.name
+        // if(tab.name === 'third'){
+        //     this.nowIndex = -1
+        // }
       },
       getSeller(){
           let id = sessionStorage.id
           this.$http.post(MOBILE+'/showSellerInfo',{id}).then(res=>{
               this.model = res.data
           })
-      }
+      },
+    
     },
     mounted(){
         this.getSeller()
@@ -128,4 +166,5 @@ export default {
 .info-left{
     text-align: right;
 }
+
 </style>

@@ -110,13 +110,25 @@
         </el-menu-item-group>
       </el-submenu>
 
+      <el-submenu index="10"  v-if="authflag === 0">
+        <template slot="title"><i class="el-icon-s-platform"></i><span>商家广告管理</span></template>
+        <el-menu-item-group>
+          <!-- <template slot="title">管理员</template> -->
+          <el-menu-item index="/Adapply">广告申请</el-menu-item>
+          <el-menu-item index="/myAdList">广告列表</el-menu-item>
+        </el-menu-item-group>
+      </el-submenu>
+
     </el-menu>
   </el-aside>
     
      
   <el-container>
     <el-header class="header">
-      <el-button type="text" :icon="isCollapse?'el-icon-s-unfold':'el-icon-s-fold'" @click="isCollapse = !isCollapse" style="font-size:20px;color:666;outline:none"></el-button>
+      <div style="align-items:center;display:flex;">
+        <el-button type="text" :icon="isCollapse?'el-icon-s-unfold':'el-icon-s-fold'" @click="isCollapse = !isCollapse" style="font-size:28px;color:666;outline:none"></el-button>
+        <div style="margin-left:20px;font-size:20px;font-weight:700;">{{authflag === 0?'商家端':'管理端'}}</div>
+      </div>
       <div style="align-items:center;display:flex;">
         <img :src="headimg" style="width:30px;height:30px;border-radius:50%;" v-if="headimg!==''"/>
         <img src="../assets/head.jpg" style="width:30px;height:30px;border-radius:50%;" v-else/>
@@ -187,6 +199,7 @@ export default {
           this.$message.success('您未收到任何退款通知')
         } else {
           this.$message.warning(`您收到了${this.paybacknum}条退款通知，去商品列表中处理吧！`)
+          this.$router.push('/myprolist')
         }
       },
       handleOpen(key, keyPath) {

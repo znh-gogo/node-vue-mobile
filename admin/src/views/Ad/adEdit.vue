@@ -2,8 +2,14 @@
     <div style="padding:10px">
         <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
             <el-tab-pane label="广告价格管理" name="first">
-                <div>
-                    {{new Date('2019-11-04T10:09:10.063Z')}}
+                <div style="display:flex;flex-wrap: wrap;">
+                    <div v-for="(item,index) in priceList" :key="index" :class="[{'priceBox':nowIndex!==index},{'current':nowIndex === index}]" @click="chooseCurrent(item,index)">
+                        <div class="priceTime">{{computedTime(item.ad_timeline)}}</div>
+                        <div class="price">￥{{item.ad_price}}</div>
+                    </div>
+                </div>
+                <div style="margin:10px;"><el-button type="danger" :disabled="nowIndex === -1" @click="delAdPrice">删除该价格</el-button>
+                <el-button @click="nowIndex = -1">重置</el-button>
                 </div>
             </el-tab-pane>
             <el-tab-pane label="设置广告价格" name="second">
@@ -41,6 +47,8 @@ export default {
         return{
             activeName: 'first',
             tabsname:'first',
+            nowIndex:-1,
+            currentId:'',
             ruleForm: {
                         ad_price: '',
                         ad_timeline: ''
@@ -64,6 +72,7 @@ export default {
                 value: 60*60*24*360,
                 label: '一年'
                 }],
+                priceList:[]
         }
     },
     methods: {
@@ -78,6 +87,7 @@ export default {
             this.$refs[formName].resetFields()
             this.activeName = 'first'
             sessionStorage.tabsname = 'first'
+            this.showAdPrice()
         })
       },
       resetForm(formName) {
@@ -85,8 +95,54 @@ export default {
       },
       showAdPrice(){
           this.$http.post(ADMIN+'/showAd').then(res=>{
-
+              this.priceList = res.data
           })
+      },
+      delAdPrice(){
+          this.$confirm('此操作将删除该价格标签, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http.post(ADMIN+'/delAd',{id:this.currentId}).then(res=>{
+              this.$message.success(res.data.message)
+              this.showAdPrice()
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+          
+      },
+      chooseCurrent(item,index){
+          this.nowIndex = index
+          this.currentId = item._id
+      },
+      computedTime(time){
+          let day = 60*60*24
+          let times = time/day
+          switch(times){
+                case 1:
+                    return 1+' 天';
+                    break;
+                case 15:
+                    return 2+' 周';
+                    break;
+                case 30:
+                    return 1+'个月';
+                    break;
+                case 90:
+                    return 3+'个月';
+                    break;
+                case 180:
+                    return '半 年';
+                    break;
+                case 360:
+                    return '一 年';
+                    break;
+          }
       }
     },
     mounted(){
@@ -97,3 +153,37 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.priceBox{
+    padding: 5px;
+    border: 1px solid #cfcfcf;
+    border-radius: 4px;
+    text-align: center;
+    margin-left: 10px;
+    margin-top: 5px;
+    width: 120px;
+    cursor: pointer;
+    
+}
+.priceTime{
+    border-bottom: 1px solid #cfcfcf;
+    padding-bottom: 5px;
+    font-size: 20px;
+}
+.price{
+    margin-top: 5px;
+    font-size: 24px;
+}
+.current{
+    border: 1px solid #409EFF;
+    border-radius: 4px;
+    text-align: center;
+    margin-left: 10px;
+    width: 120px;
+    cursor: pointer;
+    padding: 5px;
+    margin-top: 5px;
+
+}
+</style>

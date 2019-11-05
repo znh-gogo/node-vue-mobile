@@ -965,7 +965,46 @@ module.exports = app => {
     //admin 回显申请的广告位
     router.post('/showAppliedAd',solveMobileToken,async(req,res)=>{
         const {id} = req.body
-        const model = await Ad.find({relative:id})
+        const model = await Ad.findById(id)
+        res.send(model)
+    })
+
+    //admin 回显申请的广告位列表
+    router.post('/showAppliedAdList',solveMobileToken,async(req,res)=>{
+        const {id,numPage,numSize} = req.body
+        const count = await Ad.countDocuments({relative:id})
+        //前端传入页数
+        let Page = Number(numPage) || 1;
+        //前端传入每页条数
+        let Size = Number(numSize)|| 1;
+        //计算总页数
+        let allPages = Math.ceil(count/Size);
+        //当前页不能大于总页数
+        Page = Math.min(Page,allPages)
+        //当前页不能小于1
+        Page = Math.max(Page,1)
+        //忽略数
+        let skip = (Page-1)*Size;
+        const items = await Ad.find({relative:id}).populate('relative').skip(skip).limit(Size)
+        BeanPage = {
+            count,
+            Page,
+            Size,
+            allPages
+        }
+        res.send({items,BeanPage})
+    })
+
+    //admin 商家便捷显示隐藏广告
+    router.post('/ifshowAd',solveMobileToken,async(req,res)=>{
+        const {id,ad_showflag} = req.body
+        await Ad.findByIdAndUpdate(id,{$set:{ad_showflag}})
+        res.send({message:'修改状态成功'})
+    })
+
+    //admin 商家回显广告价格
+    router.post('/showAdPrice',solveMobileToken,async(req,res)=>{
+        const model = await AdPrice.find()
         res.send(model)
     })
 

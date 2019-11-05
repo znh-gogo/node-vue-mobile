@@ -1,10 +1,10 @@
 <template>
-<div>
+<div style="padding:20px 10px;">
   <h1 style="margin-top:0">计划人列表</h1>
   <el-table
     height="500"
     :data="tableData.items"
-    border
+    :header-cell-style="{background:'#eef1f6',color:'#606266'}"
     style="width: 100%">
     <el-table-column
       fixed
