@@ -28,7 +28,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import {ADMIN,MOBILE} from '../api/globol'
 import { Notification } from 'element-ui';
 export default {

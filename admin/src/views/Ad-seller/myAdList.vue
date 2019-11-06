@@ -26,9 +26,9 @@
                 >
             </el-table-column>
             <el-table-column
-                label="广告时长">
+                label="广告时长及价格">
                 <template slot-scope="scope">
-                    {{computedTime(scope.row.ad_timelong)}}
+                    {{computedTime(scope.row.ad_timelong)+'/￥'+scope.row.ad_price}}
                 </template>
             </el-table-column>
             <el-table-column
@@ -66,8 +66,36 @@
                 <template slot-scope="scope">
                     <span v-if="scope.row.ad_flag<=1">未支付</span>
                     <span v-if="scope.row.ad_flag===3" class="applysuccess">已支付</span>
-                    <el-button type="primary" v-if="scope.row.ad_flag===2" class="applying">请支付</el-button>
+                    <el-button v-if="scope.row.ad_flag===2" @click="payAd(scope.row)">请支付</el-button>
                 </template>
+            </el-table-column>
+            <el-table-column
+                label="备注">
+                <template slot-scope="scope">
+                    <el-popover
+                        v-if="scope.row.ad_remarks"
+                        placement="top-start"
+                        title="备注"
+                        width="200"
+                        trigger="hover"
+                        :content="scope.row.ad_remarks">
+                        <span slot="reference">收到备注</span>
+                    </el-popover>
+                    <span v-else>暂无收到备注</span>
+                </template>
+            </el-table-column>
+            <el-table-column
+                label="广告图片"
+                >
+                <template slot-scope="scope">
+                    <!-- <img :src="scope.row.ad_img" alt="" style="width:80px;height:60px;"> -->
+                    <el-image 
+                        style="width: 80px; height: 60px;cursor:pointer;"
+                        :src="scope.row.ad_img"
+                        @click="photoList = [],photoList.push(scope.row.ad_img)"
+                        :preview-src-list="photoList">
+                    </el-image>
+                </template>    
             </el-table-column>
             <el-table-column
             fixed="right"
@@ -104,13 +132,14 @@
 
 <script>
 import {MOBILE} from '../../api/globol'
+import format from '../../common/common'
 export default {
     data(){
         return{
             tableData: [],
             numPage:1,
             numSize:2,
-
+            photoList:[]
         }
     },
     methods:{
@@ -146,7 +175,14 @@ export default {
                     message: '已取消删除'
                 });          
             });
-            
+        },
+        payAd(e){
+            // console.log(e)
+            let id = sessionStorage.id
+            this.$http.post(MOBILE+'/payAd',{adid:e._id,id}).then(res=>{
+                this.$message.success(res.data.message)
+                this.fetchData()
+            })
         },
         changePage(e){
             console.log(e)
@@ -155,8 +191,16 @@ export default {
         },
         computedtimeline(time){
             if(time){
-                //时间转字符串比较
-                return time
+                //时间戳转字符串比较
+                // console.log(Date.now())
+                let now = Date.now()
+                //new Date(Date.parse("2019-11-07T09:42:12.144Z")).getTime() utc转时间戳
+                let timestamp = new Date(Date.parse(time)).getTime()
+                if (now>timestamp){
+                    return format(time)+'已过期';
+                } else {
+                    return format(time);
+                }
             } else return '未开始'
         },
         computedTime(time){

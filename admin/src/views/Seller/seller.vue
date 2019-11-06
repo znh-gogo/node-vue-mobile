@@ -125,10 +125,6 @@ export default {
         getIndex(i){
             this.nowIndex = i
         },
-        // handlePictureCardPreview(file) {
-        //     this.dialogImageUrl = file.url;
-        //     this.dialogVisible = true;
-        // },
         getAuth(){
             return {
                 Authorization:`Bearer ${sessionStorage.token || ''}`

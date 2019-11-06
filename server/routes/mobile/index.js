@@ -1008,13 +1008,31 @@ module.exports = app => {
         res.send(model)
     })
 
+    //admin 商家支付广告费用
+    router.post('/payAd',solveMobileToken,async(req,res)=>{
+        const {adid,id} = req.body
+        const user = await Account.findById(id,'+money')
+        const ad = await Ad.findById(adid)
+        //判断钱够不够  
+        if(user.money<ad.ad_price){
+            res.send({message:'账户余额不足，支付失败，请充值！'})
+            return
+        } else {
+            let newmoney = parseFloat(user.money) - parseFloat(ad.ad_price)
+            let newtime = Date.now() + ad.ad_timelong*1000
+            await Account.findByIdAndUpdate(id,{$set:{money:newmoney}})
+            await Ad.findByIdAndUpdate(adid,{$set:{ad_timestart:Date.now(),ad_timeline:newtime,ad_flag:3}})
+            res.send({message:'支付成功,广告位生效'})
+        }
+    })
+
     //admin 管理端 回显所有广告申请
-    app.get('/admin/api/showAllAd/:numPage/:numSize',solveAdminToken,async(req,res)=>{
+    app.post('/admin/api/showAllAd',solveAdminToken,async(req,res)=>{
         const count = await Ad.countDocuments()
         //前端传入页数
-        let Page = Number(req.params.numPage) || 1;
+        let Page = Number(req.body.numPage) || 1;
         //前端传入每页条数
-        let Size = Number(req.params.numSize)|| 1;
+        let Size = Number(req.body.numSize)|| 1;
         //计算总页数
         let allPages = Math.ceil(count/Size);
         //当前页不能大于总页数
@@ -1036,8 +1054,15 @@ module.exports = app => {
     //admin管理端 同意商家广告
     app.post('/admin/api/manageAdApply',solveAdminToken,async(req,res)=>{
         const {id,flag} = req.body
-        await Ad.findByIdAndUpdate(id,{$set:{ad_flag:flag,ad_timestart:Date.now()}})
+        await Ad.findByIdAndUpdate(id,{$set:{ad_flag:flag}})
         res.send({message:'操作成功'})
+    })
+
+    //admin 管理端 备注信息
+    app.post('/admin/api/adRemarks',solveAdminToken,async(req,res)=>{
+        const {id,ad_remarks} = req.body
+        await Ad.findByIdAndUpdate(id,{$set:{ad_remarks}})
+        res.send({message:'备注成功'})
     })
 
     //admin管理端 管理员设置广告价格与时长 和删除
