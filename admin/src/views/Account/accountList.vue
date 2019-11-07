@@ -116,8 +116,7 @@ import {ADMIN} from '../../api/globol'
             id:e._id
           }).then((res)=>{
             this.fetchUsers()
-            this.$message.success(res.message)
-            
+            this.$message.success(res.data.message)
           })
         } else if(e.frozen === 0){
           this.$http.post(ADMIN+'/frozenAccount',{
@@ -125,8 +124,7 @@ import {ADMIN} from '../../api/globol'
             id:e._id
           }).then((res)=>{
             this.fetchUsers()
-            this.$message.success(res.message)
-            
+            this.$message.success(res.data.message)
           })
         }
 

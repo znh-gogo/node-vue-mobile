@@ -191,6 +191,10 @@ const api = {
   searchProduct(data) {
     return request(global+'/mobile/api/searchProduct', data, 'post')
   },
+  showpayad(data) {
+    return request(global+'/mobile/api/showpayad', data, 'post')
+  },
+  
   
   
   

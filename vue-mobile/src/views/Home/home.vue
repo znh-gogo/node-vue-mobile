@@ -23,8 +23,18 @@
             <!-- <mt-button type="primary" size="small" style="width:20%;height:100%;display:inline-block;vertical-align: top;">搜索</mt-button> -->
         </div>
         <div style="width:100%">
-            <swiper :options="swiperOption">
-                <swiper-slide >
+            <swiper :options="swiperOption" v-if="adList.length>0">
+                <swiper-slide v-for="(item,index) in adList" :key="index" style="position:relative">
+                    <img class="w-100" style="height:180px;" :src="item.ad_img" alt="" v-if="Date.now()<new Date(Date.parse(item.ad_timeline)).getTime()">
+                    <div class="swiper-text">
+                        <div class="text-name">{{item.ad_name}}</div>
+                        <div class="text-desc">{{item.ad_description}}</div>
+                    </div>    
+                </swiper-slide>
+                <div class="swiper-pagination pagination-home text-right" slot="pagination"></div>
+            </swiper>
+            <swiper v-if="showdefault" :options="swiperOption">
+                <swiper-slide>
                     <img class="w-100" style="height:180px" src="../../assets/n1.jpg" alt="">
                 </swiper-slide>
                 <swiper-slide>
@@ -36,7 +46,13 @@
                 <div class="swiper-pagination pagination-home text-right" slot="pagination"></div>
             </swiper>
         </div>
-        <div class=" pt-3 pb-2" style="background:#ccc">
+        <!-- <div style="">
+            <div style="width:80%;margin:0 auto;padding:0.5rem 0;display:flex;justify-content:space-between;">
+                <div>如何成为商家?</div>
+                <div style="color:#409EFF">→点这里</div>
+            </div>
+        </div> -->
+        <div class="pt-3 pb-2" style="background:#ccc">
             <div class="nav d-flex jc-around pb-1" style="font-size:1.5rem;line-height:1.5rem">
                 <div :class="[{'nav-item':chooseflag===false},{'active':chooseflag===true}]">
                     <div class="p-2" @click="chooseflag = true">最新发布</div>
@@ -60,19 +76,24 @@
 import { Toast } from 'mint-ui';
 import HomeGood from './HomeGood'
 import About from './About'
+import api from '../../api'
 export default {
     data(){
         return{
              swiperOption:{
-                autoplay:true,
-                loop:true,
                 pagination:{
                 el:".pagination-home",
-                }
+                },
+                autoplay:true,
+                loop:true,
+                observer:true,
+                observeParents:true,
             },
             chooseflag:true,
             result:'',
-            tflag:''
+            tflag:'',
+            adList:[],
+            showdefault:false
         }
     },
     components:{
@@ -92,9 +113,19 @@ export default {
         },
         setnull(){
             this.tflag = ''
+        },
+        fetchAd(){
+            api.showpayad().then(res=>{
+                if(res.length!==0){
+                    this.adList = res
+                } else {
+                    this.showdefault = true
+                }
+            })
         }
     },
     mounted(){
+        this.fetchAd()
         // this.$router.push({path:'/'})
     }
 }
@@ -114,5 +145,31 @@ export default {
         // padding: 3px;
         font-weight: bold;
         border-bottom:2px solid rgb(48, 8, 121); 
+    }
+    .swiper-text{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 1rem;
+        .text-name{
+            text-shadow:5px 3px 5px #999;
+            color:#000;
+            font:18px/14px Georgia, "Times New Roman", Times, serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .text-desc{
+            width: 80%;
+            // overflow:hidden; 
+            // text-overflow:ellipsis;
+            // display:-webkit-box; 
+            // -webkit-box-orient:vertical;
+            // -webkit-line-clamp:2; 
+        }
     }
 </style>

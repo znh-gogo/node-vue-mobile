@@ -135,6 +135,10 @@ export default {
                 })
             },
             chooseCurrent(item,index){
+                if(item.ad_flag!==0){
+                    this.$message.warning('已申请的广告位不能再修改价格与期限！')
+                    return
+                }
                 this.nowIndex = index
                 this.ruleForm.ad_price = item.ad_price
                 this.ruleForm.ad_timelong = item.ad_timeline

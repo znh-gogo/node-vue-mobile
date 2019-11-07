@@ -47,9 +47,9 @@
                     <div v-if="model.user" style="margin-left:60px"><img :src="model.user.headImg" alt="" style="width:200px;height:200px;"></div>
                 </div>
             </el-tab-pane>
-            <el-tab-pane label="广告位申请" name="third">
-                <div style="">
-                    
+            <el-tab-pane label="广告位开销" name="third">
+                <div style="margin:10px">
+                    <span>您的广告为开销为：￥{{totalprice}}</span><span style="color:#409EFF;margin-left:20px;cursor:pointer" @click="$router.push('/myAdList')">查看详情</span>
                 </div>
             </el-tab-pane>
             <!-- <el-tab-pane label="定时任务补偿" name="fourth">定时任务补偿</el-tab-pane> -->
@@ -68,43 +68,19 @@ export default {
         model:{},
         format,
         delflag:false,
-        ruleForm: {
-          ad_name: '',
-          ad_description: '',
-          ad_price:'',
-          ad_timelong:'',
-          ad_showflag:1,
-          ad_img:''
-        },
-        rules: {
-          ad_name: [
-            { required: true, message: '请输入广告名称', trigger: 'blur' }
-          ],
-          ad_description: [
-            { required: true, message: '请输入广告描述', trigger: 'blur' }
-          ],
-          ad_price: [
-            { required: true, message: '请选择广告价格期限', trigger: 'change' }
-          ],
-          ad_showflag: [
-            { required: true, message: '请选择是否显示', trigger: 'change' }
-          ],
-          ad_img: [
-            { required: true, message: '请上传广告位图片', trigger: 'change' }
-          ]
-        },
         nowIndex:-1,
         nowIndex1:-1,
-        priceList:[]
+        priceList:[],
+        totalprice:0
       };
     },
     methods: {
       handleClick(tab) {
         // console.log(tab.name);
         sessionStorage.tabsname = tab.name
-        // if(tab.name === 'third'){
-        //     this.nowIndex = -1
-        // }
+        if(tab.name === 'third'){
+            this.getAdbought()
+        }
       },
       getSeller(){
           let id = sessionStorage.id
@@ -112,10 +88,18 @@ export default {
               this.model = res.data
           })
       },
+      getAdbought(){
+          let id = sessionStorage.id
+          this.$http.post(MOBILE+'/showAdAllPay',{id}).then(res=>{
+            //   console.log(res)
+              this.totalprice = res.data.totalprice
+          })
+      }
     
     },
     mounted(){
         this.getSeller()
+        this.getAdbought()
         if(sessionStorage.tabsname){
             this.activeName = sessionStorage.tabsname
         }

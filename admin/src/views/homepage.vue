@@ -64,6 +64,7 @@
                         <el-button type="text" style="width:25%;margin:0" @click="$router.push('/planList')">计划管理</el-button>
                         <el-button type="text" style="width:25%;margin:0" @click="$router.push('/accountList')">账户管理</el-button>
                         <el-button type="text" style="width:25%;margin:0" @click="$router.push('/feedbackList')">反馈管理</el-button>
+                        <el-button type="text" style="width:25%;margin:0" @click="$router.push('/Adlist')">广告管理</el-button>
                         <el-button type="text" style="width:25%;margin:0" @click="$router.push('/adminList')">管理员管理</el-button>
                     </div>
                 </el-card>

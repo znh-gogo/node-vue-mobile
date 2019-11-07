@@ -126,6 +126,11 @@ const router = new Router({
       component: () => import('./views/Mine/myfeedback/myfeedback.vue')
     },
     {
+      path:'/mine/mymarket',
+      name:'mymarket',
+      component: () => import('./views/Mine/mymarket/beseller.vue')
+    },
+    {
       path:'/mine/mypay',
       name:'mypay',
       component: () => import('./views/Mine/mypay/mypay.vue')

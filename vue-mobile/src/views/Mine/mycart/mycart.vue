@@ -22,7 +22,8 @@
                     <div style="margin-left:1rem;width:100%">
                         <div style="font-weight:700;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;width:12rem;">{{item.pro_description}}</div>
                         <div style="color:red;font-weight:700;margin:0.8rem 0">{{item.pro_price}}元</div>
-                        <div>交易成功</div>
+                        <div v-if="item.paybackflag===1" style="color:red;">退款中</div>
+                        <div v-else>交易成功</div>
                     </div>
                 </div>
                 <div style="width:90%;height:0.2rem;background:#ddd;margin:1rem auto"></div>

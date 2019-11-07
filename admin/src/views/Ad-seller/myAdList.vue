@@ -12,6 +12,8 @@
                 </el-form>
             </div>
             <el-table
+            v-loading="loading"
+            element-loading-text="正在支付中"
             :data="tableData.items"
             :header-cell-style="{background:'#eef1f6',color:'#606266'}"
             style="width: 100%">
@@ -66,7 +68,28 @@
                 <template slot-scope="scope">
                     <span v-if="scope.row.ad_flag<=1">未支付</span>
                     <span v-if="scope.row.ad_flag===3" class="applysuccess">已支付</span>
-                    <el-button v-if="scope.row.ad_flag===2" @click="payAd(scope.row)">请支付</el-button>
+                    <!-- <el-button v-if="scope.row.ad_flag===2" @click="payAd(scope.row)">请支付</el-button> -->
+                    <el-popover
+                    v-if="scope.row.ad_flag===2"
+                    placement="top-start"
+                    title="请输入支付密码"
+                    width="400"
+                    v-model="showpay"
+                    trigger="manual">
+                    <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                        <el-form-item label="密码" prop="pass">
+                            <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="确认密码" prop="checkPass">
+                            <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="submitForm('ruleForm',scope.row)">提交</el-button>
+                            <el-button @click="resetForm('ruleForm')">重置</el-button>
+                        </el-form-item>
+                    </el-form>
+                    <el-button slot="reference" @click="clickshowpay" size="medium" round>点击支付</el-button>
+                    </el-popover>
                 </template>
             </el-table-column>
             <el-table-column
@@ -131,7 +154,7 @@
 </template>
 
 <script>
-import {MOBILE} from '../../api/globol'
+import {MOBILE, ADMIN} from '../../api/globol'
 import format from '../../common/common'
 export default {
     data(){
@@ -139,7 +162,21 @@ export default {
             tableData: [],
             numPage:1,
             numSize:2,
-            photoList:[]
+            photoList:[],
+            showpay:false,
+            loading:false,
+            ruleForm: {
+                    pass: '',
+                    checkPass: '',
+                },
+            rules: {
+                pass: [
+                    { required: true,message: '密码不能为空', trigger: 'blur' }
+                ],
+                checkPass: [
+                    { required: true,message: '确认密码不能为空', trigger: 'blur' }
+                ],
+            }
         }
     },
     methods:{
@@ -183,6 +220,53 @@ export default {
                 this.$message.success(res.data.message)
                 this.fetchData()
             })
+        },
+        clickshowpay(){
+            //验证是否有支付密码
+            let id = sessionStorage.id
+            this.$http.post(MOBILE+'/showIfPaypassword',{id}).then(res=>{
+                if(!res.data.paypasswordflag){
+                    this.$message.error('请先去移动端设置支付密码!')
+                } else {
+                    this.showpay = !this.showpay
+                }
+            })
+        },
+        submitForm(formName,e) {
+            this.showpay = false
+            this.$refs[formName].validate((valid) => {
+            if (valid) {
+                if(this.ruleForm.pass!==this.ruleForm.checkPass){
+                    this.$message.error('两次输入的密码不一致');
+                    return
+                }
+                let id = sessionStorage.id
+                this.loading = true
+                this.$http.post(MOBILE+'/checkPaypassword',{id,paypassword:this.ruleForm.pass}).then((res)=>{
+                    if(res.data.status === 200){
+                        this.$message.success(res.data.message)
+                        setTimeout(()=>{
+                            this.loading = false
+                            this.payAd(e)
+                            this.resetForm(formName)
+                        },2000)
+                    } else if(res.data.status === 401){
+                        this.$message.error(res.data.message)
+                        this.loading = false
+                        this.resetForm(formName)
+                    }
+                })
+                // this.payAd(e)
+                // console.log(e)
+                // alert('submit!');
+            } else {
+                console.log('error submit!!');
+                return false;
+            }
+            });
+        },
+        resetForm(formName) {
+            this.$refs[formName].resetFields();
         },
         changePage(e){
             console.log(e)

@@ -343,12 +343,13 @@ module.exports = app => {
         if(paypassword === model.paypassword){
             res.send({
                 message:'支付密码正确',
-                status:200
+                status:200,
             })
         } else {
             res.send({
                 message:'支付密码错误',
-                status:401
+                status:401,
+                model
             })
         }
     })
@@ -1008,6 +1009,19 @@ module.exports = app => {
         res.send(model)
     })
 
+    //admin 商家回显广告位总开销
+    router.post('/showAdAllPay',solveMobileToken,async(req,res)=>{
+        const {id} = req.body
+        const model = await Ad.find({relative:id,ad_flag:3})
+        let totalprice = 0
+        model.forEach(item=>{
+            totalprice = totalprice + item.ad_price
+        })
+        setTimeout(()=>{
+            res.send({totalprice})
+        },200)
+    })
+
     //admin 商家支付广告费用
     router.post('/payAd',solveMobileToken,async(req,res)=>{
         const {adid,id} = req.body
@@ -1024,6 +1038,12 @@ module.exports = app => {
             await Ad.findByIdAndUpdate(adid,{$set:{ad_timestart:Date.now(),ad_timeline:newtime,ad_flag:3}})
             res.send({message:'支付成功,广告位生效'})
         }
+    })
+
+    //移动端 显示广告
+    router.post('/showpayad',solveMobileToken,async(req,res)=>{
+        const model = await Ad.find({ad_flag:3})
+        res.send(model)
     })
 
     //admin 管理端 回显所有广告申请

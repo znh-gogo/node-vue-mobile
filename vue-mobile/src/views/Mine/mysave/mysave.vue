@@ -28,7 +28,7 @@
             </div>
         </div>
         <div v-if="nowIndex === 2">
-                <div style="width:100%;margin:2rem auto;text-align:center"><mt-button type="primary" @click="$router.push('/about')">去查看我的关注</mt-button></div>
+                <div style="width:100%;margin:2rem auto;text-align:center"><mt-button type="primary" @click="$router.push('/home')">去查看我的关注</mt-button></div>
         </div>
     </div>    
 </template>

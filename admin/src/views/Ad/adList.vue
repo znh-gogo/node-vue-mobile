@@ -83,7 +83,7 @@
             <el-table-column
             fixed="right"
             label="操作"
-            width="150">
+            width="180">
             <template slot-scope="scope">
                 <el-button
                 :disabled="scope.row.ad_flag>=1"
@@ -108,6 +108,14 @@
                 type="text"
                 size="small">
                 备注
+                </el-button>
+                <el-button
+                :disabled="scope.row.ad_flag<=1"
+                style="text-decoration: underline;"
+                @click="frzoen(scope.row)"
+                type="text"
+                size="small">
+                冻结
                 </el-button>
             </template>
             </el-table-column>
@@ -232,7 +240,9 @@ export default {
             if(e.ad_remarks){
                 this.textarea = e.ad_remarks
             }
-            
+        },
+        frzoen(e){
+            this.$message.warning('此功能将冻结违规的广告位，暂未开放!')
         },
         remarkHandle(){
             this.$http.post(ADMIN+'/adRemarks',{id:this.adids,ad_remarks:this.textarea}).then(res=>{

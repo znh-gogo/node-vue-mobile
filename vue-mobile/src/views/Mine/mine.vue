@@ -27,6 +27,11 @@
                 <img slot="icon" src="../../assets/shopcar1.png" width="24" height="24">
             </mt-cell>
         </div>
+        <div @click="$router.push('/mine/mymarket')">
+            <mt-cell title="成为商家" style="" is-link>
+                <img slot="icon" src="../../assets/market.png" width="24" height="24">
+            </mt-cell>
+        </div>
         <div @click="$router.push('/mine/myfeedback')">
             <mt-cell title="意见反馈" style="" is-link>
                 <img slot="icon" src="../../assets/feedback.png" width="24" height="24">
