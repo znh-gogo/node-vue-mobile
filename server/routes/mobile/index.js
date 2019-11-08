@@ -120,6 +120,9 @@ module.exports = app => {
         assert(id,401,'请先登录')         
         req.user = await Account.findById(id)
         assert(req.user,401,'请先登录') 
+        if(req.user.frozen !== 1){
+            res.status(422).send({message:'账号被冻结'})
+        }
         await next()
     }
 
@@ -915,9 +918,9 @@ module.exports = app => {
         //返回商品信息、出售商品的总数量、总价值、已卖出数量、总盈利
         const product = await Product.find({seller:id})
         const productnum = product.length
-        var productallprice = 0
-        var soldnum = 0
-        var salary = 0
+        let productallprice = 0
+        let soldnum = 0
+        let salary = 0
         product.forEach(item=>{
             productallprice = productallprice + item.pro_price
             if(item.buyflag===1 || item.buyflag===2){
@@ -1043,7 +1046,14 @@ module.exports = app => {
     //移动端 显示广告
     router.post('/showpayad',solveMobileToken,async(req,res)=>{
         const model = await Ad.find({ad_flag:3})
-        res.send(model)
+        let swiper = []
+        //把已过期的挑选出来
+        model.forEach(item=>{
+            if(Date.now()<new Date(Date.parse(item.ad_timeline)).getTime()){
+                swiper.push(item)
+            }
+        })
+        res.send(swiper)
     })
 
     //admin 管理端 回显所有广告申请

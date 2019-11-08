@@ -25,7 +25,7 @@
         <div style="width:100%">
             <swiper :options="swiperOption" v-if="adList.length>0">
                 <swiper-slide v-for="(item,index) in adList" :key="index" style="position:relative">
-                    <img class="w-100" style="height:180px;" :src="item.ad_img" alt="" v-if="Date.now()<new Date(Date.parse(item.ad_timeline)).getTime()">
+                    <img class="w-100" style="height:180px;" :src="item.ad_img" alt="">
                     <div class="swiper-text">
                         <div class="text-name">{{item.ad_name}}</div>
                         <div class="text-desc">{{item.ad_description}}</div>

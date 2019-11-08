@@ -50,7 +50,7 @@
     <mt-spinner type="snake" class="loading-more" color="#26a2ff"></mt-spinner>
     <span class="loading-more-txt" style="margin-top:0.5rem">加载中...</span>
  </div>
-  <div v-if="loadflag" style="wdith:100%;text-align:center">已经没有数据了</div>
+  <div v-if="loadflag1" style="wdith:100%;text-align:center">已经没有数据了</div>
   </div>
   <!-- <div slot="bottom" class="mint-loadmore-bottom">
       <span v-show="bottomStatus !== 'loading'"
@@ -60,7 +60,7 @@
       </span>
   </div> -->
   </mt-loadmore>
-  <div v-if="upflag" @click="gotop" style="position:fixed;right:2rem;bottom:6rem;width:3rem;height:3rem;background:#fff;border-radius:50%;border:0.1rem solid #666"><img style="width:3rem;height:3rem;line-height:3rem;margin:0 auto" src="../../assets/向上.png" alt=""></div>
+  <div v-if="upflag" @click="gotop" style="position:fixed;right:2rem;bottom:6rem;width:3rem;height:3rem;background:#fff;border-radius:50%;box-shadow:2px 4px 4px 2px #999;"><img style="width:3rem;height:3rem;line-height:3rem;margin:0 auto" src="../../assets/向上.png" alt=""></div>
   </div>
 </template>
 
@@ -98,7 +98,7 @@ export default {
       isLoading : false,
       upflag:false,
       stopflag:true,
-      
+      loadflag1:false
     }
   },
   watch:{
@@ -114,6 +114,7 @@ export default {
         // this.allLoaded = false
         this.loading = false;
         this.loadflag = false
+        this.loadflag1 = false
         this.numPage = 1
         if(item._id){
           this.difftype = item._id
@@ -138,7 +139,6 @@ export default {
             // sessionStorage.removeItem('result')
           } else {
             Toast('搜索结果为空')
-          
             // sessionStorage.removeItem('result')
           }
         })
@@ -158,7 +158,11 @@ export default {
             this.loading = false;
             } else{
             this.loadflag = true
-            this.loading = true;
+            this.loading = true
+            if(this.loadflag === true){
+              this.loading = false;
+              this.loadflag1 = true
+            }
           }
         })
       } else{
@@ -175,6 +179,10 @@ export default {
           } else{
             this.loadflag = true
             this.loading = true;
+            if(this.loadflag === true){
+              this.loading = false;
+              this.loadflag1 = true
+            }
           }
         })
       }
@@ -229,6 +237,7 @@ export default {
           this.$emit('setFlag')
         this.productList = []
         this.loadflag = false
+        this.loadflag1 = false
         this.loading = false;
         this.numPage = 1
         // this.allLoaded = false
@@ -243,6 +252,7 @@ export default {
       this.isLoading = true;//加载中
       this.loading = true;
       if(this.stopflag){
+        
         this.stopflag = false
         setTimeout(() => {
         this.numPage+=1
@@ -255,12 +265,9 @@ export default {
         //   this.allLoaded = true; // 若数据已全部获取完毕
         // }
         // // this.$refs.loadmore.onTopLoaded();
-        
         // this.$refs.loadmore.onBottomLoaded();
         },1500)
       }
-      
-       
     }
   },
   mounted (){
@@ -283,7 +290,7 @@ export default {
         console.log("距顶部"+scrollTop+"可视区高度"+windowHeight+"滚动条总高度"+scrollHeight);
         // console.log(sessionStorage.result)
       if(this.result === ''){
-          if(!this.loadflag){
+          if(!this.loadflag1){
           this.loadMore()
         }
       }
