@@ -194,6 +194,9 @@ const api = {
   showpayad(data) {
     return request(global+'/mobile/api/showpayad', data, 'post')
   },
+  showmymMobilePro(data) {
+    return request(global+'/mobile/api/showmymMobilePro', data, 'post')
+  },
   
   
   

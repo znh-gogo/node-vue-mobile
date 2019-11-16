@@ -249,6 +249,7 @@ export default {
                 this.$message.success(res.data.message)
                 this.dialogVisible1 = false
                 this.textarea = ''
+                this.fetchData()
             })
         },
         changePage(e){

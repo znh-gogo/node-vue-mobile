@@ -15,6 +15,12 @@ const router = new Router({
       meta:{ isPublic:true}
     },
     {
+      path:'/origin',
+      name:'origin',
+      component:() => import('./views/origin.vue'),
+      meta:{ isPublic:true}
+    },
+    {
       path: '/',
       name: 'home',
       component: Home,

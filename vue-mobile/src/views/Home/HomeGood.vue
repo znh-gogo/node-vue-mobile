@@ -1,8 +1,9 @@
 <template>
 <div style="overflow:scroll">
-<mt-loadmore :top-method="loadTop" :top-status.sync="topStatus" ref="loadmore">
+<!-- <mt-loadmore :top-method="loadTop" :top-status.sync="topStatus" ref="loadmore"> -->
+  <van-pull-refresh v-model="vantLoading" @refresh="onRefresh">
    <!-- :bottom-method="loadMore" :bottom-all-loaded="allLoaded" -->
-    <div slot="top" class="mint-loadmore-top" style="text-align:center">
+    <!-- <div slot="top" class="mint-loadmore-top" style="text-align:center">
         <div v-show="topStatus !== 'loading'" :class="{ 'rotate': topStatus === 'drop' }">
                 <div>下拉刷新 ↓</div>
         </div>
@@ -10,7 +11,7 @@
         <mt-spinner v-show="topStatus == 'loading'" color="#26a2ff" style="margin-top:1rem"></mt-spinner>
         <span v-show="topStatus == 'loading'" >加载中...</span>
         </span>
-    </div>
+    </div> -->
     
   <div style="width:100%;min-height:100%;background:#eee;padding-bottom:6rem;">
     <div style="width:100%;padding:0.3rem 0" ref="homeWrap">
@@ -25,26 +26,24 @@
     </div>
   
     <div style="overflow-y: auto;height:auto;">
-  <div class="goodbox" 
-  
-  >
-    <div v-for="(item,index) in productList" :key="index">
-      <div class="goodcontent" v-if="item.buyflag===0" @click="$router.push({path:'/good-detail',query:{gid:item._id}})">
-        <img src="../../assets/lose.jpg" alt="" style="width:100%;height:auto;border-radius:0.8rem;" v-if="item.pro_imgs.length === 0">
-        <img :src="item.pro_imgs[0]" alt=""  style="width:100%;height:auto;border-radius:0.8rem;" v-else>
-        <div style="font-weight:bold;line-height:1.2rem;height:2.4rem;overflow:hidden;padding:0.2rem">{{item.pro_description}}</div>
-        <div style="display:flex;justify-content:space-between;margin:1rem 0;padding:0 0.5rem;">
-          <div style="color:red;">￥<span style="font-size:1.5rem">{{item.pro_price}}</span></div>
-          <div v-if="item.pro_attention">{{item.pro_attention.length}}人关注</div>
-        </div>
-        <div style="width:90%;height:1px;background:#eee;margin:0 auto"></div>
-        <div style="width:100%;padding:0.5rem;display:flex" v-if="item.seller">
-          <img :src="item.seller.headImg" alt="" style="width:2rem;height:2rem;border-radius:0.3rem">
-          <div style="margin-left:0.5rem;margin-top:0.2rem;">{{item.seller.nickname}}</div>
+    <div class="goodbox" >
+      <div v-for="(item,index) in productList" :key="index">
+        <div class="goodcontent" v-if="item.buyflag===0" @click="$router.push({path:'/good-detail',query:{gid:item._id}})">
+          <img src="../../assets/lose.jpg" alt="" style="width:100%;height:auto;border-radius:0.8rem;" v-if="item.pro_imgs.length === 0">
+          <img :src="item.pro_imgs[0]" alt=""  style="width:100%;height:auto;border-radius:0.8rem;" v-else>
+          <div style="font-weight:bold;line-height:1.2rem;height:2.4rem;overflow:hidden;padding:0.2rem">{{item.pro_description}}</div>
+          <div style="display:flex;justify-content:space-between;margin:1rem 0;padding:0 0.5rem;">
+            <div style="color:red;">￥<span style="font-size:1.5rem">{{item.pro_price}}</span></div>
+            <div v-if="item.pro_attention">{{item.pro_attention.length}}人关注</div>
+          </div>
+          <div style="width:90%;height:1px;background:#eee;margin:0 auto"></div>
+          <div style="width:100%;padding:0.5rem;display:flex" v-if="item.seller">
+            <img :src="item.seller.headImg" alt="" style="width:2rem;height:2rem;border-radius:0.3rem">
+            <div style="margin-left:0.5rem;margin-top:0.2rem;">{{item.seller.nickname}}</div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
   </div>
   <div class="loading-box tc" v-if="isLoading" style="display:flex;justify-content:space-around;">
     <mt-spinner type="snake" class="loading-more" color="#26a2ff"></mt-spinner>
@@ -59,7 +58,7 @@
       <mt-spinner type="snake"></mt-spinner>
       </span>
   </div> -->
-  </mt-loadmore>
+  </van-pull-refresh>
   <div v-if="upflag" @click="gotop" style="position:fixed;right:2rem;bottom:6rem;width:3rem;height:3rem;background:#fff;border-radius:50%;box-shadow:2px 4px 4px 2px #999;"><img style="width:3rem;height:3rem;line-height:3rem;margin:0 auto" src="../../assets/向上.png" alt=""></div>
   </div>
 </template>
@@ -92,13 +91,14 @@ export default {
       difftype:'',
       allLoaded: false,
       numPage:1,
-      numSize:4,
+      numSize:5,
       loadflag:false,
       loading:false,
       isLoading : false,
       upflag:false,
       stopflag:true,
-      loadflag1:false
+      loadflag1:false,
+      vantLoading:false
     }
   },
   watch:{
@@ -118,14 +118,15 @@ export default {
         this.numPage = 1
         if(item._id){
           this.difftype = item._id
-          api.MobileProduct({id:item._id}).then(res=>{
-            this.homeScroll()
-            this.productList = res.reverse()
-          })
+          this.getProList(this.difftype,this.numPage,this.numSize)
+          // api.MobileProduct({id:item._id}).then(res=>{
+          //   this.homeScroll()
+          //   this.productList = res.reverse()
+          // })
         } else {
           this.difftype = ''
           this.homeScroll()
-          this.getProList()
+          this.getProList(this.difftype,this.numPage,this.numSize)
         }
     },
     checkroute(){
@@ -152,6 +153,14 @@ export default {
               for(let i =0;i<res.length;i++){
                 this.productList.push(res[i])
               }
+              if(res.length<this.numSize){
+                this.loadflag = true
+                this.loading = true
+                if(this.loadflag === true){
+                  this.loading = false;
+                  this.loadflag1 = true
+                }
+              }
             } else{
               this.productList = res.reverse()
             }
@@ -171,6 +180,14 @@ export default {
             if(this.productList.length!==0){
               for(let i =0;i<res.length;i++){
                 this.productList.push(res[i])
+              }
+              if(res.length<this.numSize){
+                this.loadflag = true
+                this.loading = true
+                if(this.loadflag === true){
+                  this.loading = false;
+                  this.loadflag1 = true
+                }
               }
             } else{
               this.productList = res.reverse()
@@ -228,6 +245,9 @@ export default {
     handleBottomChange(status) {
         this.bottomStatus = status;
     },
+    onRefresh(){
+      this.loadTop()
+    },
     loadTop() {
         // load more data
         this.handleTopChange("loading");
@@ -239,11 +259,12 @@ export default {
         this.loadflag = false
         this.loadflag1 = false
         this.loading = false;
-        this.numPage = 1
+        this.numPage = 1  
         // this.allLoaded = false
-          this.getProList(this.difftype)
-          this.handleTopChange("loadingEnd")
-          this.$refs.loadmore.onTopLoaded();
+          this.getProList(this.difftype,this.numPage,this.numSize)
+          this.vantLoading = false
+          // this.handleTopChange("loadingEnd")
+          // this.$refs.loadmore.onTopLoaded();
         },1500)
     },
     loadMore(){
@@ -272,7 +293,7 @@ export default {
   },
   mounted (){
     this.proCategories()
-    this.getProList()
+    this.getProList(this.difftype,this.numPage,this.numSize)
     // console.log(this.$route.query)
   },
   created(){

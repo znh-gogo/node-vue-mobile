@@ -20,9 +20,35 @@
             <div style="margin-bottom:0.5rem">邮箱：{{userinfo.email}}</div>
             <div>个性签名：{{userinfo.description}}</div>
         </div>
-        <div style="width:100%;text-align:center;margin-top:5rem" v-if="$route.query.flag">
+        <div style="width:100%;text-align:center;margin-top:5rem" v-if="$route.query.flag==true">
             <mt-button type="primary" style="width:80%" @click="priLetter">私信</mt-button>
         </div>
+        <div style="width:100%;text-align:center;margin-top:5rem">
+            <van-divider content-position="left" :style="{ color: '#1989fa', borderColor: '#1989fa'}">他正在上架的商品</van-divider>
+            <div v-if="hisprolist.length!==0" style="width:100%;padding-top:1rem;">
+                <div style="overflow-y: auto;height:auto;">
+                <div class="goodbox" >
+                    <div v-for="(item,index) in hisprolist" :key="index">
+                    <div class="goodcontent" v-if="item.buyflag===0" @click="$router.push({path:'/good-detail',query:{gid:item._id}})">
+                        <img src="../../../assets/lose.jpg" alt="" style="width:100%;height:auto;border-radius:0.8rem;" v-if="item.pro_imgs.length === 0">
+                        <img :src="item.pro_imgs[0]" alt=""  style="width:100%;height:auto;border-radius:0.8rem;" v-else>
+                        <div style="font-weight:bold;line-height:1.2rem;height:2.4rem;overflow:hidden;padding:0.2rem;text-align:left;">{{item.pro_description}}</div>
+                        <div style="display:flex;justify-content:space-between;margin:0.5rem 0;padding:0 0.5rem;">
+                        <div style="color:red;">￥<span style="font-size:1.5rem">{{item.pro_price}}</span></div>
+                        <div v-if="item.pro_attention">{{item.pro_attention.length}}人关注</div>
+                        </div>
+                        <!-- <div style="width:90%;height:1px;background:#eee;margin:0 auto"></div>
+                        <div style="width:100%;padding:0.5rem;display:flex" v-if="item.seller">
+                        <img :src="item.seller.headImg" alt="" style="width:2rem;height:2rem;border-radius:0.3rem">
+                        <div style="margin-left:0.5rem;margin-top:0.2rem;">{{item.seller.nickname}}</div>
+                        </div> -->
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+        
     </div>
 </template>
 
@@ -32,6 +58,7 @@ export default {
     data(){
         return{
             userinfo:'',
+            hisprolist:[]
         }
     },
     methods:{
@@ -51,10 +78,20 @@ export default {
                     receiveid:that.userinfo._id
                 }
             })
+        },
+        showhissold(){
+            let id = this.$route.query.id
+            api.showmymMobilePro({id}).then(res=>{
+                this.hisprolist = res
+                if(res.length === 0){
+                    this.showflag2 = false
+                }
+            })
         }
     },
     mounted(){
         this.getUser()
+        this.showhissold()
     },
     created(){
         
@@ -75,4 +112,34 @@ export default {
             }
         }
     }
+    .goodbox{
+  padding:2%;
+  width:100%;
+  height:100%;
+  // display: flex;
+  // flex-flow:row wrap;
+  -moz-column-count:2; /* Firefox */
+  -webkit-column-count:2; /* Safari 和 Chrome */
+  column-count:2;
+  -moz-column-gap: 1rem;
+  -webkit-column-gap: 1rem;
+  column-gap: 1rem;
+  // margin: 0 auto;
+  // white-space:wrap;
+  // overflow: hidden;
+  .goodcontent{
+    // width:48%;
+    // height:100%;
+    // float:left;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    -moz-page-break-inside: avoid;
+    background: #fff;
+    // margin-right:1%;
+    border-radius:0.8rem;
+    margin-bottom:1rem;
+    padding-bottom: 0.5rem;
+    box-shadow: 0.2rem 0.2rem 0.2rem 0.2rem #eee;
+  }
+}
 </style>

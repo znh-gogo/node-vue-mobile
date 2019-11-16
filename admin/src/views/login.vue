@@ -22,6 +22,9 @@
                 <el-form-item style="text-align:center">
                     <el-button type="primary" native-type="submit" style="width:80%">登陆</el-button>
                 </el-form-item>
+                <el-form-item style="text-align:center" v-if="adminNum===0">
+                    <div>检测到未有管理员，<span style="color:#409EFF;cursor:pointer" @click="$router.push('/origin')">去创建?</span></div>
+                </el-form-item>
             </el-form>
         </el-card>
     </div>
@@ -44,7 +47,8 @@ export default {
                     label: '商家',
                     value: 0
                 }
-            ]
+            ],
+            adminNum:-1
         }
     },
     methods:{
@@ -81,7 +85,15 @@ export default {
                     })
                 })
             }   
+        },
+        checkAdmin(){
+            this.$http.post(ADMIN+'/origin').then(res=>{
+                this.adminNum = res.data
+            })
         }
+    },
+    mounted(){
+        this.checkAdmin()
     }
 }
 </script>

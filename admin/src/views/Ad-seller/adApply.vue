@@ -2,10 +2,12 @@
     <div style="padding:20px 10px;">
         <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="150px" class="demo-ruleForm">
             <el-form-item label="广告名称：" prop="ad_name">
-                <el-input type="text" v-model="ruleForm.ad_name" autocomplete="off" style="width:400px"></el-input>
+                <el-input type="text" v-model="ruleForm.ad_name" autocomplete="off" style="width:400px" maxlength="10"
+  show-word-limit></el-input>
             </el-form-item>
             <el-form-item label="广告描述：" prop="ad_description">
-                <el-input type="textarea" v-model="ruleForm.ad_description" autocomplete="off" style="width:400px"></el-input>
+                <el-input type="textarea" v-model="ruleForm.ad_description" autocomplete="off" style="width:400px" maxlength="30"
+  show-word-limit></el-input>
             </el-form-item>
             <el-form-item label="广告价格与期限：" prop="ad_price">
                 <!-- <el-input v-model.number="ruleForm.ad_timelong" style="display:none"></el-input> -->
@@ -19,8 +21,8 @@
             </el-form-item>
             <el-form-item label="首页显示选择：" prop="ad_showflag">
                 <el-radio-group v-model="ruleForm.ad_showflag">
-                    <el-radio :label="1">显示</el-radio>
-                    <el-radio :label="0">不显示</el-radio>
+                    <el-radio :label="1">On</el-radio>
+                    <el-radio :label="0">Off</el-radio>
                     <!-- <el-radio :label="9">备选项</el-radio> -->
                 </el-radio-group>
             </el-form-item>
@@ -135,7 +137,7 @@ export default {
                 })
             },
             chooseCurrent(item,index){
-                if(item.ad_flag!==0){
+                if(this.id&&item.ad_flag!==0){
                     this.$message.warning('已申请的广告位不能再修改价格与期限！')
                     return
                 }

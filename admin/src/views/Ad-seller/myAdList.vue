@@ -46,8 +46,8 @@
                     v-model="scope.row.ad_showflag"
                     :disabled="scope.row.ad_flag===1"
                     @change="changeshowflag(scope.row)"
-                    active-text="显示"
-                    inactive-text="隐藏"
+                    active-text="On"
+                    inactive-text="Off"
                     :active-value="1"
                     :inactive-value="0"
                     >

@@ -155,6 +155,7 @@ export default {
         },
         sureSendingOrder(){
             this.$http.post(MOBILE+'/sendOrderList',{id:this.pid,sendOrderList:this.buyerInfo.sendOrderList}).then(res=>{
+                this.getMyGoods()
                 this.$message.success(res.data.message)
             })
             this.dialogVisible = false

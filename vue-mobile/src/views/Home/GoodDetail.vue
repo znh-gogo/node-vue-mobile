@@ -30,7 +30,11 @@
             </div>
         </div>
         <div class="header">
-            <div v-if="infoDetail.seller"><img :src="infoDetail.seller.headImg" alt="" style="width:4rem;height:4rem;border-radius:0.5rem;margin-left:1rem"></div>
+            <div v-if="infoDetail.seller"><img 
+            :src="infoDetail.seller.headImg"
+            alt=""
+            style="width:4rem;height:4rem;border-radius:0.5rem;margin-left:1rem"
+            @touchstart="$router.push({path:'/social/info',query:{id:infoDetail.seller._id,flag:infoDetail.seller._id==accoundid?false:true}})"></div>
             <div v-if="infoDetail.seller" class="name-time">
                 <div style="font-weight:bold;font-size:1.2rem;margin-top:0.2rem">{{infoDetail.seller.nickname}}</div>
                 <div style="color:#666;margin-bottom:0.5rem;font-size:0.8rem;">{{format(infoDetail.updatedAt)}} 发布于{{infoDetail.seller.address}}</div>

@@ -1,5 +1,7 @@
 <template>
-<mt-loadmore :top-method="loadTop" :top-status.sync="topStatus" ref="loadmore">
+<van-pull-refresh v-model="isLoading" @refresh="loadTop">
+
+<!-- <mt-loadmore :top-method="loadTop" :top-status.sync="topStatus" ref="loadmore">
     <div slot="top" class="mint-loadmore-top" style="text-align:center">
         <div v-show="topStatus !== 'loading'" :class="{ 'rotate': topStatus === 'drop' }">
                 <div>下拉刷新 ↓</div>
@@ -8,9 +10,7 @@
         <mt-spinner v-show="topStatus == 'loading'" color="#26a2ff" style="margin-top:1rem"></mt-spinner>
         <span v-show="topStatus == 'loading'">加载中...</span>
         </span>
-
-        <!-- <mt-spinner v-show="topStatus == 'loading'" type="fading-circle"></mt-spinner> -->
-    </div>
+    </div> -->
     <div style="positon:relative;margin-bottom: 5rem;height:100%;background:#fff" @click.stop="cancelAll">
 
         <!-- <div class="social_top" :style="{backgroundImage: 'url(' + accountInfo.backgroundImg + ')'}">
@@ -139,7 +139,8 @@
             <img :src="zoomImg" style="width:100%;max-height:80%">
         </div>
     </div>
-    </mt-loadmore>
+    </van-pull-refresh>
+    <!-- </mt-loadmore> -->
 </template>
 
 <script>
@@ -175,7 +176,8 @@ export default {
             articleclasslist:[],
             articleIndex:0,
             scroll:'',
-            articleList:[]
+            articleList:[],
+            isLoading:false
         }
     },
     methods:{
@@ -268,8 +270,9 @@ export default {
             this.handleTopChange("loading");
             setTimeout(() => {
                 this.getTopicList()
+                this.isLoading = false
                 this.handleTopChange("loadingEnd")
-                this.$refs.loadmore.onTopLoaded();
+                // this.$refs.loadmore.onTopLoaded();
             },1500)
         },
         getArticleClass(){

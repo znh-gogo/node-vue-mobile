@@ -774,10 +774,10 @@ module.exports = app => {
             res.send(model)
         } else {
             if(id){
-                const model = await Product.find({pro_categories:id}).populate('seller').skip(skip).limit(Size)
+                const model = await Product.find({pro_categories:id,buyflag:0}).populate('seller').skip(skip).limit(Size)
                 res.send(model)
             }else {
-                const model = await Product.find().populate('seller').skip(skip).limit(Size)
+                const model = await Product.find({buyflag:0}).populate('seller').skip(skip).limit(Size)
                 res.send(model)
             }
         } 
@@ -796,6 +796,13 @@ module.exports = app => {
         }
         }
         var model = await Product.findByIdAndUpdate(id,{$push:{pro_attention:uid}})
+        res.send(model)
+    })
+
+    //mobile 回显我的商品列表
+    router.post('/showmymMobilePro',solveMobileToken,async(req,res)=>{
+        const {id} = req.body
+        const model = await Product.find({seller:id}).populate('seller')
         res.send(model)
     })
 
@@ -889,11 +896,23 @@ module.exports = app => {
         const reg = new RegExp(key, 'i')
         const model = await Product.find({
             $or : [ //多条件，数组
+                // {seller:{nickname:{$regex : reg}}},
                 {pro_description : {$regex : reg}},
-                {'seller.nickname' : {$regex : reg}}
             ]
         }).populate('seller')
-        res.send(model)
+        if(model.length===0){
+            const user = await Account.find({
+                $or : [ //多条件，数组
+                    // {seller:{nickname:{$regex : reg}}},
+                    {nickname : {$regex : reg}},
+                ]
+            })
+            const prodel = await Product.find({seller:user[0]._id}).populate('seller')
+            res.send(prodel)
+        } else {
+            res.send(model)
+        }
+        
     })
 
     //admin回显退款的个数通知

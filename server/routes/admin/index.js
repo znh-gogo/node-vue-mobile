@@ -128,6 +128,16 @@ module.exports = app => {
         res.send(file)
     })
 
+    app.post('/admin/api/origin',async(req,res)=>{
+        const {adminName} = req.body
+        const num = await AdminUser.countDocuments()
+        if(num===0&&adminName){
+            await AdminUser.create(req.body)
+            res.send({message:'创建成功'})
+        } else
+        res.send(num)
+    })
+
     app.post('/admin/api/login', async (req,res) =>{
         const { adminName,password }= req.body
         //根据用户名找到用户
