@@ -15,7 +15,7 @@
                 <div style="display:flex;flex-wrap: wrap;">
                     <div v-for="(item,index) in priceList" :key="index" :class="[{'priceBox':nowIndex!==index},{'current':nowIndex === index}]" @click="chooseCurrent(item,index)">
                         <div class="priceTime">{{computedTime(item.ad_timeline)}}</div>
-                        <div class="price">￥{{item.ad_price}}</div>
+                        <div class="price">￥{{millionChange(item.ad_price)}}</div>
                     </div>
                 </div>
             </el-form-item>
@@ -191,6 +191,9 @@ export default {
                         }
                     }
                 })
+            },
+            millionChange(e){
+                return e.replace(/\d{1,3}(?=(\d{3})+)$/g,item=>{item+','});
             }
     },
     mounted(){

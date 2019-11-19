@@ -13,14 +13,14 @@
                     </div>
                     <div class="info-items three">
                         <div class="items-title">商品总价值</div>
-                        <div class="items-content">￥{{model.productallprice}}</div>
+                        <div class="items-content">￥{{millionChange(model.productallprice)}}</div>
                     </div>  
                     <div class="info-items four">
                         <div class="items-title">营业额</div>
-                        <div class="items-content">￥{{model.salary}}</div>
+                        <div class="items-content">￥{{millionChange(model.salary)}}</div>
                     </div>
                 </div>
-                <div v-if="model.user" style="margin:10px;font-size:20px;">个人账户余额：{{model.user.money}}元</div>
+                <div v-if="model.user" style="margin:10px;font-size:20px;">个人账户余额：{{millionChange(model.user.money)}}元</div>
                 <div v-if="model.user" style="margin:10px;font-size:20px;">个人账户变动时间：{{format(model.user.updatedAt)}}</div>
             </el-tab-pane>
             <el-tab-pane label="基本信息" name="second">
@@ -49,7 +49,7 @@
             </el-tab-pane>
             <el-tab-pane label="广告位开销" name="third">
                 <div style="margin:10px">
-                    <span>您的广告为开销为：￥{{totalprice}}</span><span style="color:#409EFF;margin-left:20px;cursor:pointer" @click="$router.push('/myAdList')">查看详情</span>
+                    <span>您的广告为开销为：￥{{millionChange(totalprice)}}</span><span style="color:#409EFF;margin-left:20px;cursor:pointer" @click="$router.push('/myAdList')">查看详情</span>
                 </div>
             </el-tab-pane>
             <!-- <el-tab-pane label="定时任务补偿" name="fourth">定时任务补偿</el-tab-pane> -->
@@ -94,6 +94,9 @@ export default {
             //   console.log(res)
               this.totalprice = res.data.totalprice
           })
+      },
+      millionChange(e){
+            return e.replace(/\d{1,3}(?=(\d{3})+)$/g,item=>{item+','});
       }
     
     },

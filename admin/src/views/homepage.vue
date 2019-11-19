@@ -33,7 +33,7 @@
                 <img src="../assets/home-buy.png" alt="" style="width:64px;height:64px">
                 <div style="text-align:center">
                     <div style="margin-bottom:10px;font-weight:700">交易额</div>
-                    <div>￥{{model.buynum}}</div>
+                    <div>￥{{millionChange(model.buynum)}}</div>
                 </div>
             </div>
         </div>
@@ -305,6 +305,9 @@ export default {
                 this.myChart1.setOption(this.echarts2_option)
             })
         },
+        millionChange(e){
+            return e.replace(/\d{1,3}(?=(\d{3})+)$/g,item=>{item+','});
+        }
     },
     mounted(){
         this.myChart = echarts.init(document.getElementById('chart'));
