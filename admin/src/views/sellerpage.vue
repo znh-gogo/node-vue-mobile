@@ -1,5 +1,5 @@
 <template>
-    <div style="padding: 5px;min-height:500px">
+    <div style="padding: 5px;min-height:500px;background:#fff">
         <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
             <el-tab-pane label="商家信息" name="first">
                 <div class="sellerinfo-box">
@@ -13,11 +13,11 @@
                     </div>
                     <div class="info-items three">
                         <div class="items-title">商品总价值</div>
-                        <div class="items-content">￥{{millionChange(model.productallprice)}}</div>
+                        <div class="items-content" v-if="model.productallprice">￥{{millionChange(model.productallprice)}}</div>
                     </div>  
                     <div class="info-items four">
                         <div class="items-title">营业额</div>
-                        <div class="items-content">￥{{millionChange(model.salary)}}</div>
+                        <div class="items-content" v-if="model.salary">￥{{millionChange(model.salary)}}</div>
                     </div>
                 </div>
                 <div v-if="model.user" style="margin:10px;font-size:20px;">个人账户余额：{{millionChange(model.user.money)}}元</div>
@@ -49,7 +49,7 @@
             </el-tab-pane>
             <el-tab-pane label="广告位开销" name="third">
                 <div style="margin:10px">
-                    <span>您的广告为开销为：￥{{millionChange(totalprice)}}</span><span style="color:#409EFF;margin-left:20px;cursor:pointer" @click="$router.push('/myAdList')">查看详情</span>
+                    <span v-if="totalprice">您的广告为开销为：￥{{millionChange(totalprice)}}</span><span style="color:#409EFF;margin-left:20px;cursor:pointer" @click="$router.push('/myAdList')">查看详情</span>
                 </div>
             </el-tab-pane>
             <!-- <el-tab-pane label="定时任务补偿" name="fourth">定时任务补偿</el-tab-pane> -->
@@ -96,7 +96,8 @@ export default {
           })
       },
       millionChange(e){
-            return e.replace(/\d{1,3}(?=(\d{3})+)$/g,item=>{item+','});
+            let a = e+''
+            return a.replace(/\d{1,3}(?=(\d{3})+$)/g,item=>item+',');
       }
     
     },

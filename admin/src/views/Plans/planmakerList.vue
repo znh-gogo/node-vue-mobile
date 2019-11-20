@@ -1,5 +1,5 @@
 <template>
-<div style="padding:20px 10px;">
+<div style="padding:20px 10px;background:#fff">
   <h1 style="margin-top:0">计划人列表</h1>
   <el-table
     height="500"
@@ -53,6 +53,7 @@
 </template>
 
 <script>
+import {ADMIN} from '../../api/globol'
   export default {
     methods: {
      async remove(row) {

@@ -1,5 +1,5 @@
 <template>
-<div style="padding: 10px 20px;min-height:500px">
+<div style="padding: 10px 20px;min-height:500px;background:#fff">
   <h1 style="margin-top:0">账户列表</h1>
   <el-table
     height="500"

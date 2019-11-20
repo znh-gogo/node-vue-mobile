@@ -1,6 +1,6 @@
 <template>
-    <div style="padding: 5px">
-        <h1>{{id?'编辑':'出售'}}商品 <el-button v-if="id" style="float:right" type="primary" plain @click="$router.go(-1)">返回</el-button></h1>
+    <div style="padding: 5px;background:#fff">
+        <div style="text-align:right;padding:10px;" v-if="this.$route.params.id"><el-button type="primary" plain @click="$router.go(-1)">返回</el-button></div>
         <el-form :model="model" ref="model" :rules="rules" label-width="120px">
             <el-form-item label="商品类别:" prop="pro_categories">
                 <el-select v-model="model.pro_categories" placeholder="请选择" multiple>
@@ -141,8 +141,8 @@ export default {
                     let id = sessionStorage.id
                     this.$set(this.model,'seller',id)
                     // if(this.model.pro_categories )
-                    if(this.id){
-                        this.$set(this.model,'id',this.id)
+                    if(this.$route.params.id){
+                        this.$set(this.model,'id',this.$route.params.id)
                         this.$http.post(MOBILE+'/editProduct',this.model).then(res=>{
                             if(res){
                                 this.$message.success(res.data.message)
@@ -170,7 +170,7 @@ export default {
             });
         },
         fetchData(){
-            this.$http.post(MOBILE+'/showMyProdetail',{id:this.id}).then(res=>{
+            this.$http.post(MOBILE+'/showMyProdetail',{id:this.$route.params.id}).then(res=>{
                 this.model = res.data
             })
         }
@@ -179,7 +179,7 @@ export default {
         this.getcategory()
     },
     created(){
-        this.id && this.fetchData()
+        this.$route.params.id && this.fetchData()
     }
 }
 </script>

@@ -33,7 +33,7 @@
                 <img src="../assets/home-buy.png" alt="" style="width:64px;height:64px">
                 <div style="text-align:center">
                     <div style="margin-bottom:10px;font-weight:700">交易额</div>
-                    <div>￥{{millionChange(model.buynum)}}</div>
+                    <div v-if="model.buynum">￥{{millionChange(model.buynum)}}</div>
                 </div>
             </div>
         </div>
@@ -306,7 +306,8 @@ export default {
             })
         },
         millionChange(e){
-            return e.replace(/\d{1,3}(?=(\d{3})+)$/g,item=>{item+','});
+            let a = e+''
+            return a.replace(/\d{1,3}(?=(\d{3})+$)/g,item=>item+',');
         }
     },
     mounted(){
@@ -337,7 +338,7 @@ export default {
 
 <style scoped>
 .container{
-    padding: 5px;
+    padding:0 5px;
     /* min-height:500px; */
     background-color:#f7f7f7!important;
 }

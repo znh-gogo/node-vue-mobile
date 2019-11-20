@@ -1,6 +1,6 @@
 <template>
-    <div class="userAdd">
-        <h1 style="margin-top:0">{{id?'编辑':'添加'}}文章</h1>
+    <div class="userAdd" style="background:#fff;padding:10px">
+        <div style="text-align:right;padding:10px;" v-if="this.$route.params.id"><el-button type="primary" plain @click="$router.go(-1)">返回</el-button></div>
         <el-form @submit.native.prevent="save" label-width="120px">
             <el-form-item label="文章所属类型">
                 <el-select v-model="model.relative" placeholder="请选择" multiple >
@@ -65,8 +65,8 @@ export default {
         },
        async save(){
            let res
-            if(this.id){
-                res= await this.$http.put(ADMIN+`/rest/article/${this.id}`,this.model)
+            if(this.$route.params.id){
+                res= await this.$http.put(ADMIN+`/rest/article/${this.$route.params.id}`,this.model)
                 
             } else{
                 res= await this.$http.post(ADMIN+'/rest/article',this.model)
@@ -76,7 +76,7 @@ export default {
            
         },
         fetchData(){
-            this.$http.get(ADMIN+`/rest/article/${this.id}`).then((res)=>{
+            this.$http.get(ADMIN+`/rest/article/${this.$route.params.id}`).then((res)=>{
                 this.model=res.data
                 })
         },
@@ -88,7 +88,7 @@ export default {
     },
     created(){
        
-        this.id && this.fetchData()
+        this.$route.params.id && this.fetchData()
         this.fetchArticleClassData()
     }
 }

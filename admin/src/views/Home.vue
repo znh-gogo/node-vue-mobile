@@ -123,13 +123,17 @@
   </el-aside>
     
      
-  <el-container>
+  <el-container style="position:relative;">
     <el-header class="header">
       <div style="align-items:center;display:flex;">
-        <el-button type="text" :icon="isCollapse?'el-icon-s-unfold':'el-icon-s-fold'" @click="isCollapse = !isCollapse" style="font-size:28px;color:666;outline:none"></el-button>
+        <el-button type="text" :icon="isCollapse?'el-icon-s-unfold':'el-icon-s-fold'" @click="isCollapse = !isCollapse" style="font-size:28px;color:#666;outline:none"></el-button>
         <div style="margin-left:20px;font-size:20px;font-weight:700;">{{authflag === 0?'商家端':'管理端'}}</div>
       </div>
       <div style="align-items:center;display:flex;">
+        <div class="header-dropdown">
+            <i :class="{icon:true,'ion-md-expand':!isFullScreen,'ion-md-contract':isFullScreen}" style="font-size:20px;"
+                @click.stop="handleChangeFullScreen"></i>
+        </div>
         <img :src="headimg" style="width:30px;height:30px;border-radius:50%;" v-if="headimg!==''"/>
         <img src="../assets/head.jpg" style="width:30px;height:30px;border-radius:50%;" v-else/>
         <span style="margin:0 15px">{{username}}</span>
@@ -144,21 +148,25 @@
       </div>
     </el-header>
       
-    
-    <el-main style="background-color:#f7f7f7">
+    <div class="main-body-wrap">
+        <slot name="main-body">
+            <TabView :show-nav-tab="showNavTab"></TabView>
+        </slot>
+    </div>
+    <div style="background-color:#f1f1f1;text-align:center;color:#666;font-size:14px;position:absolute;bottom:0;width:100%;padding:15px 0">
+            Copyright © 2019 All informations from Vue.js. 
+    </div>
+    <!-- <el-main style="background-color:#f7f7f7">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item :to="{ path:authflag ===1? '/homepage':'sellerpage' }">首页</el-breadcrumb-item>
-        <!-- <el-breadcrumb-item><a href="/">活动管理</a></el-breadcrumb-item> -->
         <el-breadcrumb-item v-if="$route.meta.name">{{$route.meta.name}}</el-breadcrumb-item>
       </el-breadcrumb>
       <div style="padding:15px;">
         <router-view :key="$route.path" style="background-color:#fff"></router-view>
       </div>
-      
-    </el-main>
-    <div style="height:50px;width:100%;background-color:#ccc;line-height:60px;text-align:center;color:#666;font-size:14px;">
-      Copyright © 2019 All informations from Vue.js. 
-    </div>
+    </el-main> -->
+
+    
   </el-container>
 </el-container>
   </div>
@@ -166,17 +174,23 @@
 
 <script>
 // @ is an alias to /src
-
+import TabView from '../components/tab-view/TabView'
 import {MOBILE} from '../api/globol'
+import screenfull from 'screenfull';
 export default {
   name: 'home',
+  components:{
+    TabView
+  },
   data() {
       return {
         username:'',
         authflag:'',
         paybacknum:0,
         isCollapse: false,
-        headimg:''
+        headimg:'',
+        showNavTab:true,
+        isFullScreen: false,
       }
     },
     methods:{
@@ -207,7 +221,13 @@ export default {
       },
       handleClose(key, keyPath) {
         // console.log(key, keyPath);
-      }
+      },
+      handleChangeFullScreen() {
+          if (screenfull.isEnabled) {
+              screenfull.toggle();
+              this.isFullScreen = !this.isFullScreen;
+          }
+      },
     },
     mounted(){
       this.username = sessionStorage.username
@@ -220,7 +240,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   .el-header {
     background-color:#606266;
     color: #fff;
@@ -246,4 +266,24 @@ export default {
     min-height: 400px;
     /* overflow-x: hidden; */
   }
+  .main-body-wrap {
+      height: calc(100% - 200px);
+  }
+  .header-dropdown {
+
+            display: inline-block;
+            margin-right: 16px;
+            line-height: 64px;
+            cursor: pointer;
+            color: #515a6e;
+
+            .icon {
+                color: #515a6e;
+            }
+
+            &:last-child {
+                margin-right: 0;
+            }
+
+        }
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <div style="padding:20px 10px;">
+    <div style="padding:20px 10px;background:#fff">
         <div>
             <div style="text-align:right;">
                 <el-form :inline="true" class="demo-form-inline">

@@ -1,5 +1,5 @@
 <template>
-    <div style="padding:10px">
+    <div style="padding:10px;background:#fff">
         <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
             <el-tab-pane label="广告价格管理" name="first">
                 <div style="display:flex;flex-wrap: wrap;">

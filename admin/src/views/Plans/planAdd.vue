@@ -1,6 +1,6 @@
 <template>
-    <div class="userAdd">
-    <h1 style="margin-top:0">{{id?'编辑':'添加'}}计划</h1>
+    <div class="userAdd" style="background:#fff;padding:10px">
+    <div style="text-align:right;padding:10px;" v-if="this.$route.params.id"><el-button type="primary" plain @click="$router.go(-1)">返回</el-button></div>
     <div style="margin-bottom:20px">
         <span>
             计划执行者:
@@ -124,8 +124,8 @@ import {ADMIN} from '../../api/globol'
     // },
     async save(){
         let res
-        if(this.id){
-            res= await this.$http.put(ADMIN+`/rest/plan/${this.id}`,this.model)
+        if(this.$route.params.id){
+            res= await this.$http.put(ADMIN+`/rest/plan/${this.$route.params.id}`,this.model)
         } else{
             res= await this.$http.post(ADMIN+'/rest/plan',this.model)
         }
@@ -133,7 +133,7 @@ import {ADMIN} from '../../api/globol'
         this.$router.push('/planList')
     },
     fetchData(){
-        this.$http.get(ADMIN+`/rest/plan/${this.id}`).then((res)=>{
+        this.$http.get(ADMIN+`/rest/plan/${this.$route.params.id}`).then((res)=>{
         this.model=res.data
         }).then(()=>{
             this.fetchSelect()
@@ -156,8 +156,8 @@ import {ADMIN} from '../../api/globol'
       }
     },
     created(){
-        this.id && this.fetchData()
-       this.id === undefined && this.fetchSelect()
+        this.$route.params.id && this.fetchData()
+       this.$route.params.id === undefined && this.fetchSelect()
         
         // this.fetchRelativeData()
     }

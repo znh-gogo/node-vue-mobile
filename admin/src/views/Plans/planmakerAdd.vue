@@ -1,6 +1,6 @@
 <template>
-    <div class="userAdd">
-    <h1 style="margin-top:0">{{id?'编辑':'添加'}}计划人</h1>
+    <div class="userAdd" style="background:#fff;padding:10px">
+    <div style="text-align:right;padding:10px;" v-if="this.$route.params.id"><el-button type="primary" plain @click="$router.go(-1)">返回</el-button></div>
     <el-form @submit.native.prevent="save" label-width="120px">
     <!-- <el-form-item label="所属关系">
     <el-select v-model="model.relative" placeholder="请选择">
@@ -35,7 +35,9 @@
             :on-success="afterUpload"
             >
             <img v-if="model.makericon" :src="model.makericon" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            <div v-else  style="width:178px;height:178px;background:#eee;text-align:center;line-height:178px">
+                    <i class="el-icon-plus avatar-uploader-icon"></i>
+            </div>
             </el-upload>
         </el-form-item>
         <el-form-item>
@@ -69,8 +71,8 @@ import {ADMIN} from '../../api/globol'
     },
     async save(){
         let res
-        if(this.id){
-            res= await this.$http.put(ADMIN+`/rest/planmaker/${this.id}`,this.model)
+        if(this.$route.params.id){
+            res= await this.$http.put(ADMIN+`/rest/planmaker/${this.$route.params.id}`,this.model)
         } else{
             res= await this.$http.post(ADMIN+'/rest/planmaker',this.model)
         }
@@ -78,7 +80,7 @@ import {ADMIN} from '../../api/globol'
         this.$router.push('/planmakerList')
     },
     fetchData(){
-        this.$http.get(ADMIN+`/rest/planmaker/${this.id}`).then((res)=>{
+        this.$http.get(ADMIN+`/rest/planmaker/${this.$route.params.id}`).then((res)=>{
         this.model=res.data
         })
     },
@@ -89,7 +91,7 @@ import {ADMIN} from '../../api/globol'
     // }
     },
     created(){
-        this.id && this.fetchData()
+        this.$route.params.id && this.fetchData()
         // this.fetchRelativeData()
     }
     }

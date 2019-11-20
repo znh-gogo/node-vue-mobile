@@ -1,6 +1,6 @@
 <template>
-    <div class="userAdd" style="padding: 5px;min-height:500px">
-        <h1 style="margin-top:0">{{id?'编辑':'添加'}}管理员</h1>
+    <div class="userAdd" style="padding: 10px;min-height:500px;background:#fff">
+        <div style="text-align:right;padding:10px;" v-if="this.$route.params.id"><el-button type="primary" plain @click="$router.go(-1)">返回</el-button></div>
         <el-form @submit.native.prevent="save" label-width="120px">
 
             <el-form-item label="用户名">
@@ -32,8 +32,8 @@ export default {
     methods:{
        async save(){
            let res
-            if(this.id){
-                res= await this.$http.put(ADMIN+`/rest/adminUser/${this.id}`,this.model)
+            if(this.$route.params.id){
+                res= await this.$http.put(ADMIN+`/rest/adminUser/${this.$route.params.id}`,this.model)
                 
             } else{
                 res= await this.$http.post(ADMIN+'/rest/adminUser',this.model)
@@ -43,7 +43,7 @@ export default {
            
         },
         fetchData(){
-            this.$http.get(ADMIN+`/rest/adminUser/${this.id}`).then((res)=>{
+            this.$http.get(ADMIN+`/rest/adminUser/${this.$route.params.id}`).then((res)=>{
                 this.model=res.data
                 })
         },
@@ -51,10 +51,10 @@ export default {
     },
     created(){
         
-        if(this.id!==undefined){
+        if(this.$route.params.id!==undefined){
             this.flag=true
         }
-        this.id && this.fetchData()
+        this.$route.params.id && this.fetchData()
         
     }
 }

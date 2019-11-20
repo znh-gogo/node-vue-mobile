@@ -1,5 +1,5 @@
 <template>
-    <div style="padding: 5px;min-height:500px">
+    <div style="padding: 5px;min-height:500px;background:#fff">
         <h1>我的商品列表</h1>
         <div v-if="myproductlist.length === 0" style="text-align:center;margin-top:20px">
             您暂时还没有商品出售哦，<span style="color:#409EFF;cursor: pointer;" @click="$router.push('/selling')">去发售</span>
@@ -27,7 +27,7 @@
                         <div style="color:#67C23A" v-if="o.buyflag === 2">交易完成</div>
                         <div style="color:#F56C6C" v-if="o.buyflag === 3">已下架</div>
                     </div>
-                    <div class="bottom clearfix">
+                    <div class="bottom">
                     <div class="time">{{ format(o.updatedAt) }}</div>
                     <div>
                         <el-button type="text" class="button" @click="$router.push(`/editseller/${o._id}`)" v-if="o.buyflag === 0||o.buyflag === 3">编辑</el-button>

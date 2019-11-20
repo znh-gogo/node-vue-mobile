@@ -1,5 +1,6 @@
 <template>
-    <div style="padding:20px 10px;">
+    <div style="padding:20px 10px;background:#fff">
+        <div style="text-align:right;padding:10px;" v-if="this.$route.params.id"><el-button type="primary" plain @click="$router.go(-1)">返回</el-button></div>
         <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="150px" class="demo-ruleForm">
             <el-form-item label="广告名称：" prop="ad_name">
                 <el-input type="text" v-model="ruleForm.ad_name" autocomplete="off" style="width:400px" maxlength="10"
@@ -15,7 +16,7 @@
                 <div style="display:flex;flex-wrap: wrap;">
                     <div v-for="(item,index) in priceList" :key="index" :class="[{'priceBox':nowIndex!==index},{'current':nowIndex === index}]" @click="chooseCurrent(item,index)">
                         <div class="priceTime">{{computedTime(item.ad_timeline)}}</div>
-                        <div class="price">￥{{millionChange(item.ad_price)}}</div>
+                        <div class="price" v-if="item.ad_price">￥{{millionChange(item.ad_price)}}</div>
                     </div>
                 </div>
             </el-form-item>
@@ -104,8 +105,8 @@ export default {
           submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    if(this.id){
-                        this.$set(this.ruleForm,'id',this.id)
+                    if(this.$route.params.id){
+                        this.$set(this.ruleForm,'id',this.$route.params.id)
                         this.$http.post(MOBILE+'/editAd',this.ruleForm).then(res=>{
                             this.$message.success(res.data.message)
                             this.$router.replace('/myAdList')
@@ -133,11 +134,11 @@ export default {
             showAdPrice(){
                 this.$http.post(MOBILE+'/showAdPrice').then(res=>{
                     this.priceList = res.data
-                    this.id && this.fetchDatachange()
+                    this.$route.params.id && this.fetchDatachange()
                 })
             },
             chooseCurrent(item,index){
-                if(this.id&&item.ad_flag!==0){
+                if(this.$route.params.id&&item.ad_flag!==0){
                     this.$message.warning('已申请的广告位不能再修改价格与期限！')
                     return
                 }
@@ -183,7 +184,7 @@ export default {
                 }
             },
             fetchDatachange(){
-                this.$http.post(MOBILE+'/showAppliedAd',{id:this.id}).then(res=>{
+                this.$http.post(MOBILE+'/showAppliedAd',{id:this.$route.params.id}).then(res=>{
                     this.ruleForm = res.data
                     for(let i =0;i<this.priceList.length;i++){
                         if(this.priceList[i].ad_price === this.ruleForm.ad_price){
@@ -193,7 +194,8 @@ export default {
                 })
             },
             millionChange(e){
-                return e.replace(/\d{1,3}(?=(\d{3})+)$/g,item=>{item+','});
+                let a = e+''
+                return a.replace(/\d{1,3}(?=(\d{3})+$)/g,item=>item+',');
             }
     },
     mounted(){
