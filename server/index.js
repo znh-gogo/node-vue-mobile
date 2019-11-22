@@ -19,7 +19,20 @@ require('./routes/admin/index')(app) //引用路由
 require('./routes/mobile/index')(app)
 require('./plugins/db')(app)  //引用数据库
 
+const port = 3000
+app.listen(port)
+console.log(`Sever is Starting now...
+ ${require('chalk').red(`
+ 
+  __  __                            _   
+ |  \\/  | ___  _ __ ___   ___ _ __ | |_ 
+ | |\\/| |/ _ \\| '_ \` _ \\ / _ \\ '_ \\| __|
+ | |  | | (_) | | | | | |  __/ | | | |_ 
+ |_|  |_|\\___/|_| |_| |_|\\___|_| |_|\\__|
+                                        
+ `)} 
 
-app.listen(3000,()=>{
-    console.log("http://localhost:3000")
-})
+completed.
+
+server is listening on PORT ${port}.
+`)
