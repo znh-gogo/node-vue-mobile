@@ -1,6 +1,19 @@
 <template>
 <div style="padding:20px 10px;min-height:500px;background:#fff">
   <h1 style="margin-top:0">反馈列表</h1>
+  <div style="text-align:right;">
+      <el-form :inline="true" class="demo-form-inline">
+          <el-form-item>
+              <el-input placeholder="请输入反馈主题" v-model="searchInfo"></el-input>
+          </el-form-item>
+          <el-form-item>
+              <el-button type="primary" icon="el-icon-search" @click="fetchUsers" :disabled="searchInfo===''">查询</el-button>
+          </el-form-item>
+          <el-form-item>
+              <el-button icon="el-icon-delete" @click="reset">重置</el-button>
+          </el-form-item>
+      </el-form>
+  </div>
   <el-table
     height="500"
     :data="tableData.items"
@@ -79,11 +92,15 @@ import format from '../../common/common'
   export default {
     methods: {
       fetchUsers(){
-          this.$http.get(ADMIN+'/FeedbackList'+`/${this.numPage}/${this.numSize}`).then((res)=>{
+          this.$http.post(ADMIN+'/FeedbackList',{searchInfo:this.searchInfo,numPage:this.numPage,numSize:this.numSize}).then((res)=>{
               this.tableData=res.data
               this.tableData.items = this.tableData.items.reverse()
               // console.log(this.tableData)
           })
+      },
+      reset(){
+        this.searchInfo = ''
+        this.fetchUsers()
       },
       changePage(e){
         // console.log(e)
@@ -122,7 +139,8 @@ import format from '../../common/common'
         numSize:5,
         dialogVisible: false,
         userDetails: '',
-        format
+        format,
+        searchInfo:''
       }
     }
   }

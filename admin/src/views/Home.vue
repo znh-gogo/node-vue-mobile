@@ -4,7 +4,7 @@
       
   <el-aside style="background-color: #002140;width:auto;max-width:201px">
     
-    <div style="text-align:center;height:60px;" v-if="!isCollapse"><img src="../assets/title.jpg" style="width:100%;height:100%;background-size:100%;" alt=""></div>
+    <div style="height:60px;display:flex;align-items:center;justify-content:center" v-if="!isCollapse"><img src="../assets/title.jpg" style="width:90%;border-radius:10px;" alt=""></div>
     <div style="height:60px;line-height:60px;text-align:center;font-size:18px;padding:0 10px;color: #fff;" v-else>
       农产
     </div>

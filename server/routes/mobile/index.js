@@ -127,28 +127,55 @@ module.exports = app => {
     }
 
     //admin端获取列表信息
-    app.get('/admin/api/AccountList/:numPage/:numSize',solveAdminToken ,async(req,res)=>{
-        const count = await Account.countDocuments()
-        //前端传入页数
-        let Page = Number(req.params.numPage) || 1;
-        //前端传入每页条数
-        let Size = Number(req.params.numSize)|| 1;
-        //计算总页数
-        let allPages = Math.ceil(count/Size);
-        //当前页不能大于总页数
-        Page = Math.min(Page,allPages)
-        //当前页不能小于1
-        Page = Math.max(Page,1)
-        //忽略数
-        let skip = (Page-1)*Size;
-        const items = await Account.find().skip(skip).limit(Size)
-        BeanPage = {
-            count,
-            Page,
-            Size,
-            allPages
+    app.post('/admin/api/AccountList',solveAdminToken ,async(req,res)=>{
+        const {searchInfo} = req.body
+        if(!searchInfo){
+            const count = await Account.countDocuments()
+            //前端传入页数
+            let Page = Number(req.body.numPage) || 1;
+            //前端传入每页条数
+            let Size = Number(req.body.numSize)|| 1;
+            //计算总页数
+            let allPages = Math.ceil(count/Size);
+            //当前页不能大于总页数
+            Page = Math.min(Page,allPages)
+            //当前页不能小于1
+            Page = Math.max(Page,1)
+            //忽略数
+            let skip = (Page-1)*Size;
+            const items = await Account.find().skip(skip).limit(Size)
+            BeanPage = {
+                count,
+                Page,
+                Size,
+                allPages
+            }
+            res.send({items,BeanPage})
+        } else{
+            let reg = new RegExp(searchInfo,'i')
+            const count = await Account.countDocuments({'account':{$regex:reg}})
+            //前端传入页数
+            let Page = Number(req.body.numPage) || 1;
+            //前端传入每页条数
+            let Size = Number(req.body.numSize)|| 1;
+            //计算总页数
+            let allPages = Math.ceil(count/Size);
+            //当前页不能大于总页数
+            Page = Math.min(Page,allPages)
+            //当前页不能小于1
+            Page = Math.max(Page,1)
+            //忽略数
+            let skip = (Page-1)*Size;
+            const items = await Account.find({'account':{$regex:reg}}).skip(skip).limit(Size)
+            BeanPage = {
+                count,
+                Page,
+                Size,
+                allPages
+            }
+            res.send({items,BeanPage})
         }
-        res.send({items,BeanPage})
+        
     })
     //删除账户
     app.delete('/admin/api/AccountDel/:id',solveAdminToken,async(req,res)=>{
@@ -514,28 +541,55 @@ module.exports = app => {
     })
 
     //admin端获取反馈列表信息
-    app.get('/admin/api/FeedbackList/:numPage/:numSize',solveAdminToken ,async(req,res)=>{
-        const count = await Feedback.countDocuments()
-        //前端传入页数
-        let Page = Number(req.params.numPage) || 1;
-        //前端传入每页条数
-        let Size = Number(req.params.numSize)|| 1;
-        //计算总页数
-        let allPages = Math.ceil(count/Size);
-        //当前页不能大于总页数
-        Page = Math.min(Page,allPages)
-        //当前页不能小于1
-        Page = Math.max(Page,1)
-        //忽略数
-        let skip = (Page-1)*Size;
-        const items = await Feedback.find().populate('relative').skip(skip).limit(Size)
-        BeanPage = {
-            count,
-            Page,
-            Size,
-            allPages
+    app.post('/admin/api/FeedbackList',solveAdminToken ,async(req,res)=>{
+        const {searchInfo} = req.body
+        if(!searchInfo){
+            const count = await Feedback.countDocuments()
+            //前端传入页数
+            let Page = Number(req.body.numPage) || 1;
+            //前端传入每页条数
+            let Size = Number(req.body.numSize)|| 1;
+            //计算总页数
+            let allPages = Math.ceil(count/Size);
+            //当前页不能大于总页数
+            Page = Math.min(Page,allPages)
+            //当前页不能小于1
+            Page = Math.max(Page,1)
+            //忽略数
+            let skip = (Page-1)*Size;
+            const items = await Feedback.find().populate('relative').skip(skip).limit(Size)
+            BeanPage = {
+                count,
+                Page,
+                Size,
+                allPages
+            }
+            res.send({items,BeanPage})
+        } else {
+            let reg = new RegExp(searchInfo,'i')
+            const count = await Feedback.countDocuments({feedbacktopic : {$regex : reg}})
+            //前端传入页数
+            let Page = Number(req.body.numPage) || 1;
+            //前端传入每页条数
+            let Size = Number(req.body.numSize)|| 1;
+            //计算总页数
+            let allPages = Math.ceil(count/Size);
+            //当前页不能大于总页数
+            Page = Math.min(Page,allPages)
+            //当前页不能小于1
+            Page = Math.max(Page,1)
+            //忽略数
+            let skip = (Page-1)*Size;
+            const items = await Feedback.find({feedbacktopic : {$regex : reg}}).populate('relative').skip(skip).limit(Size)
+            BeanPage = {
+                count,
+                Page,
+                Size,
+                allPages
+            }
+            res.send({items,BeanPage})
         }
-        res.send({items,BeanPage})
+        
     })
 
     //admin端处理反馈事件
@@ -672,28 +726,54 @@ module.exports = app => {
     })
 
     //admin端回显所有商品列表
-    app.get('/admin/api/showAllProduct/:numPage/:numSize',solveAdminToken,async(req,res)=>{
-        const count = await Product.countDocuments()
-        //前端传入页数
-        let Page = Number(req.params.numPage) || 1;
-        //前端传入每页条数
-        let Size = Number(req.params.numSize)|| 1;
-        //计算总页数
-        let allPages = Math.ceil(count/Size);
-        //当前页不能大于总页数
-        Page = Math.min(Page,allPages)
-        //当前页不能小于1
-        Page = Math.max(Page,1)
-        //忽略数
-        let skip = (Page-1)*Size;
-        const items = await Product.find().populate('pro_categories seller').skip(skip).limit(Size)
-        BeanPage = {
-            count,
-            Page,
-            Size,
-            allPages
+    app.post('/admin/api/showAllProduct',solveAdminToken,async(req,res)=>{
+        const { searchInfo } = req.body
+        if(!searchInfo){
+            const count = await Product.countDocuments()
+            //前端传入页数
+            let Page = Number(req.body.numPage) || 1;
+            //前端传入每页条数
+            let Size = Number(req.body.numSize)|| 1;
+            //计算总页数
+            let allPages = Math.ceil(count/Size);
+            //当前页不能大于总页数
+            Page = Math.min(Page,allPages)
+            //当前页不能小于1
+            Page = Math.max(Page,1)
+            //忽略数
+            let skip = (Page-1)*Size;
+            const items = await Product.find().populate('pro_categories seller buyer').skip(skip).limit(Size)
+            BeanPage = {
+                count,
+                Page,
+                Size,
+                allPages
+            }
+            res.send({items,BeanPage})
+        } else {
+            let reg = new RegExp(searchInfo,'i')
+            const count = await Product.countDocuments({pro_description : {$regex : reg}})
+            //前端传入页数
+            let Page = Number(req.body.numPage) || 1;
+            //前端传入每页条数
+            let Size = Number(req.body.numSize)|| 1;
+            //计算总页数
+            let allPages = Math.ceil(count/Size);
+            //当前页不能大于总页数
+            Page = Math.min(Page,allPages)
+            //当前页不能小于1
+            Page = Math.max(Page,1)
+            //忽略数
+            let skip = (Page-1)*Size;
+            const items = await Product.find({pro_description : {$regex : reg}}).populate('pro_categories seller buyer').skip(skip).limit(Size)
+            BeanPage = {
+                count,
+                Page,
+                Size,
+                allPages
+            }
+            res.send({items,BeanPage})
         }
-        res.send({items,BeanPage})
     })
 
     //admin删除商品
@@ -994,28 +1074,54 @@ module.exports = app => {
 
     //admin 回显申请的广告位列表
     router.post('/showAppliedAdList',solveMobileToken,async(req,res)=>{
-        const {id,numPage,numSize} = req.body
-        const count = await Ad.countDocuments({relative:id})
-        //前端传入页数
-        let Page = Number(numPage) || 1;
-        //前端传入每页条数
-        let Size = Number(numSize)|| 1;
-        //计算总页数
-        let allPages = Math.ceil(count/Size);
-        //当前页不能大于总页数
-        Page = Math.min(Page,allPages)
-        //当前页不能小于1
-        Page = Math.max(Page,1)
-        //忽略数
-        let skip = (Page-1)*Size;
-        const items = await Ad.find({relative:id}).populate('relative').skip(skip).limit(Size)
-        BeanPage = {
-            count,
-            Page,
-            Size,
-            allPages
+        const {id,numPage,numSize,searchInfo} = req.body
+        if(!searchInfo){
+            const count = await Ad.countDocuments({relative:id})
+            //前端传入页数
+            let Page = Number(numPage) || 1;
+            //前端传入每页条数
+            let Size = Number(numSize)|| 1;
+            //计算总页数
+            let allPages = Math.ceil(count/Size);
+            //当前页不能大于总页数
+            Page = Math.min(Page,allPages)
+            //当前页不能小于1
+            Page = Math.max(Page,1)
+            //忽略数
+            let skip = (Page-1)*Size;
+            const items = await Ad.find({relative:id}).populate('relative').skip(skip).limit(Size)
+            BeanPage = {
+                count,
+                Page,
+                Size,
+                allPages
+            }
+            res.send({items,BeanPage})
+        } else {
+            let reg = new RegExp(searchInfo,'i')
+            const count = await Ad.countDocuments({relative:id,ad_name:{$regex:reg}})
+            //前端传入页数
+            let Page = Number(numPage) || 1;
+            //前端传入每页条数
+            let Size = Number(numSize)|| 1;
+            //计算总页数
+            let allPages = Math.ceil(count/Size);
+            //当前页不能大于总页数
+            Page = Math.min(Page,allPages)
+            //当前页不能小于1
+            Page = Math.max(Page,1)
+            //忽略数
+            let skip = (Page-1)*Size;
+            const items = await Ad.find({relative:id,ad_name:{$regex:reg}}).populate('relative').skip(skip).limit(Size)
+            BeanPage = {
+                count,
+                Page,
+                Size,
+                allPages
+            }
+            res.send({items,BeanPage})
         }
-        res.send({items,BeanPage})
+        
     })
 
     //admin 商家便捷显示隐藏广告
@@ -1077,27 +1183,53 @@ module.exports = app => {
 
     //admin 管理端 回显所有广告申请
     app.post('/admin/api/showAllAd',solveAdminToken,async(req,res)=>{
-        const count = await Ad.countDocuments()
-        //前端传入页数
-        let Page = Number(req.body.numPage) || 1;
-        //前端传入每页条数
-        let Size = Number(req.body.numSize)|| 1;
-        //计算总页数
-        let allPages = Math.ceil(count/Size);
-        //当前页不能大于总页数
-        Page = Math.min(Page,allPages)
-        //当前页不能小于1
-        Page = Math.max(Page,1)
-        //忽略数
-        let skip = (Page-1)*Size;
-        const items = await Ad.find().populate('relative').skip(skip).limit(Size)
-        BeanPage = {
-            count,
-            Page,
-            Size,
-            allPages
+        const { searchInfo } = req.body
+        if(!searchInfo){
+            const count = await Ad.countDocuments()
+            //前端传入页数
+            let Page = Number(req.body.numPage) || 1;
+            //前端传入每页条数
+            let Size = Number(req.body.numSize)|| 1;
+            //计算总页数
+            let allPages = Math.ceil(count/Size);
+            //当前页不能大于总页数
+            Page = Math.min(Page,allPages)
+            //当前页不能小于1
+            Page = Math.max(Page,1)
+            //忽略数
+            let skip = (Page-1)*Size;
+            const items = await Ad.find().populate('relative').skip(skip).limit(Size)
+            BeanPage = {
+                count,
+                Page,
+                Size,
+                allPages
+            }
+            res.send({items,BeanPage})
+        } else {
+            let reg = new RegExp(searchInfo,'i')
+            const count = await Ad.countDocuments({ad_name : {$regex : reg}})
+            //前端传入页数
+            let Page = Number(req.body.numPage) || 1;
+            //前端传入每页条数
+            let Size = Number(req.body.numSize)|| 1;
+            //计算总页数
+            let allPages = Math.ceil(count/Size);
+            //当前页不能大于总页数
+            Page = Math.min(Page,allPages)
+            //当前页不能小于1
+            Page = Math.max(Page,1)
+            //忽略数
+            let skip = (Page-1)*Size;
+            const items = await Ad.find({ad_name : {$regex : reg}}).populate('relative').skip(skip).limit(Size)
+            BeanPage = {
+                count,
+                Page,
+                Size,
+                allPages
+            }
+            res.send({items,BeanPage})
         }
-        res.send({items,BeanPage})
     })
 
     //admin管理端 同意商家广告

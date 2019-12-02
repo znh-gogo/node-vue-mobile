@@ -1,6 +1,19 @@
 <template>
 <div style="padding: 10px 20px;min-height:500px;background:#fff">
   <h1 style="margin-top:0">账户列表</h1>
+  <div style="text-align:right;">
+      <el-form :inline="true" class="demo-form-inline">
+          <el-form-item>
+              <el-input placeholder="请输入账户" v-model="searchInfo"></el-input>
+          </el-form-item>
+          <el-form-item>
+              <el-button type="primary" icon="el-icon-search" @click="fetchUsers" :disabled="searchInfo===''">查询</el-button>
+          </el-form-item>
+          <el-form-item>
+              <el-button icon="el-icon-delete" @click="reset">重置</el-button>
+          </el-form-item>
+      </el-form>
+  </div>
   <el-table
     height="500"
     :data="tableData.items"
@@ -94,10 +107,14 @@ import {ADMIN} from '../../api/globol'
         })
       },
       fetchUsers(){
-          this.$http.get(ADMIN+'/AccountList'+`/${this.numPage}/${this.numSize}`).then((res)=>{
+          this.$http.post(ADMIN+'/AccountList',{searchInfo:this.searchInfo,numPage:this.numPage,numSize:this.numSize}).then((res)=>{
               this.tableData=res.data
               // console.log(this.tableData)
           })
+      },
+      reset(){
+        this.searchInfo = ''
+        this.fetchUsers()
       },
       changePage(e){
         console.log(e)
@@ -140,7 +157,8 @@ import {ADMIN} from '../../api/globol'
         numPage:1,
         numSize:5,
         dialogVisible: false,
-        userDetails: ''
+        userDetails: '',
+        searchInfo:''
       }
     }
   }

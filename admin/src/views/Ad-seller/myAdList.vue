@@ -4,10 +4,13 @@
             <div style="text-align:right;">
                 <el-form :inline="true" class="demo-form-inline">
                     <el-form-item>
-                        <el-input placeholder="请输入广告名称"></el-input>
+                        <el-input placeholder="请输入广告名称" v-model="searchInfo"></el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary">查询</el-button>
+                        <el-button type="primary" icon="el-icon-search" @click="fetchData" :disabled="searchInfo===''">查询</el-button>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button icon="el-icon-delete" @click="reset">重置</el-button>
                     </el-form-item>
                 </el-form>
             </div>
@@ -165,6 +168,7 @@ export default {
             photoList:[],
             showpay:false,
             loading:false,
+            searchInfo:'',
             ruleForm: {
                     pass: '',
                     checkPass: '',
@@ -182,9 +186,13 @@ export default {
     methods:{
         fetchData(){
             let id = sessionStorage.id
-            this.$http.post(MOBILE+'/showAppliedAdList',{id,numPage:this.numPage,numSize:this.numSize}).then(res=>{
+            this.$http.post(MOBILE+'/showAppliedAdList',{id,numPage:this.numPage,numSize:this.numSize,searchInfo:this.searchInfo}).then(res=>{
                 this.tableData = res.data
             })
+        },
+        reset(){
+            this.searchInfo = ''
+            this.fetchData()
         },
         changeshowflag(e){
             if(e.ad_showflag==0){

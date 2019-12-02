@@ -1,7 +1,8 @@
 <template>
     <div class="login">
         <el-card class="login-card">
-            <div id="header" style="text-align:center;padding:20px 0;font-size:20px">农商产品信息服务平台登陆中心</div>
+            <!-- <div id="header" style="text-align:center;padding:20px 0;font-size:20px">农商产品信息服务平台登陆中心</div> -->
+            <div style="text-align:center;"><img src="../assets/title.jpg" style="border-radius:10px" alt=""></div>
             <el-form @submit.native.prevent="login">
                 <el-form-item label="用户名:">
                     <el-input v-model="model.adminName" placeholder="请输入用户名"></el-input>
@@ -107,12 +108,16 @@ export default {
     background: url(~@/assets/background.svg) no-repeat;
     background-size: 100% 100%;
     /* padding: 2rem 0 2rem; */
-    position: relative;
-    overflow: hidden;
+    /* position: relative;
+    overflow: hidden; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .login-card{
     width: 25rem;
-    margin: 7rem auto;
+    /* margin: 7rem auto; */
+    background: rgba(255, 255, 255, 0.5)
     /* position: absolute;
     left: 50%;
     top: 50%;

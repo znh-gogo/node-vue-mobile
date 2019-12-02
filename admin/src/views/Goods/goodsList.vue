@@ -1,6 +1,19 @@
 <template>
 <div style="padding:20px 10px;background:#fff">
   <h1 style="margin-top:0">商品列表</h1>
+  <div style="text-align:right;">
+      <el-form :inline="true" class="demo-form-inline">
+          <el-form-item>
+              <el-input placeholder="请输入商品描述" v-model="searchInfo"></el-input>
+          </el-form-item>
+          <el-form-item>
+              <el-button type="primary" icon="el-icon-search" @click="fetchGoods" :disabled="searchInfo===''">查询</el-button>
+          </el-form-item>
+          <el-form-item>
+              <el-button icon="el-icon-delete" @click="reset">重置</el-button>
+          </el-form-item>
+      </el-form>
+  </div>
   <el-table
     height="500"
     :data="tableData.items"
@@ -59,14 +72,18 @@
   <el-dialog
     title="详情"
     :visible.sync="dialogVisible"
-    width="40%"
+    width="30%"
     :before-close="handleClose">
     <div>
       <p v-if="model.seller">售卖人：<span style="font-weight:bold">{{model.seller.nickname}}</span></p>
+      <p v-if="model.seller">售卖人账号：<span style="font-weight:bold">{{model.seller.account}}</span></p>
       <p>售卖类别：<span style="font-weight:bold" v-for="(item,index) in model.pro_categories" :key="index"> {{item.goodcategory}} </span></p>
       <p>售卖价格：<span style="font-weight:bold">￥{{model.pro_price}}</span></p>
       <p>售卖描述：<span style="font-weight:bold">{{model.pro_description}}</span></p>
       <p>发货地址：<span style="font-weight:bold">{{model.pro_address}}</span></p>
+      <el-divider v-if="model.buyer"></el-divider>
+      <p v-if="model.buyer">购买人：<span style="font-weight:bold">{{model.buyer.nickname}}</span></p>
+      <p v-if="model.buyer">购买人账号：<span style="font-weight:bold">{{model.buyer.account}}</span></p>
     </div>
     <span slot="footer" class="dialog-footer">
       <el-button @click="dialogVisible = false">取 消</el-button>
@@ -95,10 +112,14 @@ import {ADMIN} from '../../api/globol'
         })
       },
       fetchGoods(){
-          this.$http.get(ADMIN+'/showAllProduct'+`/${this.numPage}/${this.numSize}`).then((res)=>{
+          this.$http.post(ADMIN+'/showAllProduct',{numSize:this.numSize,numPage:this.numPage,searchInfo:this.searchInfo}).then((res)=>{
               this.tableData=res.data
               // console.log(this.tableData)
           })
+      },
+      reset(){
+        this.searchInfo = ''
+        this.fetchGoods()
       },
       changePage(e){
         console.log(e)
@@ -128,7 +149,8 @@ import {ADMIN} from '../../api/globol'
         numSize: 4,
         numPage: 1,
         dialogVisible: false,
-        model:{}
+        model:{},
+        searchInfo:''
       }
     }
   }
