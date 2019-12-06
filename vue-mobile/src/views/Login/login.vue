@@ -31,6 +31,10 @@ export default {
     },
     methods:{
         handleLogin(){
+            if(!this.model.account || !this.model.password || !this.model.verify){
+                Toast('请输入完整信息')
+                return
+            }
             api.login(this.model).then((res)=>{
                 // console.log(res)
                 if(res.user){

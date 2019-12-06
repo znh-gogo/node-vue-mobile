@@ -1,5 +1,5 @@
 <template>
-    <div style="width: 100%;height: 100vh;background-color: #fafafa;">
+    <div style="width: 100%;min-height: 100vh;background-color: #fafafa;">
         <mt-header title="我的购物中心" style="background-color:#f1f1f1;color: #222222;font-size: 1.2rem;height:4rem">
             <router-link to="/mine" slot="left">
                 <mt-button icon="back"></mt-button>
@@ -173,7 +173,8 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
-        background: rgba($color: #000000, $alpha: 0.2)
+        background: rgba($color: #000000, $alpha: 0.2);
+        border-radius:0.8rem;
     }
   }
 }
