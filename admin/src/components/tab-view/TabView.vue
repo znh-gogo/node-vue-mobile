@@ -43,7 +43,8 @@ import Scrollbar from '../scrollbar/Scrollbar'
                 views: [],
                 currentView: null,
                 route: true,
-                authflag:''
+                authflag:'',
+                homeItem:''
             }
         },
         watch: {
@@ -114,22 +115,48 @@ import Scrollbar from '../scrollbar/Scrollbar'
                 this.views.splice(this.views.indexOf(item), 1);
             },
             addView() {
-
+                let flag = true
                 if (!this.$route.meta.tab) {
                     return;
                 }
-                let view = {
-                    lastView: this.currentView,
-                    name: this.$route.meta.name,
-                    path: this.$route.path,
-                    params: this.$route.params,
-                    query: this.$route.query,
-                    timestamp: new Date().getTime(),
-                    component: this.$route.matched[this.$route.matched.length - 1].components.default,
-                    id: new Date().getTime()
-                };
-                this.currentView = view;
-                this.views.push(view);
+                if(this.views.length ===0){
+                    let view = {
+                            lastView: this.currentView,
+                            name: this.$route.meta.name,
+                            path: this.$route.path,
+                            params: this.$route.params,
+                            query: this.$route.query,
+                            timestamp: new Date().getTime(),
+                            component: this.$route.matched[this.$route.matched.length - 1].components.default,
+                            id: new Date().getTime()
+                        };
+                    this.currentView = view;
+                    this.views.push(view);
+                } else {
+                    this.views.forEach(item=>{
+                    if(item.path === '/homepage' && this.$route.path === '/homepage'){
+                        this.homeItem = item
+                        flag = false
+                    }
+                 })
+                 if(flag){
+                     let view = {
+                            lastView: this.currentView,
+                            name: this.$route.meta.name,
+                            path: this.$route.path,
+                            params: this.$route.params,
+                            query: this.$route.query,
+                            timestamp: new Date().getTime(),
+                            component: this.$route.matched[this.$route.matched.length - 1].components.default,
+                            id: new Date().getTime()
+                        };
+                    this.currentView = view;
+                    this.views.push(view);
+                 } else {
+                     this.handleChangeTab(this.homeItem)
+                 }
+                }
+                
             },
         },
         created() {

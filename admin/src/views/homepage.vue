@@ -303,6 +303,10 @@ export default {
                 this.echarts2_option.series[0].data=this.model.articlecharts
                 this.myChart.setOption(this.echarts1_option);
                 this.myChart1.setOption(this.echarts2_option)
+                window.onresize = ()=>{
+                    this.myChart.resize()
+                    this.myChart1.resize()
+                }
             })
         },
         millionChange(e){

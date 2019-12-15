@@ -12,7 +12,7 @@ const router = new Router({
       path:'/login',
       name:'login',
       component:() => import('./views/login.vue'),
-      meta:{ isPublic:true}
+      meta:{ isPublic:true,name:'登陆页'}
     },
     {
       path:'/origin',
@@ -34,13 +34,13 @@ const router = new Router({
           path: '/homepage',
           name: 'homepage',
           component: () => import('./views/homepage.vue'),
-          meta:{name:'首页',tab:true}
+          meta:{name:'管理首页',tab:true}
         },
         {
           path: '/sellerpage',
           name: 'sellerpage',
           component: () => import('./views/sellerpage.vue'),
-          meta:{name:'首页',tab:true}
+          meta:{name:'商家首页',tab:true}
         },
         //用户发售商品
         {
@@ -254,6 +254,7 @@ router.beforeEach((to,from,next)=>{
   if(!to.meta.isPublic && !sessionStorage.token){
     return next('/login')
   }
+  window.document.title = '农商服务平台-'+to.meta.name || '农产品电商服务平台'
   next()
 })
 
