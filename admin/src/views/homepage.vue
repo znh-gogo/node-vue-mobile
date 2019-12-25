@@ -38,11 +38,17 @@
             </div>
         </div>
         <div class="charts" style="padding-bottom:20px">
+            <el-card style="width: 100%;height:450px;">    
+                <div slot="header">商品上架竖状分布图</div>
+                <div id="chart2" style="width: 100%;height:350px;"></div>
+            </el-card>
+        </div>
+        <div class="charts" style="padding-bottom:20px">
             <div style="width:55%;">
                 <el-card style="width: 100%;height:460px;">    
                 <div slot="header">文章分类及数量</div>
                 <div id="chart1" style="width: 100%;height:400px;"></div>
-            </el-card>
+                </el-card>
                
             </div>
             <div style="" class="right-box">
@@ -113,6 +119,7 @@ export default {
             model:{},
             myChart:'',
             myChart1:'',
+            myChart2:'',
             time:new Date(),
             realTime:'',
             time1:'',
@@ -273,6 +280,63 @@ export default {
                         //magicType:{type:['line','bar']}//动态数据切换，数据显示可以在该规定内容中切换显示方式，
                         }
                     },
+                },
+                echars3_option : {
+                    color: ['#3398DB'],
+                    tooltip : {
+                        trigger: 'axis',
+                        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                        }
+                    },
+                    legend: {
+                        data:['上架商品条形图分布', '上架商品折线图分布']
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis : [
+                        {
+                            type : 'category',
+                            data : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                            axisTick: {
+                                alignWithLabel: true
+                            }
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value'
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'上架商品条形图分布',
+                            type:'bar',
+                            barWidth: '40%',
+                            data:[10, 52, 200, 334, 390, 330, 220]
+                        },
+                        {
+                            name:'上架商品折线图分布',
+                            color: '#666',
+                            type:'line',
+                            data:[]
+                        }
+                    ],
+                    //工具箱
+                    toolbox:{
+                        show:true,//显示工具箱
+                        feature:{
+                        dataView:{show:true}, //以文字形式显示数据
+                        restore:{show:true},   //还原
+                        //dataZoom:{show:true}, //区域缩放
+                        saveAsImage:{show:true},  //保存图片
+                        //magicType:{type:['line','bar']}//动态数据切换，数据显示可以在该规定内容中切换显示方式，
+                        }
+                    },
                 }
         }
     },
@@ -301,11 +365,17 @@ export default {
 
                 this.echarts2_option.legend.data = this.model.articlecategory
                 this.echarts2_option.series[0].data=this.model.articlecharts
+
+                this.echars3_option.xAxis[0].data = this.model.weekList
+                this.echars3_option.series[0].data = this.model.upList
+                this.echars3_option.series[1].data = this.model.upList
                 this.myChart.setOption(this.echarts1_option);
-                this.myChart1.setOption(this.echarts2_option)
+                this.myChart1.setOption(this.echarts2_option);
+                this.myChart2.setOption(this.echars3_option);
                 window.onresize = ()=>{
                     this.myChart.resize()
                     this.myChart1.resize()
+                    this.myChart2.resize()
                 }
             })
         },
@@ -317,6 +387,7 @@ export default {
     mounted(){
         this.myChart = echarts.init(document.getElementById('chart'));
         this.myChart1 = echarts.init(document.getElementById('chart1'));
+        this.myChart2 = echarts.init(document.getElementById('chart2'))
         this.getData()
         // 页面加载完后显示当前时间
         this.realTime = format(new Date())

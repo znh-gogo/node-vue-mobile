@@ -121,6 +121,15 @@
         </el-menu-item-group>
       </el-submenu>
 
+      <el-submenu index="11"  v-if="authflag === 1">
+        <template slot="title"><i class="el-icon-s-tools"></i><span>日志操作管理</span></template>
+        <el-menu-item-group>
+          <!-- <template slot="title">管理员</template> -->
+          <el-menu-item index="/logList">日志操作列表</el-menu-item>
+          <!-- <el-menu-item index="/myAdList">广告列表</el-menu-item> -->
+        </el-menu-item-group>
+      </el-submenu>
+
     </el-menu>
   </el-aside>
     
