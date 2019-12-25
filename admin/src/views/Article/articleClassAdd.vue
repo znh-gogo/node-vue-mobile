@@ -1,6 +1,6 @@
 <template>
     <div class="userAdd" style="background:#fff;padding:10px">
-        <div style="text-align:right;padding:10px;" v-if="this.$route.params.id"><el-button type="primary" plain @click="$router.go(-1)">返回</el-button></div>
+        <div style="text-align:right;padding:10px;"><el-button type="primary" plain @click="$router.go(-1)">返回</el-button></div>
         <el-form @submit.native.prevent="save" label-width="120px">
             <!-- <el-form-item label="所属关系">
                 <el-select v-model="model.relative" placeholder="请选择">

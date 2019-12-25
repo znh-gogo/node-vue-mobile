@@ -50,7 +50,7 @@
         <template slot="title"><i class="el-icon-notebook-2"></i><span>文章管理</span></template>
         <el-menu-item-group>
           <template slot="title">文章</template>
-          <el-menu-item index="/articleClassAdd">新建文章分类</el-menu-item>
+          <!-- <el-menu-item index="/articleClassAdd">新建文章分类</el-menu-item> -->
           <el-menu-item index="/articleClassList">文章分类列表</el-menu-item>
           <el-menu-item index="/articleAdd">新建文章</el-menu-item>
           <el-menu-item index="/articleList">文章列表</el-menu-item>
