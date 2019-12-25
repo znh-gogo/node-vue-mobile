@@ -8,6 +8,9 @@ module.exports = app => {
         mergeParams:true
     })
 
+    //日志配置
+    const Log = require('../../models/mobile/log')
+    const logConfig = require('../../middleware/logConfig')
     //登陆图形校验码
 
     var vetifys = null
@@ -151,6 +154,8 @@ module.exports = app => {
                 allPages
             }
             res.send({items,BeanPage})
+            const logs = logConfig(req,'查看账户信息操作')
+            await Log.create(logs)
         } else{
             let reg = new RegExp(searchInfo,'i')
             const count = await Account.countDocuments({'account':{$regex:reg}})
@@ -174,6 +179,8 @@ module.exports = app => {
                 allPages
             }
             res.send({items,BeanPage})
+            const logs = logConfig(req,'根据搜索查看账户信息操作')
+            await Log.create(logs)
         }
         
     })
@@ -183,6 +190,8 @@ module.exports = app => {
         res.send({
             success:true
         })
+        const logs = logConfig(req,'账户删除操作')
+        await Log.create(logs)
     })
 
     //冻结解冻账号
@@ -192,6 +201,8 @@ module.exports = app => {
         res.send({
             message:'操作成功'
         })
+        const logs = logConfig(req,'账户冻结操作')
+        await Log.create(logs)
     })
 
     //回显示用户信息
@@ -543,6 +554,7 @@ module.exports = app => {
     //admin端获取反馈列表信息
     app.post('/admin/api/FeedbackList',solveAdminToken ,async(req,res)=>{
         const {searchInfo} = req.body
+        console.log(req.ip)
         if(!searchInfo){
             const count = await Feedback.countDocuments()
             //前端传入页数
@@ -565,6 +577,8 @@ module.exports = app => {
                 allPages
             }
             res.send({items,BeanPage})
+            const logs = logConfig(req,'查看反馈列表操作')
+            await Log.create(logs)
         } else {
             let reg = new RegExp(searchInfo,'i')
             const count = await Feedback.countDocuments({feedbacktopic : {$regex : reg}})
@@ -588,6 +602,8 @@ module.exports = app => {
                 allPages
             }
             res.send({items,BeanPage})
+            const logs = logConfig(req,'根据搜索查看反馈列表操作')
+            await Log.create(logs)
         }
         
     })
@@ -599,6 +615,8 @@ module.exports = app => {
         res.send({
             message:'反馈处理成功!'
         })
+        const logs = logConfig(req,'处理反馈操作')
+        await Log.create(logs)
     })
 
     const ArticleClass = require('../../models/ArticleClass')
@@ -750,6 +768,8 @@ module.exports = app => {
                 allPages
             }
             res.send({items,BeanPage})
+            const logs = logConfig(req,'查看商品列表操作')
+            await Log.create(logs)
         } else {
             let reg = new RegExp(searchInfo,'i')
             const count = await Product.countDocuments({pro_description : {$regex : reg}})
@@ -773,6 +793,8 @@ module.exports = app => {
                 allPages
             }
             res.send({items,BeanPage})
+            const logs = logConfig(req,'根据搜索查看商品列表操作')
+            await Log.create(logs)
         }
     })
 
@@ -781,6 +803,8 @@ module.exports = app => {
         const {id} = req.body
         await Product.findByIdAndDelete(id)
         res.send({message:'删除成功'})
+        const logs = logConfig(req,'商品删除操作')
+        await Log.create(logs)
     })
 
     //admin首页数据回显
@@ -801,6 +825,7 @@ module.exports = app => {
         })
         var productcharts = []
         var categorycharts = []
+        
         //商品类型及对应数量
         const productcategory = await GoodCategory.find()
         productcategory.forEach(async(item)=>{
@@ -812,8 +837,25 @@ module.exports = app => {
                 name:item.goodcategory
             })
             categorycharts.push(item.goodcategory)
-            
         })
+
+        //商品上架数量分布
+        var weekList = []
+        var upList = []
+        let times = new Date(Date.now()-60*60*24*7*1000).getDate()
+        let weekTime = 60*60*24*7*1000
+        for(let i = 0;i<7;i++){
+            let now = new Date(Date.now()-weekTime*i).getFullYear()+ '-' +(new Date(Date.now()-weekTime*i).getMonth()+1 )+ '-' +new Date(Date.now()-weekTime*i).getDate()
+            let prve = new Date(Date.now()-(weekTime*(i+1))).getFullYear()+ '-' +(new Date(Date.now()-(weekTime*(i+1))).getMonth()+1) + '-' +new Date(Date.now()-(weekTime*(i+1))).getDate()
+            weekList.push(`${prve}到${now}`)
+            var products = await Product.find({
+                $and:[{'updatedAt':{$gt:new Date(Date.now()-(weekTime*(i+1)))}},{'updatedAt':{$lt:new Date(Date.now()-weekTime*i)}}]
+            })
+            let proNum = products.length
+            upList.push(proNum)
+        }
+        // console.log(weekList,upList)
+
         //文章类型及对应数量
         var articlecategory = []
         var articlecharts = []
@@ -829,8 +871,10 @@ module.exports = app => {
         })
         
         setTimeout(()=>{
-            res.send({usernum,productnum,articlenum,topicnum,buynum,productcharts,categorycharts,articlecategory,articlecharts})
+            res.send({usernum,productnum,articlenum,topicnum,buynum,productcharts,categorycharts,articlecategory,articlecharts,weekList,upList})
         },200)
+        const logs = logConfig(req,'查看首页操作')
+        await Log.create(logs)
     })
 
     //mobile商品列表
@@ -1206,6 +1250,8 @@ module.exports = app => {
                 allPages
             }
             res.send({items,BeanPage})
+            const logs = logConfig(req,'查看广告申请列表操作')
+            await Log.create(logs)
         } else {
             let reg = new RegExp(searchInfo,'i')
             const count = await Ad.countDocuments({ad_name : {$regex : reg}})
@@ -1229,6 +1275,8 @@ module.exports = app => {
                 allPages
             }
             res.send({items,BeanPage})
+            const logs = logConfig(req,'根据搜索查看商品列表操作')
+            await Log.create(logs)
         }
     })
 
@@ -1237,6 +1285,8 @@ module.exports = app => {
         const {id,flag} = req.body
         await Ad.findByIdAndUpdate(id,{$set:{ad_flag:flag}})
         res.send({message:'操作成功'})
+        const logs = logConfig(req,'处理商家广告操作')
+        await Log.create(logs)
     })
 
     //admin 管理端 备注信息
@@ -1244,21 +1294,54 @@ module.exports = app => {
         const {id,ad_remarks} = req.body
         await Ad.findByIdAndUpdate(id,{$set:{ad_remarks}})
         res.send({message:'备注成功'})
+        const logs = logConfig(req,'备注商家广告操作')
+        await Log.create(logs)
     })
 
     //admin管理端 管理员设置广告价格与时长 和删除
     app.post('/admin/api/setAd',solveAdminToken,async(req,res)=>{
         await AdPrice.create(req.body)
         res.send({message:'设置成功'})
+        const logs = logConfig(req,'设置广告价格与时长操作')
+        await Log.create(logs)
     })
     app.post('/admin/api/delAd',solveAdminToken,async(req,res)=>{
         const {id} = req.body
         await AdPrice.findByIdAndDelete(id)
         res.send({message:'删除成功'})
+        const logs = logConfig(req,'删除广告价格与时长操作')
+        await Log.create(logs)
     })
     app.post('/admin/api/showAd',solveAdminToken,async(req,res)=>{
         const model = await AdPrice.find()
         res.send(model)
+        const logs = logConfig(req,'查看广告价格操作')
+        await Log.create(logs)
+    })
+
+    //admin端操作日记管理
+    app.post('/admin/api/logList',solveAdminToken,async(req,res)=>{
+        const count = await Log.countDocuments()
+            //前端传入页数
+            let Page = Number(req.body.numPage) || 1;
+            //前端传入每页条数
+            let Size = Number(req.body.numSize)|| 1;
+            //计算总页数
+            let allPages = Math.ceil(count/Size);
+            //当前页不能大于总页数
+            Page = Math.min(Page,allPages)
+            //当前页不能小于1
+            Page = Math.max(Page,1)
+            //忽略数
+            let skip = (Page-1)*Size;
+            const items = await Log.find().sort({'_id':-1}).skip(skip).limit(Size)
+            BeanPage = {
+                count,
+                Page,
+                Size,
+                allPages
+            }
+            res.send({items,BeanPage})
     })
 
     //上传文件中间处理

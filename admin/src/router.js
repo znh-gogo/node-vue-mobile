@@ -244,6 +244,13 @@ const router = new Router({
           component: () => import('./views/Ad-seller/myAdList.vue'),
           meta:{name:'我的广告列表',tab:true}
         },
+        //日志
+        {
+          path: '/logList',
+          name: 'logList',
+          component: () => import('./views/Log/LogList.vue'),
+          meta:{name:'操作日志管理',tab:true}
+        },
       ]
     },
 

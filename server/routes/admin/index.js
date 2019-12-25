@@ -7,6 +7,10 @@ module.exports = app => {
     const router = express.Router({
         mergeParams:true
     })
+
+    //日志配置
+    const Log = require('../../models/mobile/log')
+    const logConfig = require('../../middleware/logConfig')
     // const Users = require('../../models/Users')
     //通用增加数据接口
     router.post('/',async(req,res)=>{
@@ -19,6 +23,10 @@ module.exports = app => {
     router.put('/:id',async(req,res)=>{
         const model = await req.Model.findByIdAndUpdate(req.params.id,req.body)
         res.send(model)
+        if(req.Model.modelName==='Article'){
+            const logs = logConfig(req,'修改文章操作')
+            await Log.create(logs)
+        }
     })
 
     //通用删除数据接口
@@ -27,6 +35,10 @@ module.exports = app => {
         res.send({
             success:true
         })
+        if(req.Model.modelName==='Article'){
+            const logs = logConfig(req,'删除文章操作')
+            await Log.create(logs)
+        }
     })
 
     //通用获取数据接口
@@ -47,7 +59,7 @@ module.exports = app => {
     })
 
     //通用获取数据接口 带分页
-    router.get('/:numPage/:numSize' ,async(req,res)=>{
+    router.get(`/:numPage/:numSize` ,async(req,res)=>{
         const count = await req.Model.countDocuments()
         //前端传入页数
         let Page = Number(req.params.numPage) || 1;
@@ -82,6 +94,11 @@ module.exports = app => {
                     allPages
                 }
                 res.send({items,BeanPage})
+                if(req.Model.modelName==='Article'){
+                    const logs = logConfig(req,'查看文章列表操作')
+                    await Log.create(logs)
+                }
+                
     })
     //通用根据id获取数据接口
     router.get('/:id',async(req,res)=>{
