@@ -366,9 +366,9 @@ export default {
                 this.echarts2_option.legend.data = this.model.articlecategory
                 this.echarts2_option.series[0].data=this.model.articlecharts
 
-                this.echars3_option.xAxis[0].data = this.model.weekList.reverse()
-                this.echars3_option.series[0].data = this.model.upList.reverse()
-                this.echars3_option.series[1].data = this.model.upList.reverse()
+                this.echars3_option.xAxis[0].data = this.model.weekList
+                this.echars3_option.series[0].data = this.model.upList
+                this.echars3_option.series[1].data = this.model.upList
                 this.myChart.setOption(this.echarts1_option);
                 this.myChart1.setOption(this.echarts2_option);
                 this.myChart2.setOption(this.echars3_option);

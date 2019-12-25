@@ -20,6 +20,7 @@ const router = new Router({
       component:() => import('./views/origin.vue'),
       meta:{ isPublic:true}
     },
+    
     {
       path: '/',
       name: 'home',
@@ -253,7 +254,12 @@ const router = new Router({
         },
       ]
     },
-
+    {
+      path:'*',
+      name:'404',
+      component:() => import('./views/404/index.vue'),
+      meta:{ isPublic:true}
+    }
   ]
 })
 
