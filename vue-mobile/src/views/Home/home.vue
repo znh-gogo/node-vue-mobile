@@ -1,5 +1,7 @@
 <template>
     <div>
+    <van-pull-refresh v-model="vantLoading" @refresh="onRefresh">
+
         <div class="text-white py-2 px-3 d-flex ai-center jc-between" style="background:#4DA422">
             <div style="line-height:2rem">农商品信息服务交易平台</div>
             <button type="button" class="btn" style="background:#E8EB12">欢迎使用</button>
@@ -62,9 +64,11 @@
                 </div>
             </div> 
         </div>
+        </van-pull-refresh>
+
         <!-- <router-view></router-view> -->
         <div v-if="chooseflag">
-            <HomeGood :result="tflag" @setFlag="setnull"></HomeGood>
+            <HomeGood :result="tflag" @setFlag="setnull" @closeLoad="getLoad" ref="good"></HomeGood>
         </div>
         <div v-else>
             <About></About>
@@ -93,7 +97,8 @@ export default {
             result:'',
             tflag:'',
             adList:[],
-            showdefault:false
+            showdefault:false,
+            vantLoading:false
         }
     },
     components:{
@@ -122,6 +127,12 @@ export default {
                     this.showdefault = true
                 }
             })
+        },
+        onRefresh(){
+            this.$refs.good.onRefresh();
+        },
+        getLoad(e){
+            this.vantLoading = e
         }
     },
     mounted(){

@@ -8,10 +8,10 @@ import MintUI from 'mint-ui'
 import 'mint-ui/lib/style.css'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import 'swiper/dist/css/swiper.css'
-import { Step, Steps,PasswordInput, NumberKeyboard,Search,PullRefresh,Divider   } from 'vant';
+import { Step, Steps,PasswordInput, NumberKeyboard,Search,PullRefresh,Divider,List  } from 'vant';
 Vue.use(VueAwesomeSwiper)
 Vue.use(MintUI)
-Vue.use(Step).use(Steps).use(PasswordInput).use(NumberKeyboard).use(Search).use(PullRefresh).use(Divider );
+Vue.use(Step).use(Steps).use(PasswordInput).use(NumberKeyboard).use(Search).use(PullRefresh).use(Divider).use(List);
 window.addEventListener('popstate', function (e) {
   router.isBack = true
 },false)

@@ -1,5 +1,5 @@
 <template>
-<van-pull-refresh v-model="isLoading" @refresh="loadTop">
+
 
 <!-- <mt-loadmore :top-method="loadTop" :top-status.sync="topStatus" ref="loadmore">
     <div slot="top" class="mint-loadmore-top" style="text-align:center">
@@ -19,6 +19,7 @@
                 <img :src="accountInfo.headImg" alt="" style="width:4rem;height:4rem;border-radius:0.3rem" @click="$router.push({path:'/social/info',query:{id:accountId,flag:false}})">
             </div>
         </div> -->
+        <van-pull-refresh v-model="isLoading" @refresh="loadTop">
         <div style="width:100%;padding:1rem 0;">
             <div style="width:100%;height:3rem;">
                 <img src="../../assets/laba.png" alt="" style="float:left;margin:0.3rem 0 0 0.8rem">
@@ -62,6 +63,8 @@
         </div>
 
         </div>
+        </van-pull-refresh>
+
         <div style="width:100%;height:0.3rem;background:#eee;margin-top:1rem"></div>    
         <div style="font-size:1.5rem;margin:1rem;padding-bottom:0.5rem;color: #439057;">信息发布：</div>
         <div style="width:100%;text-align:right;padding-right:1.5rem;color:#777">当前共有{{topicList.length}}条动态</div>
@@ -91,7 +94,7 @@
                     </div>
                     <div v-if="item.relative.address" style="font-size:0.8rem;margin-top:0.5rem;color:#4169E1">{{item.relative.address}}</div>
                     <div class="content-bottom">
-                        <div style="color:#666;height:2rem;line-height:2rem">{{format(item.createdAt)}}
+                        <div style="color:#666;height:2rem;line-height:2rem">{{timeago(item.createdAt)}}
                             <span style="color:red;font-size:0.8rem;margin-left:1rem" v-if="item.relative._id === accountId" @click="delTopic(item._id)">删除</span></div>
                         <transition name="moveR">
                             <div class="controlbtn" v-show="showBtn"  v-if="nowIndex === index">
@@ -139,7 +142,6 @@
             <img :src="zoomImg" style="width:100%;max-height:80%">
         </div>
     </div>
-    </van-pull-refresh>
     <!-- </mt-loadmore> -->
 </template>
 
@@ -147,6 +149,7 @@
 import api from '../../api'
 import { Toast } from 'mint-ui'
 import format from '../../common/common'
+import timeago from '../../common/date'
 import { Spinner } from 'mint-ui'
 import BScroll from 'better-scroll'
 export default {
@@ -164,6 +167,7 @@ export default {
             zoomImg:'',
             zoomFlag:false,
             format,
+            timeago,
             topStatus:'',
             swiperOption: {
                 direction: 'vertical',

@@ -28,7 +28,7 @@
                     style="font-size:1.5rem;margin:0.5rem 0;color:#F56C6C"
                     v-if="item.comcontent[item.comcontent.length-1].talker._id !== accountId">您有新的消息未回</div>
                     <div style="font-size:1.5rem;margin:0.5rem 0;color:#666" v-else>暂时未有新的消息</div>
-                    <div style="color:#999">{{format(item.updatedAt)}}</div>
+                    <div style="color:#999">{{timeago(item.updatedAt)}}</div>
                 </div>
                 <transition name="moveR">
                 <div
@@ -47,7 +47,7 @@
                     style="font-size:1.5rem;margin:0.5rem 0;color:#F56C6C"
                     v-if="item.comcontent[item.comcontent.length-1].talker._id !== accountId">您有新的消息未回</div>
                     <div style="font-size:1.5rem;margin:0.5rem 0;color:#666" v-else>暂时未有新的消息</div>
-                    <div style="color:#999">{{format(item.updatedAt)}}</div>
+                    <div style="color:#999">{{timeago(item.updatedAt)}}</div>
                 </div>
                 <transition name="moveR">
                 <div
@@ -64,11 +64,13 @@
 <script>
 import api from '../../api'
 import format from '../../common/common'
+import timeago from '../../common/date'
 export default {
     data (){
         return {
             accountId:'',
             format,
+            timeago,
             check:{
                 sendrelative:null,
                 receiverelative:null

@@ -1,5 +1,6 @@
 import request from './fetch.js'
 const global = 'http://localhost:3000';
+// const global = 'http://10.52.176.86:3000';
 
 const api = {
 // 登陆注册

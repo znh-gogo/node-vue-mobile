@@ -49,6 +49,7 @@ export default {
             // this.$router.push({path:'/home',query:{account}})
         },
         changeVerify(){
+            // this.vetifyNum = 'http://10.52.176.86:3000/photoVerify?'+Math.random();
             this.vetifyNum = 'http://localhost:3000/photoVerify?'+Math.random();
         },
         checkAutoLogin(){

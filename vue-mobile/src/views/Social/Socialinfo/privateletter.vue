@@ -5,7 +5,7 @@
                 <mt-button icon="back" slot="left" @click="$router.go(-1)"></mt-button>
         </mt-header>
         </div>
-        <div  ref="contentScroll" style="height:88%;margin-bottom:5rem;overflow:hidden;">
+        <div  ref="contentScroll" class="contentScroll">
             <div class="center-content">
                 <div v-for="(item,index) in privateinfo.comcontent" :key="index">
                     <div v-if="item.talker">
@@ -131,7 +131,7 @@ export default {
             }, 1100);
         },
         _initScroll(){
-            this.contentScroll=new BScroll(this.$refs.contentScroll,{click:true});
+            this.contentScroll=new BScroll(this.$refs.contentScroll,{});
             console.log(this.contentScroll)
             // this.refreshScroll()
         }
@@ -181,8 +181,15 @@ export default {
     left: 0;
     z-index: 10;
 }
+.contentScroll{
+    margin-bottom:5rem;
+    overflow:hidden;
+    height: calc(100% - 6rem);
+    border-bottom: 0;
 .center-content{
     // margin: 4rem 0;
+    border-bottom: 0;
+
     width: 100%;
     // height: 100%;
     background-color: #fafafa;
@@ -228,6 +235,8 @@ export default {
         }
     }
 }
+}
+
 .sendBtn{
     position: fixed;
     left: 0;

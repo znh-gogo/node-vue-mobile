@@ -5,6 +5,6 @@ module.exports = {
         //     errors: false
         // },
         // lintOnSave: false,
-        disableHostCheck: true
+        // disableHostCheck: true
     }
 }

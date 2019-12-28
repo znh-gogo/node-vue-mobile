@@ -1,7 +1,7 @@
 <template>
 <div style="overflow:scroll">
 <!-- <mt-loadmore :top-method="loadTop" :top-status.sync="topStatus" ref="loadmore"> -->
-  <van-pull-refresh v-model="vantLoading" @refresh="onRefresh">
+  
    <!-- :bottom-method="loadMore" :bottom-all-loaded="allLoaded" -->
     <!-- <div slot="top" class="mint-loadmore-top" style="text-align:center">
         <div v-show="topStatus !== 'loading'" :class="{ 'rotate': topStatus === 'drop' }">
@@ -14,14 +14,14 @@
     </div> -->
     
   <div style="width:100%;min-height:100%;background:#eee;padding-bottom:6rem;">
-    <div style="width:100%;padding:0.3rem 0" ref="homeWrap">
-        <ul style="overflow:hidden;padding:0 1rem" ref="one">
+    <div style="width:100%;padding:0.3rem 0;overflow:hidden" class="scrollbar" ref="homeWrap">
+        <ul style="overflow-y:hidden;overflow-x:scroll;padding:0 1rem;display:flex;white-space:nowrap" ref="one">
           <li
           v-for="(item,index) in typelist"
           :key="index"
           @click="choosetype(item,index)"
           :class="{'current':typeIndex === index}"
-          style="float:left;margin-right:1rem;font-size:1.2rem;padding:0.5rem;">{{item.goodcategory}}</li>
+          style="margin-right:1rem;font-size:1.2rem;padding:0.5rem;">{{item.goodcategory}}</li>
         </ul>
     </div>
   
@@ -49,7 +49,7 @@
     <mt-spinner type="snake" class="loading-more" color="#26a2ff"></mt-spinner>
     <span class="loading-more-txt" style="margin-top:0.5rem">加载中...</span>
  </div>
-  <div v-if="loadflag1" style="wdith:100%;text-align:center">已经没有数据了</div>
+  <div v-show="loadflag1" style="wdith:100%;text-align:center">已经没有数据了</div>
   </div>
   <!-- <div slot="bottom" class="mint-loadmore-bottom">
       <span v-show="bottomStatus !== 'loading'"
@@ -58,8 +58,6 @@
       <mt-spinner type="snake"></mt-spinner>
       </span>
   </div> -->
-  </van-pull-refresh>
-  <div v-if="upflag" @click="gotop" style="position:fixed;right:2rem;bottom:6rem;width:3rem;height:3rem;background:#fff;border-radius:50%;box-shadow:2px 4px 4px 2px #999;"><img style="width:3rem;height:3rem;line-height:3rem;margin:0 auto" src="../../assets/向上.png" alt=""></div>
   </div>
 </template>
 
@@ -98,7 +96,7 @@ export default {
       upflag:false,
       stopflag:true,
       loadflag1:false,
-      vantLoading:false
+      
     }
   },
   watch:{
@@ -216,25 +214,26 @@ export default {
       // let width = 6 * 120;
       let count = this.typelist.length
       let width = 6*count
-      // console.log(this.$refs.two.style.width)
+      console.log(this.$refs.one.offsetWidth)
       // console.log(count)
-      this.$refs.one.style.width = width+ 1 + "rem";
-      // this.$nextTick 是一个异步函数，为了确保 DOM 已经渲染
-      this.$nextTick(() => {
-          if (!this.scroll) {
-          this.scroll = new BScroll(this.$refs.homeWrap, {
-              startX: 0,
-              click: true,
-              scrollX: true,
-              // 忽略竖直方向的滚动
-              scrollY: false,
-              // eventPassthrough: "vertical"
-          });
-          console.log(this.scroll)
-          } else {
-          this.scroll.refresh();
-          }
-      });
+
+      // this.$refs.one.style.width = width+ 1 + "rem";
+      // // this.$nextTick 是一个异步函数，为了确保 DOM 已经渲染
+      // this.$nextTick(() => {
+      //     if (!this.scroll) {
+      //     this.scroll = new BScroll(this.$refs.homeWrap, {
+      //         startX: 0,
+      //         click: true,
+      //         scrollX: true,
+      //         // 忽略竖直方向的滚动
+      //         scrollY: false,
+      //         // eventPassthrough: "vertical"
+      //     });
+      //     console.log(this.scroll)
+      //     } else {
+      //     this.scroll.refresh();
+      //     }
+      // });
     },
     gotop(){
       window.scrollTo(0,0);
@@ -262,7 +261,8 @@ export default {
         this.numPage = 1  
         // this.allLoaded = false
           this.getProList(this.difftype,this.numPage,this.numSize)
-          this.vantLoading = false
+          this.$emit('closeLoad',false)
+          // this.vantLoading = false
           // this.handleTopChange("loadingEnd")
           // this.$refs.loadmore.onTopLoaded();
         },1500)
@@ -305,13 +305,12 @@ export default {
      		//变量scrollHeight是滚动条的总高度
      		var scrollHeight = document.documentElement.scrollHeight||document.body.scrollHeight;
         //滚动条到底部的条件
-  // console.log(11);
         if(scrollTop+windowHeight>=scrollHeight){
         //写后台加载数据的函数
         console.log("距顶部"+scrollTop+"可视区高度"+windowHeight+"滚动条总高度"+scrollHeight);
         // console.log(sessionStorage.result)
       if(this.result === ''){
-          if(!this.loadflag1){
+          if(!this.loadflag1&&!this.isLoading){
           this.loadMore()
         }
       }
@@ -359,6 +358,15 @@ ul{padding-left: 0;}
 .current{
   border-bottom: 0.2rem solid #4DA422;
   font-weight: bold;
+}
+
+.scrollbar{
+  ::-webkit-scrollbar {
+     width: 0 !important;
+   }
+   ::-webkit-scrollbar {
+     width: 0 !important;height: 0;
+   }
 }
 </style>
 
