@@ -13,7 +13,7 @@ export default function timeago(timestamp1) { //将时间转化成离现在几�
   var date = new Date(timestamp);
   
   var diffMs = Date.now() - timestamp;//相差的毫秒数
-  console.log(Date.now(),timestamp,diffMs)
+  // console.log(Date.now(),timestamp,diffMs)
   var diff = (diffMs) / 1000 / 60 / 60;  //相差的时间 小时数
   if (diff >= 24) {  //时间差大于24个小时 显示标准时间 例：2019.6.5 00:26:11
     // alert(date.toLocaleString())

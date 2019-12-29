@@ -54,8 +54,8 @@
                 <div style="color:#409EFF">→点这里</div>
             </div>
         </div> -->
-        <div class="pt-3 pb-2" style="background:#ccc">
-            <div class="nav d-flex jc-around pb-1" style="font-size:1.5rem;line-height:1.5rem">
+        <div class="pt-3 pb-2 bg10">
+            <div class="nav d-flex jc-around pb-1" style="font-size:1.5rem;line-height:1.5rem;">
                 <div :class="[{'nav-item':chooseflag===false},{'active':chooseflag===true}]">
                     <div class="p-2" @click="chooseflag = true">最新发布</div>
                 </div>
@@ -151,11 +151,14 @@ export default {
         border-bottom:2px solid transparent; 
         // padding: 3px;
         // padding-bottom: 0.2rem;
+        // opacity:1;
+        color: #000;
     }
     .active{
         // padding: 3px;
         font-weight: bold;
         border-bottom:2px solid rgb(48, 8, 121); 
+        color: #000;
     }
     .swiper-text{
         position: absolute;
@@ -182,5 +185,9 @@ export default {
             // -webkit-box-orient:vertical;
             // -webkit-line-clamp:2; 
         }
+    }
+    .bg10{
+        background:url('../../assets/bg10.jpg') no-repeat 100%;
+        background-size:100%; 
     }
 </style>

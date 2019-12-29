@@ -42,8 +42,8 @@
                 <img slot="icon" src="../../assets/setting.png" width="24" height="24">
             </mt-cell>
         </div>
-        <div style="width: 100%;text-align: center;margin-top: 2rem;">
-            <mt-button type="primary" @click="logout" style="width: 90%;">退出登陆</mt-button>
+        <div class="version">
+            当前版本 1.2.2
         </div>
     </div>
 </template>
@@ -63,11 +63,7 @@ export default {
                 this.accountInfo = res
             })
         },
-        logout(){
-            window.sessionStorage.clear()
-            window.localStorage.clear();
-            this.$router.push('/login')
-        }
+        
     },
     mounted (){
         this.getUser()
@@ -91,6 +87,13 @@ export default {
             }
         }
     }
-
+    .version{
+        margin: 0 auto;
+        text-align: center;
+        height: 2rem;
+        line-height: 2rem;
+        font-size: 0.6rem;
+        color: grey;
+    }
 
 </style>

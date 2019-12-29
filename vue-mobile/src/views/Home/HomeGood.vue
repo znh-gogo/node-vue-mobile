@@ -15,7 +15,7 @@
     
   <div style="width:100%;min-height:100%;background:#eee;padding-bottom:6rem;">
     <div style="width:100%;padding:0.3rem 0;overflow:hidden" class="scrollbar" ref="homeWrap">
-        <ul style="overflow-y:hidden;overflow-x:scroll;padding:0 1rem;display:flex;white-space:nowrap" ref="one">
+        <ul style="overflow-y:hidden;overflow-x:scroll;padding:1rem;display:flex;white-space:nowrap;" ref="one">
           <li
           v-for="(item,index) in typelist"
           :key="index"
@@ -212,9 +212,9 @@ export default {
     homeScroll() {
       // 默认有六个li子元素，每个子元素的宽度为120px
       // let width = 6 * 120;
-      let count = this.typelist.length
-      let width = 6*count
-      console.log(this.$refs.one.offsetWidth)
+      // let count = this.typelist.length
+      // let width = 6*count
+      // console.log(this.$refs.one.offsetWidth)
       // console.log(count)
 
       // this.$refs.one.style.width = width+ 1 + "rem";
@@ -297,17 +297,22 @@ export default {
     // console.log(this.$route.query)
   },
   created(){
-     	window.onscroll = ()=>{
+    setTimeout(()=>{
+      window.onscroll = ()=>{
      		//变量scrollTop是滚动条滚动时，距离顶部的距离
      		var scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
      		//变量windowHeight是可视区的高度
      		var windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
      		//变量scrollHeight是滚动条的总高度
      		var scrollHeight = document.documentElement.scrollHeight||document.body.scrollHeight;
+
         //滚动条到底部的条件
-        if(scrollTop+windowHeight>=scrollHeight){
+        if(Math.ceil(scrollTop)+Math.ceil(windowHeight)>=scrollHeight){
         //写后台加载数据的函数
         console.log("距顶部"+scrollTop+"可视区高度"+windowHeight+"滚动条总高度"+scrollHeight);
+          scrollTop = 0
+          windowHeight = 0
+          scrollHeight = 0
         // console.log(sessionStorage.result)
       if(this.result === ''){
           if(!this.loadflag1&&!this.isLoading){
@@ -320,7 +325,15 @@ export default {
        this.upflag = false
      }
     }
-   }
+  // console.log(window.onscroll)
+    },0)
+     	
+  
+   },
+  destroyed(){
+    window.onscroll = null
+    console.log(window.onscroll,"销毁了")
+  }
 }
 </script>
 
@@ -366,6 +379,9 @@ ul{padding-left: 0;}
    }
    ::-webkit-scrollbar {
      width: 0 !important;height: 0;
+   }
+   ul{
+     -webkit-overflow-scrolling: touch;
    }
 }
 </style>

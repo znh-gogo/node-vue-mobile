@@ -37,7 +37,7 @@
             @touchstart="$router.push({path:'/social/info',query:{id:infoDetail.seller._id,flag:infoDetail.seller._id==accoundid?false:true}})"></div>
             <div v-if="infoDetail.seller" class="name-time">
                 <div style="font-weight:bold;font-size:1.2rem;margin-top:0.2rem">{{infoDetail.seller.nickname}}</div>
-                <div style="color:#666;margin-bottom:0.5rem;font-size:0.8rem;">{{format(infoDetail.updatedAt)}} 发布于{{infoDetail.seller.address}}</div>
+                <div style="color:#666;margin-bottom:0.5rem;font-size:0.8rem;">{{date(infoDetail.updatedAt)}} <span v-if="infoDetail.seller.address">发布于</span>{{infoDetail.seller.address}}</div>
             </div>
         </div>
         <div class="line"></div>
@@ -95,11 +95,13 @@
 <script>
 import api from '../../api'
 import format from '../../common/common'
+import date from '../../common/date'
 export default {
     data(){
         return{
             infoDetail:{},
             format,
+            date,
             accoundid:'',
             commentFlag:false,
             comments:'',

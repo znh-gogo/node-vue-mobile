@@ -19,6 +19,9 @@
             </mt-cell>
         </div>
         </div>
+        <div style="width: 100%;text-align: center;margin-top: 2rem;">
+            <mt-button type="primary" @click="logout" style="width: 90%;">退出登陆</mt-button>
+        </div>
 
     </div>
 </template>
@@ -68,6 +71,11 @@ export default {
                 //     Toast(res.message)
                 // })
             }
+        },
+        logout(){
+            window.sessionStorage.clear()
+            window.localStorage.clear();
+            this.$router.push('/login')
         }
     },
     mounted(){
