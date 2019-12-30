@@ -14,10 +14,13 @@
         <!-- <div style="height:30px;width:100%;background-color:#f1f1f1"></div> -->
         <Scrollbar ref="scrollbar" padding="20px" class="tv-main-body">
             <template v-for="view in views">
-                <component v-show="view === currentView" v-bind:is="view.component" :params="view.params"
-                           :query="view.query"
-                           :timestamp="view.timestamp"
-                           v-bind:key="view.id"></component>
+                <transition-group name="slide" v-bind:key="view.id" appear mode="out-in">
+                    <component v-show="view === currentView" v-bind:is="view.component" :params="view.params"
+                            :query="view.query"
+                            :timestamp="view.timestamp"
+                            v-bind:key="view.id"
+                            style="width:calc(100% - 10px)"></component>
+                </transition-group>
             </template>
         </Scrollbar>
         
@@ -44,7 +47,8 @@ import Scrollbar from '../scrollbar/Scrollbar'
                 currentView: null,
                 route: true,
                 authflag:'',
-                homeItem:''
+                homeItem:'',
+                transitionName:'slide-right'
             }
         },
         watch: {
@@ -205,5 +209,34 @@ import Scrollbar from '../scrollbar/Scrollbar'
         /*padding: 20px;*/
     }
 
+    /* 可以设置不同的进入和离开动画 */
+    /* 设置持续时间和动画函数 */
+   
+    .slide-enter-active, .slide-leave-active {
+        transition: all 1.5s ease;
+        // opacity: 1;
+        // position: absolute;
+        // top:20px;
+    }
+    .slide-enter {
+        opacity: 0;
+        transform: translateX(calc(100% - 20px));
+        // transition-delay:1s;
+        // position: relative;
+        // top:20px;
+    }
+    .slide-enter-to {
+        opacity: 1;
+        // transform: translateX(calc(100% - 20px));
+        // transition-delay:1s;
+        
+    }
 
+    .slide-leave-active {
+        transition: all 1.5s ease;
+        opacity: 0;
+        transform: translateX(-100%);
+        position: absolute;
+        top:20px;
+    }
 </style>

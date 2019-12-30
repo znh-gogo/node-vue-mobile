@@ -4,6 +4,15 @@ import Home from './views/Home.vue'
 
 Vue.use(Router)
 
+/**
+ * bug:修复router的promise问题。
+ * 也可以install @3.1.1以上的router也可以解决这个问题
+ */
+const originalPush = Router.prototype.push
+Router.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
+
 const router = new Router({
   // mode: 'history',
   base: process.env.BASE_URL,

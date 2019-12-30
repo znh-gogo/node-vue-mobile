@@ -554,7 +554,7 @@ module.exports = app => {
     //admin端获取反馈列表信息
     app.post('/admin/api/FeedbackList',solveAdminToken ,async(req,res)=>{
         const {searchInfo} = req.body
-        console.log(req.ip)
+        // console.log(req.ip)
         if(!searchInfo){
             const count = await Feedback.countDocuments()
             //前端传入页数
