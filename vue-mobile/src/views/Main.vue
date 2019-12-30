@@ -1,6 +1,10 @@
 <template>
     <div style="height:100%">
-        <router-view></router-view>
+        <transition name="slide" appear mode="out-in">
+            <!-- <keep-alive> -->
+                <router-view></router-view>
+            <!-- </keep-alive> -->
+        </transition>
         <div class="footer">
         <router-link class="nav-link" tag="div" to="/home" style="flex:1">
             <img src="../assets/home.png" alt="" style="width:2.2rem;margin-top:0.5rem" v-if="$route.path !== '/home'">
@@ -50,7 +54,33 @@
             // cursor: pointer;
         }
     }
+    .routerClass{
+        width: 100%;
+        position: absolute;
+        // width: 100%; 
+        height: 100%;
+        transition: all .5s cubic-bezier(.55,0,.1,1);
+    }
     .current {
         color: #3385ff !important;
+    }
+    .slide-enter-active, .slide-leave-active {
+        transition: all 0.5s ease;
+    }
+    .slide-enter ,.slider-leave-to{
+        // opacity: 0;
+        transform: translateX(100%);
+        
+        // position: relative;
+        // top:20px;
+    }
+    .slide-enter-to {
+        opacity: 1; 
+    }
+
+    .slide-leave-active {
+        // transition: all 0.8s ease;
+        // opacity: 0;
+        transform: translateX(-100%);
     }
 </style>
