@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home/home.vue'
+import Conversation from './views/Conversation/conversation.vue'
+import Social from './views/Social/social.vue'
+import Mine from './views/Mine/mine.vue'
 import Main from './views/Main.vue'
 import { Toast } from 'mint-ui'
 
@@ -50,17 +53,17 @@ const router = new Router({
         {
           path: '/conversation',
           name: 'conversation',
-          component: () => import('./views/Conversation/conversation.vue')
+          component:Conversation
         },
         {
           path: '/social',
           name: 'social',
-          component: () => import('./views/Social/social.vue')
+          component: Social
         },
         {
           path: '/mine',
           name: 'mine',
-          component: () => import('./views/Mine/mine.vue')
+          component: Mine
         }
 
       ]

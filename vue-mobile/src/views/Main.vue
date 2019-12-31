@@ -1,6 +1,6 @@
 <template>
     <div style="height:100%">
-        <transition name="slide" appear mode="out-in">
+        <transition name="slide" appear>
             <!-- <keep-alive> -->
                 <router-view></router-view>
             <!-- </keep-alive> -->
@@ -55,11 +55,12 @@
         }
     }
     .routerClass{
-        width: 100%;
-        position: absolute;
+        
+        // position: absolute;
+        // top: 0;
         // width: 100%; 
-        height: 100%;
-        transition: all .5s cubic-bezier(.55,0,.1,1);
+        
+        // transition: all 5s cubic-bezier(.55,0,.1,1);
     }
     .current {
         color: #3385ff !important;
@@ -82,5 +83,7 @@
         // transition: all 0.8s ease;
         // opacity: 0;
         transform: translateX(-100%);
+        position: absolute;
+        top: 0;
     }
 </style>

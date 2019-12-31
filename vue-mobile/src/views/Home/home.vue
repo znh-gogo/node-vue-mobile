@@ -187,7 +187,7 @@ export default {
         }
     }
     .bg10{
-        background:url('../../assets/bg10.jpg') no-repeat 100%;
+        background:url('../../assets/bg10.jpg') no-repeat 100% top;
         background-size:100%; 
     }
 </style>

@@ -214,9 +214,6 @@ import Scrollbar from '../scrollbar/Scrollbar'
    
     .slide-enter-active, .slide-leave-active {
         transition: all 1.5s ease;
-        // opacity: 1;
-        // position: absolute;
-        // top:20px;
     }
     .slide-enter {
         opacity: 0;
@@ -227,9 +224,6 @@ import Scrollbar from '../scrollbar/Scrollbar'
     }
     .slide-enter-to {
         opacity: 1;
-        // transform: translateX(calc(100% - 20px));
-        // transition-delay:1s;
-        
     }
 
     .slide-leave-active {

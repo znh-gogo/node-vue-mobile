@@ -40,7 +40,7 @@
         <div class="charts" style="padding-bottom:20px">
             <el-card style="width: 100%;height:450px;">    
                 <div slot="header">商品上架竖状分布图</div>
-                <div id="chart2" style="width: 100%;height:350px;"></div>
+                <div id="chart2" style="width: 95%;height:350px;"></div>
             </el-card>
         </div>
         <div class="charts" style="padding-bottom:20px">

@@ -1,7 +1,10 @@
 <template>
 
   <div id="app">
+    <transition name="slide" appear>
       <router-view></router-view>
+    </transition>
+
   </div>
 
 </template>
@@ -25,6 +28,26 @@ html,body{overflow-x:hidden;}
 //   }
 // }
     
+.slide-enter-active, .slide-leave-active {
+        transition: all 0.5s ease;
+    }
+    .slide-enter ,.slider-leave-to{
+        // opacity: 0;
+        transform: translateX(100%);
+        
+        // position: relative;
+        // top:20px;
+    }
+    .slide-enter-to {
+        opacity: 1; 
+    }
 
+    .slide-leave-active {
+        // transition: all 0.8s ease;
+        // opacity: 0;
+        transform: translateX(-100%);
+        position: absolute;
+        top: 0;
+    }
 
 </style>
