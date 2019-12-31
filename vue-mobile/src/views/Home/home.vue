@@ -25,7 +25,7 @@
             <!-- <mt-button type="primary" size="small" style="width:20%;height:100%;display:inline-block;vertical-align: top;">搜索</mt-button> -->
         </div>
         <div style="width:100%">
-            <swiper :options="swiperOption" v-if="adList.length>0">
+            <swiper :options="swiperOption" v-if="adList.length>0" ref="mySwiper">
                 <swiper-slide v-for="(item,index) in adList" :key="index" style="position:relative">
                     <img class="w-100" style="height:180px;" :src="item.ad_img" alt="">
                     <div class="swiper-text">
@@ -81,6 +81,7 @@ import { Toast } from 'mint-ui';
 import HomeGood from './HomeGood'
 import About from './About'
 import api from '../../api'
+var vm = null
 export default {
     data(){
         return{
@@ -92,6 +93,22 @@ export default {
                 loop:true,
                 observer:true,
                 observeParents:true,
+                on: {
+                        slideChangeTransitionEnd: function() {
+                            console.log(this.activeIndex);
+                            //切换结束时，告诉我现在是第几个slide
+                            //                             const realIndex = this.activeIndex;
+                            //                             vm.carousel(realIndex);
+                        },
+                        click: function() {
+                          // 这里有坑，需要注意的是：this 指向的是 swpier 实例，而不是当前的 vue， 因此借助 vm，来调用 methods 里的方法 
+                          // console.log(this); // -> Swiper
+                          // 当前活动块的索引，与activeIndex不同的是，在loop模式下不会将 复制的块 的数量计算在内。
+                            console.log('ss'+this.realIndex)
+                            const realIndex = this.realIndex;
+                            vm.checkInfo(vm.adList[realIndex]);
+                        }
+                    },
             },
             chooseflag:true,
             result:'',
@@ -133,12 +150,25 @@ export default {
         },
         getLoad(e){
             this.vantLoading = e
+        },
+        checkInfo(e){
+            // console.log(e.relative)
+            let id = sessionStorage.id
+            this.$router.push({path:'/social/info',query:{id:e.relative,flag:e.relative===id?false:true}})
         }
     },
     mounted(){
         this.fetchAd()
         // this.$router.push({path:'/'})
-    }
+    },
+    computed: {
+            swiper() {
+                return this.$refs.mySwiper.swiper;
+            }
+        },
+    created() {
+        vm = this;
+    },
 }
 </script>
 

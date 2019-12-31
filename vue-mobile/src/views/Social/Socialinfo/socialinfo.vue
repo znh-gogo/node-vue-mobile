@@ -20,7 +20,7 @@
             <div style="margin-bottom:0.5rem">邮箱：{{userinfo.email}}</div>
             <div>个性签名：{{userinfo.description}}</div>
         </div>
-        <div style="width:100%;text-align:center;margin-top:5rem" v-if="$route.query.flag==true">
+        <div style="width:100%;text-align:center;margin-top:5rem" v-show="$route.query.flag==true">
             <mt-button type="primary" style="width:80%" @click="priLetter">私信</mt-button>
         </div>
         <div style="width:100%;text-align:center;margin-top:5rem">
