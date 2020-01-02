@@ -54,9 +54,9 @@
     <el-table-column
       fixed="right"
       label="操作"
-      width="150">
+      width="200">
       <template slot-scope="scope">
-        <el-button @click="getdetail(scope.row)" type="primary" plain size="small">查看</el-button>
+        <el-button @click="getdetail(scope.row)" type="primary" plain size="small">查看详情</el-button>
         <el-button @click="remove(scope.row)" type="danger" size="small">删除</el-button>
       </template>
     </el-table-column>
@@ -84,6 +84,13 @@
       <el-divider v-if="model.buyer"></el-divider>
       <p v-if="model.buyer">购买人：<span style="font-weight:bold">{{model.buyer.nickname}}</span></p>
       <p v-if="model.buyer">购买人账号：<span style="font-weight:bold">{{model.buyer.account}}</span></p>
+      <div v-if="model.buyer">
+        <div v-for="(item,index) in model.buyer.rece_info" :key="index">
+          <p v-if="item.checked === 1">购买人收货地址：<span style="font-weight:bold">{{item.re_address}}</span></p>
+          <p v-if="item.checked === 1">购买人姓名：<span style="font-weight:bold">{{item.re_name}}</span></p>
+          <p v-if="item.checked === 1">购买人手机号码：<span style="font-weight:bold">{{item.re_phone}}</span></p>
+        </div>
+      </div>
     </div>
     <span slot="footer" class="dialog-footer">
       <el-button @click="dialogVisible = false">取 消</el-button>
