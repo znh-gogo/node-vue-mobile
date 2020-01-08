@@ -1,7 +1,8 @@
 <template>
 <div style="padding:20px 10px;background:#fff">
   <h1 style="margin-top:0">商品列表</h1>
-  <div style="text-align:right;">
+  <div class="top-control">
+      <div style="padding-left:10px"><el-button @click="$router.push(`/goodsAdd`)">添加商品类别</el-button></div>
       <el-form :inline="true" class="demo-form-inline">
           <el-form-item>
               <el-input placeholder="请输入商品描述" v-model="searchInfo"></el-input>
@@ -63,8 +64,10 @@
   </el-table>
     <el-pagination
     v-if="tableData.BeanPage"
-    layout="prev, pager, next"
+    layout="sizes, prev, pager, next"
     @current-change="changePage"
+    @size-change="handleSizeChange"
+    :page-sizes="[4, 6, 10]"
     :page-size="numSize"
     :page-count="tableData.BeanPage.allPages"
     :total="tableData.BeanPage.count">
@@ -133,6 +136,10 @@ import {ADMIN} from '../../api/globol'
         this.numPage=e
         this.fetchGoods()
       },
+      handleSizeChange(e){
+            this.numSize = e
+            this.fetchGoods()
+      },
       getdetail(e){
         this.model = e
         this.dialogVisible = true
@@ -162,3 +169,10 @@ import {ADMIN} from '../../api/globol'
     }
   }
 </script>
+
+<style scoped>
+.top-control{
+  display: flex;
+  justify-content: space-between;
+}
+</style>

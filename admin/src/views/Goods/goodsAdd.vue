@@ -1,6 +1,8 @@
 <template>
-    <div class="userAdd" style="padding: 5px;min-height:500px;background:#fff">
-        <h1 style="margin-top:0">{{this.$route.params.id?'编辑':'添加'}}商品类别</h1>
+    <div class="userAdd" style="padding: 10px;min-height:500px;background:#fff">
+        <h1 style="margin-top:0">{{$route.params.id?'编辑':'添加'}}商品类别</h1>
+        <div style="text-align:right;padding:10px;"><el-button type="primary" plain @click="$router.go(-1)">返回</el-button></div>
+        
         <el-form @submit.native.prevent="save" label-width="120px">
             <!-- <el-form-item label="所属关系">
                 <el-select v-model="model.relative" placeholder="请选择">

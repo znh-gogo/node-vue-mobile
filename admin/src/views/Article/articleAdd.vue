@@ -1,6 +1,6 @@
 <template>
     <div class="userAdd" style="background:#fff;padding:10px">
-        <div style="text-align:right;padding:10px;" v-if="this.$route.params.id"><el-button type="primary" plain @click="$router.go(-1)">返回</el-button></div>
+        <div style="text-align:right;padding:10px;"><el-button type="primary" plain @click="$router.go(-1)">返回</el-button></div>
         <el-form @submit.native.prevent="save" label-width="120px">
             <el-form-item label="文章所属类型">
                 <el-select v-model="model.relative" placeholder="请选择" multiple >
@@ -25,17 +25,18 @@
             <el-form-item label="文章内容">
                 <vue-editor v-model="model.articleContent"
                 useCustomImageHandler
-                @imageAdded="handupload"></vue-editor>  
+                @image-added="handupload"></vue-editor>  
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" native-type="submit">保存</el-button>
             </el-form-item>
         </el-form>
+        <!-- <div v-html="model.articleContent"></div> -->
     </div>
 </template>
 <script>
 import {VueEditor} from 'vue2-editor'
-import {ADMIN} from '../../api/globol'
+import {ADMIN,MOBILE} from '../../api/globol'
 export default {
     props:{
         id:{}

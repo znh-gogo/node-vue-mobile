@@ -124,9 +124,11 @@
             </el-table-column>
             </el-table>
              <el-pagination
-                layout="prev, pager, next"
+                layout="sizes,prev, pager, next"
                 v-if="tableData.BeanPage"
+                @size-change="handleSizeChange"
                 @current-change="changePage"
+                :page-sizes="[2, 4, 6, 10]"
                 :page-size="numSize"
                 :page-count="tableData.BeanPage.allPages"
                 :total="tableData.BeanPage.count">
@@ -263,6 +265,10 @@ export default {
         changePage(e){
             console.log(e)
             this.numPage=e
+            this.fetchData()
+        },
+        handleSizeChange(e){
+            this.numSize = e
             this.fetchData()
         },
         computedtimeline(time){

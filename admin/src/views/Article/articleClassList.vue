@@ -1,7 +1,7 @@
 <template>
 <div style="padding:20px 10px;background:#fff">
   <h1 style="margin-top:0">文章分类列表</h1>
-  <div style="padding:10px"><el-button @click="$router.push(`/articleClassAdd`)" type="primary">添加文章分类</el-button></div>
+  <div style="padding:10px"><el-button @click="$router.push(`/articleClassAdd`)">新建文章分类</el-button></div>
   <el-table
     height="500"
     :data="tableData"

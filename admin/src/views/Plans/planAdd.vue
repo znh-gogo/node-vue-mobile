@@ -1,6 +1,6 @@
 <template>
     <div class="userAdd" style="background:#fff;padding:10px">
-    <div style="text-align:right;padding:10px;" v-if="this.$route.params.id"><el-button type="primary" plain @click="$router.go(-1)">返回</el-button></div>
+    <div style="text-align:right;padding:10px;"><el-button type="primary" plain @click="$router.go(-1)">返回</el-button></div>
     <div style="margin-bottom:20px">
         <span>
             计划执行者:

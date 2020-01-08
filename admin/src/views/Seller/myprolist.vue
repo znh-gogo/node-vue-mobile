@@ -80,8 +80,10 @@
         </el-dialog>
         <el-pagination
             v-if="pageList"
-            layout="prev, pager, next"
+            layout="sizes, prev, pager, next"
             @current-change="changePage"
+            @size-change="handleSizeChange"
+            :page-sizes="[4, 6, 10]"
             :page-size="numSize"
             :page-count="pageList.allPages"
             :total="pageList.count">
@@ -177,6 +179,10 @@ export default {
         changePage(e){
             console.log(e)
             this.numPage=e
+            this.getMyGoods()
+      },
+      handleSizeChange(e){
+            this.numSize = e
             this.getMyGoods()
       },
       showBuyer(b,id){

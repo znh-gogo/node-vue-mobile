@@ -1,6 +1,7 @@
 <template>
 <div style="padding:20px 10px;min-height:500px;background:#fff">
   <h1 style="margin-top:0">管理员列表</h1>
+  <div style="padding:10px"><el-button @click="$router.push(`/adminAdd`)">添加管理员</el-button></div>
   <el-table
     height="500"
     :data="tableData"

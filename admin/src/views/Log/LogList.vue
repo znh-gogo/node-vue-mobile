@@ -64,9 +64,10 @@
     </el-table-column>
   </el-table>
   <el-pagination
-    layout="prev, pager, next"
+    layout="prev, pager, next,jumper"
     v-if="tableData.BeanPage"
     @current-change="changePage"
+    @size-change="handleSizeChange"
     :page-size="numSize"
     :page-count="tableData.BeanPage.allPages"
     :total="tableData.BeanPage.count">
@@ -91,6 +92,10 @@ import format from '../../common/common'
         this.numPage=e
         this.fetchLogs()
       },
+      handleSizeChange(e){
+        this.numPage=e
+        this.fetchLogs()
+      }
     },
     created(){
         this.fetchLogs()

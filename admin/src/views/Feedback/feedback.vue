@@ -55,9 +55,11 @@
   </el-table>
   
     <el-pagination
-    layout="prev, pager, next"
+    layout="sizes, prev, pager, next"
     v-if="tableData.BeanPage"
     @current-change="changePage"
+    @size-change="handleSizeChange"
+    :page-sizes="[2, 4, 6, 10]"
     :page-size="numSize"
     :page-count="tableData.BeanPage.allPages"
     :total="tableData.BeanPage.count">
@@ -107,6 +109,10 @@ import format from '../../common/common'
         this.numPage=e
         this.fetchUsers()
       },
+      handleSizeChange(e){
+            this.numSize = e
+            this.fetchUsers()
+      },
       showDialog(el){
         this.userDetails = el
         // console.log(el)
@@ -136,7 +142,7 @@ import format from '../../common/common'
       return {
         tableData: [],
         numPage:1,
-        numSize:5,
+        numSize:2,
         dialogVisible: false,
         userDetails: '',
         format,

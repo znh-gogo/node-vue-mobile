@@ -2,13 +2,13 @@
   <div class="home">
     <el-container style="min-height: 100vh; ">
       
-  <el-aside style="background-color: #002140;width:auto;max-width:201px">
+  <el-aside style="background-color: #002140;overflow:hidden" :class="[{'showCollapse':!isCollapse},{'hiddenCollapse':isCollapse}]">
     
     <div style="height:60px;display:flex;align-items:center;justify-content:center" v-if="!isCollapse"><img src="../assets/title.jpg" style="width:90%;border-radius:10px;" alt=""></div>
     <div style="height:60px;line-height:60px;text-align:center;font-size:18px;padding:0 10px;color: #fff;" v-else>
       农产
     </div>
-
+    <transition name="el-fade-in-linear">
     <el-menu
     class="el-menu-vertical-demo"
     router
@@ -23,26 +23,27 @@
       <el-submenu index="0">
         <template slot="title"><i class="el-icon-s-home"></i><span>首页</span></template>
         <el-menu-item-group>
-          <el-menu-item index="/homepage" v-if="authflag === 1">首页</el-menu-item>
-          <el-menu-item index="/sellerpage" v-if="authflag === 0">首页</el-menu-item>
+          <template slot="title">首页</template>
+          <el-menu-item index="/homepage" v-if="authflag === 1">管理首页</el-menu-item>
+          <el-menu-item index="/sellerpage" v-if="authflag === 0">商家首页</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
 
-      <el-submenu index="1" v-if="authflag === 2">
+      <!-- <el-submenu index="1" v-if="authflag === 2">
         <template slot="title"><i class="el-icon-user"></i><span>用户管理</span></template>
         <el-menu-item-group>
           <template slot="title">用户</template>
           <el-menu-item index="/userList">用户列表</el-menu-item>
           <el-menu-item index="/userAdd">添加用户</el-menu-item>
         </el-menu-item-group>
-      </el-submenu>
+      </el-submenu> -->
 
       <el-submenu index="2"  v-if="authflag === 1">
         <template slot="title"><i class="el-icon-s-shop"></i><span>商品管理</span></template>
         <el-menu-item-group>
           <template slot="title">商品</template>
           <el-menu-item index="/goodsList">商品列表</el-menu-item>
-          <el-menu-item index="/goodsAdd">商品类别</el-menu-item>
+          <!-- <el-menu-item index="/goodsAdd">商品类别</el-menu-item> -->
         </el-menu-item-group>
       </el-submenu>
 
@@ -52,7 +53,7 @@
           <template slot="title">文章</template>
           <!-- <el-menu-item index="/articleClassAdd">新建文章分类</el-menu-item> -->
           <el-menu-item index="/articleClassList">文章分类列表</el-menu-item>
-          <el-menu-item index="/articleAdd">新建文章</el-menu-item>
+          <!-- <el-menu-item index="/articleAdd">新建文章</el-menu-item> -->
           <el-menu-item index="/articleList">文章列表</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
@@ -60,9 +61,9 @@
         <template slot="title"><i class="el-icon-collection"></i><span>计划管理</span></template>
         <el-menu-item-group>
           <template slot="title">计划</template>
-          <el-menu-item index="/planAdd">添加计划</el-menu-item>
+          <!-- <el-menu-item index="/planAdd">添加计划</el-menu-item> -->
           <el-menu-item index="/planList">计划列表</el-menu-item>
-          <el-menu-item index="/planmakerAdd">添加计划人</el-menu-item>
+          <!-- <el-menu-item index="/planmakerAdd">添加计划人</el-menu-item> -->
           <el-menu-item index="/planmakerList">计划人列表</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
@@ -72,14 +73,14 @@
         <el-menu-item-group>
           <template slot="title">管理员</template>
           <el-menu-item index="/adminList">管理员列表</el-menu-item>
-          <el-menu-item index="/adminAdd">添加管理员</el-menu-item>
+          <!-- <el-menu-item index="/adminAdd">添加管理员</el-menu-item> -->
         </el-menu-item-group>
       </el-submenu>
 
       <el-submenu index="6"  v-if="authflag === 1">
         <template slot="title"><i class="el-icon-s-custom"></i><span>账户管理</span></template>
         <el-menu-item-group>
-          <!-- <template slot="title">管理员</template> -->
+          <template slot="title">账户</template>
           <el-menu-item index="/accountList">账户列表</el-menu-item>
           <!-- <el-menu-item index="/adminAdd">添加管理员</el-menu-item> -->
         </el-menu-item-group>
@@ -88,7 +89,7 @@
       <el-submenu index="7"  v-if="authflag === 1">
         <template slot="title"><i class="el-icon-edit-outline"></i><span>反馈管理</span></template>
         <el-menu-item-group>
-          <!-- <template slot="title">管理员</template> -->
+          <template slot="title">反馈</template>
           <el-menu-item index="/feedbackList">反馈列表</el-menu-item>
           <!-- <el-menu-item index="/adminAdd">添加管理员</el-menu-item> -->
         </el-menu-item-group>
@@ -97,7 +98,7 @@
       <el-submenu index="8"  v-if="authflag === 0">
         <template slot="title"><i class="el-icon-s-shop"></i><span>商品管理</span></template>
         <el-menu-item-group>
-          <!-- <template slot="title">管理员</template> -->
+          <template slot="title">商品</template>
           <el-menu-item index="/selling">商品发售</el-menu-item>
           <el-menu-item index="/myprolist">商品列表</el-menu-item>
         </el-menu-item-group>
@@ -106,7 +107,7 @@
       <el-submenu index="9"  v-if="authflag === 1">
         <template slot="title"><i class="el-icon-s-marketing"></i><span>广告管理</span></template>
         <el-menu-item-group>
-          <!-- <template slot="title">管理员</template> -->
+          <template slot="title">广告</template>
           <el-menu-item index="/setAd">广告价格与时长</el-menu-item>
           <el-menu-item index="/Adlist">广告申请列表</el-menu-item>
         </el-menu-item-group>
@@ -115,7 +116,7 @@
       <el-submenu index="10"  v-if="authflag === 0">
         <template slot="title"><i class="el-icon-s-platform"></i><span>商家广告管理</span></template>
         <el-menu-item-group>
-          <!-- <template slot="title">管理员</template> -->
+          <template slot="title">广告</template>
           <el-menu-item index="/Adapply">广告申请</el-menu-item>
           <el-menu-item index="/myAdList">广告列表</el-menu-item>
         </el-menu-item-group>
@@ -124,13 +125,14 @@
       <el-submenu index="11"  v-if="authflag === 1">
         <template slot="title"><i class="el-icon-s-tools"></i><span>日志操作管理</span></template>
         <el-menu-item-group>
-          <!-- <template slot="title">管理员</template> -->
+          <template slot="title">日志</template>
           <el-menu-item index="/logList">日志操作列表</el-menu-item>
           <!-- <el-menu-item index="/myAdList">广告列表</el-menu-item> -->
         </el-menu-item-group>
       </el-submenu>
 
     </el-menu>
+    </transition>
   </el-aside>
     
      
@@ -208,6 +210,7 @@ export default {
       logout(){
         sessionStorage.clear()
         this.$router.push('/login')
+        this.$message.success("退出成功！")
       },
       getInfo(){
         this.authflag = parseInt(sessionStorage.authflag)
@@ -297,4 +300,12 @@ export default {
             }
 
         }
+  .showCollapse {
+    max-width: 200px;
+    width:auto;
+    box-sizing: border-box;
+  }
+  .hiddenCollapse {
+    max-width: 64px;
+  }
 </style>

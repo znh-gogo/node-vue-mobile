@@ -1,6 +1,7 @@
 <template>
 <div style="padding:20px 10px;background:#fff">
   <h1 style="margin-top:0">计划人列表</h1>
+  <div style="padding:10px"><el-button @click="$router.push(`/planAdd`)">新建计划</el-button></div>
   <el-table
     height="500"
     :data="tableData.items"

@@ -1,6 +1,7 @@
 <template>
 <div style="padding:20px 10px;background:#fff">
   <h1 style="margin-top:0">文章列表</h1>
+  <div style="padding:10px"><el-button @click="$router.push(`/articleAdd`)">新建文章</el-button></div>
   <el-table
     height="500"
     :data="tableData"
@@ -33,9 +34,11 @@
     </el-table-column>
   </el-table>
   <el-pagination
-    layout="prev, pager, next"
-    v-if="page"
+  v-if="page"
+    layout="sizes, prev, pager, next"
     @current-change="changePage"
+    @size-change="handleSizeChange"
+    :page-sizes="[4, 6, 10]"
     :page-size="numSize"
     :page-count="page.allPages"
     :total="page.count">
@@ -83,6 +86,10 @@ import {ADMIN} from '../../api/globol'
       changePage(e){
         console.log(e)
         this.numPage=e
+        this.fetchArticle()
+      },
+      handleSizeChange(e){
+        this.numSize = e
         this.fetchArticle()
       }
     },
