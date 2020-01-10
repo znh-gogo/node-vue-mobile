@@ -4,7 +4,7 @@
 
   <el-aside style="background-color: #002140;overflow:hidden" :class="[{'showCollapse':!isCollapse},{'hiddenCollapse':isCollapse}]">
 
-    <div style="height:60px;display:flex;align-items:center;justify-content:center" v-if="!isCollapse"><img src="../assets/title.jpg" style="width:90%;border-radius:10px;" alt=""></div>
+    <div style="height:60px;display:flex;align-items:center;justify-content:center" v-if="!isCollapse"><a style="width:85%;height:70%;" href><img src="../assets/title.jpg" style="width:100%;height:100%;border-radius:10px;" alt=""></a></div>
     <div style="height:60px;line-height:60px;text-align:center;font-size:18px;padding:0 10px;color: #fff;" v-else>
       农产
     </div>
