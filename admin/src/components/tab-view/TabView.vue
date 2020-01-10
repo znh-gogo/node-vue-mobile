@@ -19,7 +19,7 @@
                             :query="view.query"
                             :timestamp="view.timestamp"
                             v-bind:key="view.id"
-                            style="width:calc(100% - 10px)"></component>
+                            ></component>
                 </transition-group>
             </template>
         </Scrollbar>
@@ -89,15 +89,23 @@ import Scrollbar from '../scrollbar/Scrollbar'
 
             handleCloseAll() {
                 let vm = this;
-                let view = this.views.find((v) => {
-                    return v.path === '/'
-                });
-
+                let view = ''
+                if(sessionStorage.authflag==='1'){
+                    view = this.views.find((v) => {
+                        return v.path === '/homepage'
+                    });
+                } else {
+                    view = this.views.find((v) => {
+                        return v.path === '/sellerpage'
+                    });
+                }
+                
                 if (view) {
                     this.handleCloseOthers(view);
                 } else {
                     this.views = [];
                     vm.$router.push('/');
+                    // console.log(1555)
                 }
 
 

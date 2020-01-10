@@ -1,9 +1,9 @@
 <template>
   <div class="home">
     <el-container style="min-height: 100vh; ">
-      
+
   <el-aside style="background-color: #002140;overflow:hidden" :class="[{'showCollapse':!isCollapse},{'hiddenCollapse':isCollapse}]">
-    
+
     <div style="height:60px;display:flex;align-items:center;justify-content:center" v-if="!isCollapse"><img src="../assets/title.jpg" style="width:90%;border-radius:10px;" alt=""></div>
     <div style="height:60px;line-height:60px;text-align:center;font-size:18px;padding:0 10px;color: #fff;" v-else>
       农产
@@ -134,8 +134,8 @@
     </el-menu>
     </transition>
   </el-aside>
-    
-     
+
+
   <el-container style="position:relative;">
     <el-header class="header">
       <div style="align-items:center;display:flex;">
@@ -160,14 +160,14 @@
         </el-dropdown>
       </div>
     </el-header>
-      
+
     <div class="main-body-wrap">
         <slot name="main-body">
             <TabView :show-nav-tab="showNavTab"></TabView>
         </slot>
     </div>
     <div style="background-color:#f1f1f1;text-align:center;color:#666;font-size:14px;position:absolute;bottom:0;width:100%;padding:15px 0">
-            Copyright © 2019 All informations from Vue.js. 
+            Copyright © 2019 All informations from Vue.js.
     </div>
     <!-- <el-main style="background-color:#f7f7f7">
       <el-breadcrumb separator="/">
@@ -179,9 +179,9 @@
       </div>
     </el-main> -->
 
-    
+
+    </el-container>
   </el-container>
-</el-container>
   </div>
 </template>
 
@@ -269,7 +269,7 @@ export default {
   }
   .el-aside {
     color: #333;
-    
+
   }
   .item {
   /* margin-top: 10px; */

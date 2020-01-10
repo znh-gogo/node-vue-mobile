@@ -51,7 +51,7 @@ module.exports = app => {
         //检验是否自动登陆
         if(autoLogin){
             const user = await Account.findOne({account}).select('+password')
-            const token = jwt.sign({id:user._id},app.get('secret'))
+            const token = jwt.sign({id:user._id,time:new Date().getTime()},app.get('secret'))
             return res.send({
                 token:token,
                 message:'登陆成功',
@@ -68,7 +68,7 @@ module.exports = app => {
             if(user.password!==password){
                     return res.status(422).send({message:'密码错误'})
             }
-            const token = jwt.sign({id:user._id},app.get('secret'))
+            const token = jwt.sign({id:user._id,time:new Date().getTime()},app.get('secret'))
             return res.send({
                 token:token,
                 message:'登陆成功',
