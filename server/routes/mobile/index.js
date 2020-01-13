@@ -955,7 +955,7 @@ module.exports = app => {
     router.post('/orderDetail',solveMobileToken,async(req,res)=>{
         const {uid,gid} = req.body
         const user = await Account.findById(uid,'account nickname rece_info money')
-        const good = await Product.findById(gid,'pro_price seller pro_imgs pro_description buyflag updatedAt buyer sendOrderList paybackflag').populate('seller')
+        const good = await Product.findById(gid,'pro_price seller pro_imgs pro_description buyflag updatedAt buyer sendOrderList paybackflag pro_address').populate('seller')
         res.send({user,good})
     })
 

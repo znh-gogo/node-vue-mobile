@@ -52,6 +52,10 @@
             <div>{{userinfo.account}}</div>
         </div>
         <div class="listinfo">
+            <div>发货地址</div>
+            <div>{{goodinfo.pro_address}}</div>
+        </div>
+        <div class="listinfo">
             <div>订单编号</div>
             <div>{{goodinfo._id}}</div>
         </div>

@@ -43,6 +43,7 @@
         <div class="line"></div>
         <div style="color:red;margin:1rem 1.5rem;">￥<span style="font-size:1.5rem;font-weight:bold">{{infoDetail.pro_price}}</span></div>
         <div style="font-weight:bold;font-size:1.5rem;margin:1rem 1.5rem;line-height:2rem;">{{infoDetail.pro_description}}</div>
+        <div style="color:#333;font-weight:bold;font-size:1rem;margin:1rem 1.5rem;line-height:2rem;text-align:right">发货地址:{{infoDetail.pro_address}}</div>
         <div style="margin:1rem 1.5rem;">
             <img :src="item" alt="" v-for="(item,index) in infoDetail.pro_imgs" :key="index" style="width:100%;height:auto;border-radius:0.5rem;">
         </div>
@@ -51,7 +52,7 @@
             <div style="color:#999" v-if="infoDetail.pro_attention">{{infoDetail.pro_attention.length}}人关注</div>
         </div>
         <div style="width:100%;height:0.7rem;background:#f1f1f1"></div>
-        <div v-if="infoDetail.comments" style="background:#fff">
+        <div v-if="infoDetail.comments" style="background:#fff;overflow:hidden">
             <div style="margin:1rem 0rem;padding:0 1rem;font-size:1.5rem;font-weight:700">全部留言 · {{infoDetail.comments.length}}</div>
             <div class="line"></div>
             <div v-if="infoDetail.comments.length !== 0">
