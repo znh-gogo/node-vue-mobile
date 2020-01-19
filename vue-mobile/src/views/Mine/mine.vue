@@ -59,8 +59,8 @@ export default {
     },
     methods:{
         getUser(){
-            api.showAccount(this.accountId,null).then((res)=>{
-                this.accountInfo = res
+            api.showAccount({id:this.accountId}).then((res)=>{
+                this.accountInfo = res.model
             })
         },
         

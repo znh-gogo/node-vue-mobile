@@ -21,7 +21,7 @@
 
 <script>
 import api from '../../../api'
-import { MessageBox } from 'mint-ui';
+import { MessageBox,Indicator } from 'mint-ui';
 export default {
     data(){
         return{
@@ -34,11 +34,15 @@ export default {
                 MessageBox('提示', '输入金额不能为空')
                 return
             }
-            let id = window.sessionStorage.getItem('id')            
+            let id = window.sessionStorage.getItem('id')    
+            Indicator.open('充值中...')        
             api.recharge({id,money:this.money}).then(res => {
-                MessageBox('提示', res.message).then(action => {
-                    this.$router.go(-1)
-                });
+                setTimeout(()=>{
+                    Indicator.close()
+                    MessageBox('提示', res.message).then(action => {
+                        this.$router.go(-1)
+                    });
+                },2000)
             })
         }
     }

@@ -14,6 +14,14 @@
       >
     </el-table-column>
     <el-table-column
+      label="发布时间"
+      >
+      <template slot-scope="scope">
+        {{format(scope.row.createdAt)}}
+      </template>
+    </el-table-column>
+    
+    <el-table-column
       prop="articleName"
       label="文章名称"
       >
@@ -48,6 +56,7 @@
 
 <script>
 import {ADMIN} from '../../api/globol'
+import format from '../../common/common'
   export default {
     methods: {
      async remove(row) {
@@ -104,7 +113,8 @@ import {ADMIN} from '../../api/globol'
         temp:[],
         page:[],
         numSize: 4,
-        numPage: 1
+        numPage: 1,
+        format
       }
     }
   }

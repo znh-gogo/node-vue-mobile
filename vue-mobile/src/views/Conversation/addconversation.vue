@@ -68,6 +68,7 @@ export default {
                 if(!this.account){
                     return
                 }
+                this.resultList = []
                 api.searchConversation({account:this.account}).then(res => {
                     // console.log(res)
                     if(res.message){
@@ -81,6 +82,7 @@ export default {
                 if(!this.account){
                     return
                 }
+                this.resultList = []
                 api.searchConversation({nickname:this.account}).then(res => {
                     // console.log(res)
                     if(res.message){

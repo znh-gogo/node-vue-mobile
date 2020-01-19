@@ -24,7 +24,7 @@
             </van-search>
             <!-- <mt-button type="primary" size="small" style="width:20%;height:100%;display:inline-block;vertical-align: top;">搜索</mt-button> -->
         </div>
-        <div style="width:100%">
+        <div style="width:100%" v-show="swiperFlag">
             <swiper :options="swiperOption" v-if="adList.length>0" ref="mySwiper">
                 <swiper-slide v-for="(item,index) in adList" :key="index" style="position:relative">
                     <img class="w-100" style="height:180px;" :src="item.ad_img" alt="">
@@ -95,7 +95,7 @@ export default {
                 observeParents:true,
                 on: {
                         slideChangeTransitionEnd: function() {
-                            console.log(this.activeIndex);
+                            // console.log(this.activeIndex);
                             //切换结束时，告诉我现在是第几个slide
                             //                             const realIndex = this.activeIndex;
                             //                             vm.carousel(realIndex);
@@ -104,6 +104,9 @@ export default {
                           // 这里有坑，需要注意的是：this 指向的是 swpier 实例，而不是当前的 vue， 因此借助 vm，来调用 methods 里的方法 
                           // console.log(this); // -> Swiper
                           // 当前活动块的索引，与activeIndex不同的是，在loop模式下不会将 复制的块 的数量计算在内。
+                          if(vm.showdefault){
+                              return
+                          }
                             console.log('ss'+this.realIndex)
                             const realIndex = this.realIndex;
                             vm.checkInfo(vm.adList[realIndex]);
@@ -115,7 +118,8 @@ export default {
             tflag:'',
             adList:[],
             showdefault:false,
-            vantLoading:false
+            vantLoading:false,
+            swiperFlag:true
         }
     },
     components:{
@@ -169,6 +173,16 @@ export default {
     created() {
         vm = this;
     },
+    deactivated(){
+        this.swiperFlag = false
+        // console.log(123)
+    },
+    activated(){
+        // console.log(456)
+        setTimeout(()=>{
+            this.swiperFlag = true
+        },100)
+    }
 }
 </script>
 

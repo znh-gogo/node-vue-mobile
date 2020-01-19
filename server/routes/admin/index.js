@@ -115,8 +115,15 @@ module.exports = app => {
         
         const token = await String(req.headers.authorization || '').split(' ').pop()
         assert(token,401,'请先登录') 
-        const {id} = await jwt.verify(token,req.app.get('secret'))
+        const {id,time} = await jwt.verify(token,req.app.get('secret'))
         assert(id,401,'请先登录')         
+        // const {time} = await jwt.verify(token,req.app.get('secret')) 
+        // console.log(Date.now()-time>60*60*1000)
+        if(Date.now()-time>60*60*1000){
+            return res.status(401).send({
+                message:'您已经超过一个小时没有进行操作，token过期，请重新登陆！'
+            })
+        } 
         req.user = await AdminUser.findById(id)
         assert(req.user,401,'请先登录') 
         await next()

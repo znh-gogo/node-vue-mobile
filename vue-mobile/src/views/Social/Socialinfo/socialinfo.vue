@@ -17,8 +17,14 @@
             </div>
         </div>
         <div style="padding:0 2rem;font-size:1.2rem">
+            <div class="like">
+                <div>关注：{{likeNum}}</div>
+                <div>粉丝：{{likedNum}}</div>
+                <van-button round type="primary" size="small" icon="plus" @click="doLike">{{likeFlag?'取消关注':'关注'}}</van-button>
+            </div>
             <div style="margin-bottom:0.5rem">邮箱：{{userinfo.email}}</div>
             <div>个性签名：{{userinfo.description}}</div>
+
         </div>
         <div style="width:100%;text-align:center;margin-top:5rem" v-show="$route.query.flag==true">
             <mt-button type="primary" style="width:80%" @click="priLetter">私信</mt-button>
@@ -54,19 +60,35 @@
 
 <script>
 import api from '../../../api'
+import { Toast } from 'mint-ui'
 export default {
     data(){
         return{
             userinfo:'',
-            hisprolist:[]
+            hisprolist:[],
+            like:'关注',
+            likeFlag:false,
+            likedNum:0,
+            likeNum:0
         }
     },
     methods:{
         getUser(){
             
-            api.showAccount(this.$route.query.id,null).then((res)=>{
-                this.userinfo = res
+            api.showAccount({id:this.$route.query.id}).then((res)=>{
+                this.userinfo = res.model
+                this.likeNum = res.model.like.length
                 // console.log(res)
+                this.likedNum = res.model.liked.length
+                this.likeFlag = res.model.liked.find((v)=>{
+                    return v._id === sessionStorage.id
+                })
+                // console.log(this.likeFlag)
+                if(!this.likeFlag){
+                    this.likeFlag = false
+                } else {
+                    this.likeFlag = true
+                }
             })
         },
         priLetter(){
@@ -87,6 +109,26 @@ export default {
                     this.showflag2 = false
                 }
             })
+        },
+        doLike(){
+            let id = sessionStorage.id
+            if(id === this.$route.query.id){
+                Toast('自己不能关注自己哦！')
+                return
+            }
+            if(this.likeFlag){
+                api.like({bid:id,sid:this.$route.query.id,like:false}).then(res=>{
+                    this.likeFlag = !this.likeFlag
+                    this.getUser()
+                    Toast(res.message)
+                })
+            } else {
+                api.like({bid:id,sid:this.$route.query.id,like:true}).then(res=>{
+                    this.likeFlag = !this.likeFlag
+                    this.getUser()
+                    Toast(res.message)
+                })
+            }
         }
     },
     mounted(){
@@ -111,6 +153,13 @@ export default {
                 margin-right: 2rem;
             }
         }
+    }
+    .like{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 0;
+        font-size: 1.5rem;
     }
     .goodbox{
   padding:2%;

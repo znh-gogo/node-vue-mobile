@@ -30,7 +30,7 @@
                     <div style="font-size:1.5rem;margin:0.5rem 0;color:#666" v-else>暂时未有新的消息</div>
                     <div style="color:#999">{{timeago(item.updatedAt)}}</div>
                 </div>
-                <transition name="moveR">
+                <transition name="van-slide-right">
                 <div
                 class="delBtn"
                 v-show="delFlag"
@@ -49,7 +49,7 @@
                     <div style="font-size:1.5rem;margin:0.5rem 0;color:#666" v-else>暂时未有新的消息</div>
                     <div style="color:#999">{{timeago(item.updatedAt)}}</div>
                 </div>
-                <transition name="moveR">
+                <transition name="van-slide-right">
                 <div
                 class="delBtn"
                 v-show="delFlag"

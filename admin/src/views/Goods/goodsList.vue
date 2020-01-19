@@ -21,7 +21,7 @@
     :header-cell-style="{background:'#eef1f6',color:'#606266'}"
     style="width: 100%">
     <el-table-column
-      
+      width="500"
       prop="pro_description"
       label="商品描述"
       >

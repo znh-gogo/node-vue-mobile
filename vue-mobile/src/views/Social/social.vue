@@ -125,7 +125,7 @@
             </div>
         <div style="width:100%;height:0.3rem;background:#eee;margin-top:1rem"></div>    
         </div>
-        <transition name="moveT">
+        <transition name="van-slide-up">
             <div style="position:fixed;width:100%;bottom:5rem;left:0:z-index: 20;border-top:1px solid #ccc;background:#fff" v-if="commentFlag" @click.stop="">
                 <mt-field placeholder="请输入评论内容" type="textarea" rows="2" v-model="model.comment">
                     <div>

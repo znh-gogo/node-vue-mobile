@@ -12,8 +12,11 @@ const api = {
   },
 
   //个人中心
-  showAccount(id,data) {
-    return request(global+'/mobile/api/showAccount/'+id,data, 'post')
+  showAccount(data) {
+    return request(global+'/mobile/api/showAccount',data, 'post')
+  },
+  like(data) {
+    return request(global+'/mobile/api/like',data, 'post')
   },
   changeNickname(data) {
     return request(global+'/mobile/api/updateNickname', data, 'post')

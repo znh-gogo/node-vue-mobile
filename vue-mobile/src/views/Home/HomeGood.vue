@@ -45,7 +45,7 @@
       </div>
     </div>
   </div>
-  <div class="loading-box tc" v-if="isLoading" style="display:flex;justify-content:space-around;">
+  <div class="loading-box tc" v-show="isLoading" style="display:flex;justify-content:space-around;">
     <mt-spinner type="snake" class="loading-more" color="#26a2ff"></mt-spinner>
     <span class="loading-more-txt" style="margin-top:0.5rem">加载中...</span>
  </div>
@@ -100,7 +100,17 @@ export default {
     }
   },
   watch:{
-    result:'checkroute'
+    result:'checkroute',
+    $route:{
+        handler:function(to,old){
+          if(to.path == '/home'){
+            this.listenScroll()
+          } else {
+            window.onscroll = null
+            console.log(window.onscroll,"销毁了")
+          }
+        }
+    }
   },
   methods:{
     choosetype(item,index){
@@ -289,15 +299,9 @@ export default {
         // this.$refs.loadmore.onBottomLoaded();
         },1500)
       }
-    }
-  },
-  mounted (){
-    this.proCategories()
-    this.getProList(this.difftype,this.numPage,this.numSize)
-    // console.log(this.$route.query)
-  },
-  created(){
-    setTimeout(()=>{
+    },
+    listenScroll(){
+      setTimeout(()=>{
       window.onscroll = ()=>{
      		//变量scrollTop是滚动条滚动时，距离顶部的距离
      		var scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
@@ -327,6 +331,16 @@ export default {
     }
   // console.log(window.onscroll)
     },0)
+    }
+  },
+  mounted (){
+    this.proCategories()
+    this.getProList(this.difftype,this.numPage,this.numSize)
+    // console.log(this.$route.query)
+  },
+  created(){
+    
+            this.listenScroll()
      	
   
    },

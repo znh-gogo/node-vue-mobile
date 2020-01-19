@@ -11,6 +11,16 @@ import { Toast } from 'mint-ui'
 Vue.use(Router)
 
 const router = new Router({
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+        return savedPosition
+    } else {
+        return {
+            x: 0,
+            y: 0
+        }
+    }
+},
   // mode: 'history',
   base: process.env.BASE_URL,
   routes: [
@@ -30,25 +40,17 @@ const router = new Router({
       path: '/',
       name: 'Main',
       component: Main,
-      redirect:'/home',
       children:[
+        {
+          path: '/',
+          redirect:'/home',
+          meta:{keepAlive:true}
+        },
         {
           path:'/home',
           name:'home',
           component:Home,
-          // redirect:'/home/good',
-          // children:[
-          //   {
-          //     path: '/home/good',
-          //     name: 'good',
-          //     component: () => import('./views/Home/HomeGood.vue')
-          //   },
-          //   {
-          //     path: '/about',
-          //     name: 'about',
-          //     component: () => import('./views/Home/About.vue')
-          //   }
-          // ]
+          meta:{keepAlive:true}
         },
         {
           path: '/conversation',
@@ -58,14 +60,25 @@ const router = new Router({
         {
           path: '/social',
           name: 'social',
-          component: Social
+          component: Social,
+          // meta:{keepAlive:true}
         },
         {
           path: '/mine',
           name: 'mine',
           component: Mine
-        }
-
+        },
+        {
+          path:'/good-detail',
+          name:'good-detail',
+          component: () => import('./views/Home/GoodDetail.vue'),
+          meta:{keepAlive:true}
+        },
+        {
+          path:'/order-detail',
+          name:'order-detail',
+          component: () => import('./views/Home/OrderDetail.vue')
+        },
       ]
     },
     {
@@ -188,16 +201,12 @@ const router = new Router({
       name:'addconversation',
       component: () => import('./views/Conversation/addconversation.vue')
     },
-    {
-      path:'/good-detail',
-      name:'good-detail',
-      component: () => import('./views/Home/GoodDetail.vue')
-    },
-    {
-      path:'/order-detail',
-      name:'order-detail',
-      component: () => import('./views/Home/OrderDetail.vue')
-    },
+    // {
+    //   path:'/good-detail',
+    //   name:'good-detail',
+    //   component: () => import('./views/Home/GoodDetail.vue')
+    // },
+
     {
       path: '*',
       redirect: '/home'

@@ -94,7 +94,7 @@ module.exports = app => {
             })
         }
         //返回token
-        const token = jwt.sign({id:user._id},app.get('secret'))
+        const token = jwt.sign({id:user._id,time:new Date().getTime()},app.get('secret'))
         return res.send({
             token:token,
             message:'登陆成功',
@@ -109,8 +109,15 @@ module.exports = app => {
     const solveAdminToken = async (req,res,next)=>{
         const token = await String(req.headers.authorization || '').split(' ').pop()
         assert(token,401,'请先登录') 
-        const {id} = await jwt.verify(token,req.app.get('secret'))
-        assert(id,401,'请先登录')         
+        const {id,time} = await jwt.verify(token,req.app.get('secret'))
+        assert(id,401,'请先登录')
+        // const {time} = await jwt.verify(token,req.app.get('secret')) 
+        // console.log(Date.now()-time>60*60*1000)
+        if(Date.now()-time>60*60*1000){
+            return res.status(401).send({
+                message:'您已经超过一个小时没有进行操作，token过期，请重新登陆！'
+            })
+        }    
         req.user = await AdminUser.findById(id)
         assert(req.user,401,'请先登录') 
         await next()
@@ -206,9 +213,13 @@ module.exports = app => {
     })
 
     //回显示用户信息
-    router.post('/showAccount/:id',solveMobileToken,async (req,res)=>{
-        const model = await Account.findById(req.params.id,'-password')
-        res.send(model)
+    router.post('/showAccount',solveMobileToken,async (req,res)=>{
+        const model = await Account.findById(req.body.id,'-password').populate('like liked')
+
+        //粉丝人数
+        // let likedNum = await Account.find({'like':req.body.id})
+        
+        res.send({model})
     })
 
     //更改nickname
@@ -1223,6 +1234,20 @@ module.exports = app => {
             }
         })
         res.send(swiper)
+    })
+
+    //移动端 关注卖家
+    router.post('/like',solveMobileToken,async(req,res)=>{
+        const {bid,sid,like} = req.body
+        if(like){
+            await Account.findByIdAndUpdate(bid,{$push:{like:sid}})
+            await Account.findByIdAndUpdate(sid,{$push:{liked:bid}})
+            res.send({message:'关注成功'})
+        } else {
+            await Account.findByIdAndUpdate(bid,{$pull:{like:sid}})
+            await Account.findByIdAndUpdate(sid,{$pull:{liked:bid}})
+            res.send({message:'取消关注成功'})
+        }
     })
 
     //admin 管理端 回显所有广告申请

@@ -1,9 +1,12 @@
 <template>
     <div style="height:100%">
+        <!-- <transition name="slide" appear> -->
+            <keep-alive>
+                <router-view v-if="$route.meta.keepAlive"></router-view>
+            </keep-alive>
+        <!-- </transition> -->
         <transition name="slide" appear>
-            <!-- <keep-alive> -->
-                <router-view></router-view>
-            <!-- </keep-alive> -->
+            <router-view v-if="!$route.meta.keepAlive"></router-view>
         </transition>
         <div class="footer">
         <router-link class="nav-link" tag="div" to="/home" style="flex:1">

@@ -11,6 +11,8 @@ const schema = new mongoose.Schema({
     headImg:{type:String,default:'https://s2.ax1x.com/2019/08/24/my1zWR.jpg'},
     description:{type:String,default:'这个人比较懒，什么都没有...'},
     address:{type:String},
+    like:[{type: mongoose.SchemaTypes.ObjectId, ref: 'Account'}], //关注
+    liked:[{type: mongoose.SchemaTypes.ObjectId, ref: 'Account'}], //粉丝
     rece_info:[
         {
         re_name:{type:String},

@@ -166,6 +166,9 @@ export default {
     mounted(){
         
         this.getInfo()
+    },
+    activated(){
+        this.getInfo()
     }
 }
 </script>
