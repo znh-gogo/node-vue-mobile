@@ -130,6 +130,7 @@
             <template slot-scope="scope">
                 <el-button
                 @click="$router.push(`/Adapplyedit/${scope.row._id}`)"
+                :disabled="scope.row.ad_flag===1"
                 type="text"
                 size="small">
                 编辑

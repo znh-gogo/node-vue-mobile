@@ -223,6 +223,9 @@ export default {
         }
         .text-desc{
             width: 80%;
+            padding: 0.3rem;
+            background:rgba(255,255,255,0.5);
+            border-radius:0.5rem; 
             // overflow:hidden; 
             // text-overflow:ellipsis;
             // display:-webkit-box; 

@@ -115,7 +115,7 @@ module.exports = app => {
         // console.log(Date.now()-time>60*60*1000)
         if(Date.now()-time>60*60*1000){
             return res.status(401).send({
-                message:'您已经超过一个小时没有进行操作，token过期，请重新登陆！'
+                message:'您登陆已经超过一个小时，token过期，请重新登陆！'
             })
         }    
         req.user = await AdminUser.findById(id)

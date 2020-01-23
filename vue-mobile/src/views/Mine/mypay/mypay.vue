@@ -30,10 +30,10 @@ export default {
         getmoney(){
             let id = window.sessionStorage.getItem('id')
             api.showMyMoney({id}).then(res =>{
-                this.money = res.money
-                if(this.money === parseInt(this.money)){
-                    this.money = this.money + '.00' 
-                }
+                this.money = res.money.toFixed(2)
+                // if(this.money === parseInt(this.money)){
+                //     this.money = this.money + '.00' 
+                // }
             })
         }
     },

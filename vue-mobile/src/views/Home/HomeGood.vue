@@ -58,6 +58,7 @@
       <mt-spinner type="snake"></mt-spinner>
       </span>
   </div> -->
+  <div v-if="upflag" @click="gotop" style="position:fixed;right:2rem;bottom:6rem;width:3rem;height:3rem;background:#fff;border-radius:50%;box-shadow:2px 4px 4px 2px #999;"><img style="width:3rem;height:3rem;line-height:3rem;margin:0 auto" src="../../assets/向上.png" alt=""></div>
   </div>
 </template>
 
@@ -340,7 +341,7 @@ export default {
   },
   created(){
     
-            this.listenScroll()
+      this.listenScroll()
      	
   
    },

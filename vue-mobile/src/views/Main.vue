@@ -8,7 +8,7 @@
         <transition name="slide" appear>
             <router-view v-if="!$route.meta.keepAlive"></router-view>
         </transition>
-        <div class="footer">
+        <div class="footer" v-show="$route.path !=='/order-detail'">
         <router-link class="nav-link" tag="div" to="/home" style="flex:1">
             <img src="../assets/home.png" alt="" style="width:2.2rem;margin-top:0.5rem" v-if="$route.path !== '/home'">
             <img src="../assets/home-checked.png" alt="" style="width:2.2rem;margin-top:0.5rem" v-if="$route.path === '/home'">     

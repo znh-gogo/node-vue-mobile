@@ -80,7 +80,7 @@ const router = new Router({
           meta:{name:'我的商品列表',tab:true}
         },
         {
-          path: '/userEdit/:id',
+          path: '/userEdit',
           name: 'userEdit',
           component: () => import('./views/User/userAdd.vue'),
           props:true
@@ -157,7 +157,7 @@ const router = new Router({
           meta:{name:'添加管理员',tab:true}
         },
         {
-          path: '/adminEdit/:id',
+          path: '/adminEdit',
           name: 'adminEdit',
           component: () => import('./views/AdminUser/adminAdd.vue'),
           props:true,

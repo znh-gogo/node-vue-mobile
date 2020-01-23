@@ -179,7 +179,7 @@ export default {
         return{
             tableData: [],
             numPage:1,
-            numSize:2,
+            numSize:4,
             dialogVisible:false,
             dialogVisible1:false,
             userDetails:{},

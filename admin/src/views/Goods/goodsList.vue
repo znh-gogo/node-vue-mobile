@@ -27,9 +27,11 @@
       >
     </el-table-column>
     <el-table-column
-      prop="pro_price"
       label="商品价格"
       >
+      <template slot-scope="scope">
+        <span style="color:red;font-weight:bold;">￥{{scope.row.pro_price}}</span>
+      </template>
     </el-table-column>
     <el-table-column
       prop="buyflag"
@@ -51,6 +53,19 @@
          </div>
         </el-image>
       </template> -->
+    </el-table-column>
+    <el-table-column
+      label="商品图片"
+    >
+      <template slot-scope="scope">
+        <div class="demo-image__preview">
+          <el-image 
+            style="width: 100px; height: 100px"
+            :src="scope.row.pro_imgs[0]" 
+            :preview-src-list="scope.row.pro_imgs">
+          </el-image>
+        </div>
+      </template>
     </el-table-column>
     <el-table-column
       fixed="right"

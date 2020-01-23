@@ -13,7 +13,7 @@ app.use(session({
     }
 }));
 app.use(require('cors')()) //处理跨域的中间件
-app.use('/uploads',express.static(__dirname+'/uploads'))
+app.use('/uploads',express.static(__dirname+'/uploads')) //开放公共资源文件
 app.set('secret','TOKEN') //设置token的密钥
 require('./routes/admin/index')(app) //引用路由
 require('./routes/mobile/index')(app)

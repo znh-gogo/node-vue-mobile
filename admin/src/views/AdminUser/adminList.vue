@@ -23,7 +23,7 @@
       label="操作"
       width="150">
       <template slot-scope="scope">
-        <el-button @click="$router.push(`/adminEdit/${scope.row._id}`)" type="primary" size="small">编辑</el-button>
+        <el-button @click="$router.push({path:'/adminEdit',query:{id:scope.row._id,username:scope.row.adminName}})" type="primary" size="small">编辑</el-button>
         <el-button @click="remove(scope.row)" type="danger" size="small">删除</el-button>
       </template>
     </el-table-column>

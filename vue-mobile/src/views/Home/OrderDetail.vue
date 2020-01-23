@@ -143,7 +143,7 @@ export default {
                     this.active= 3
                 }
                 if(this.goodinfo.pro_price === parseInt(this.goodinfo.pro_price)){
-                    this.goodinfo.pro_price = this.goodinfo.pro_price + '.00' 
+                    this.goodinfo.pro_price = this.goodinfo.pro_price.toFixed(2)
                 }
                 if(this.goodinfo.paybackflag === 1){
                    this.paybacktext = '退款中'

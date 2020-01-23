@@ -46,6 +46,18 @@
       >
     </el-table-column>
     <el-table-column
+      label="账户图片"
+    >
+      <template slot-scope="scope">
+        <div class="demo-image__preview">
+          <el-image 
+            style="width: 80px; height: 80px"
+            :src="scope.row.headImg">
+          </el-image>
+        </div>
+      </template>
+    </el-table-column>
+    <el-table-column
       fixed="right"
       label="操作"
       width="250">
@@ -161,7 +173,7 @@ import {ADMIN} from '../../api/globol'
       return {
         tableData: [],
         numPage:1,
-        numSize:2,
+        numSize:4,
         dialogVisible: false,
         userDetails: '',
         searchInfo:''
