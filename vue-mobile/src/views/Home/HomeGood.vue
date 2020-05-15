@@ -58,7 +58,7 @@
       <mt-spinner type="snake"></mt-spinner>
       </span>
   </div> -->
-  <div v-if="upflag" @click="gotop" style="position:fixed;right:2rem;bottom:6rem;width:3rem;height:3rem;background:#fff;border-radius:50%;box-shadow:2px 4px 4px 2px #999;"><img style="width:3rem;height:3rem;line-height:3rem;margin:0 auto" src="../../assets/向上.png" alt=""></div>
+  <div v-if="upflag" @click="backTop" style="position:fixed;right:2rem;bottom:6rem;width:3rem;height:3rem;background:#fff;border-radius:50%;box-shadow:2px 4px 4px 2px #999;"><img style="width:3rem;height:3rem;line-height:3rem;margin:0 auto" src="../../assets/向上.png" alt=""></div>
   </div>
 </template>
 
@@ -97,6 +97,8 @@ export default {
       upflag:false,
       stopflag:true,
       loadflag1:false,
+      scrollTop:0,
+      btnFlag:false
       
     }
   },
@@ -246,8 +248,25 @@ export default {
       //     }
       // });
     },
-    gotop(){
-      window.scrollTo(0,0);
+    scrollToTop () {
+        const that = this
+        let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+        that.scrollTop = scrollTop
+        if (that.scrollTop > 60) {
+        that.upflag = true
+        } else {
+        that.upflag = false
+        }
+    },
+    backTop () {
+        const that = this
+        let timer = setInterval(() => {
+            let ispeed = Math.floor(-that.scrollTop / 5)
+            document.documentElement.scrollTop = document.body.scrollTop = that.scrollTop + ispeed
+            if (that.scrollTop === 0) {
+            clearInterval(timer)
+            }
+        }, 16)
     },
     handleTopChange(status) {
         this.topStatus = status;
@@ -335,6 +354,7 @@ export default {
     }
   },
   mounted (){
+    window.addEventListener('scroll', this.scrollToTop)
     this.proCategories()
     this.getProList(this.difftype,this.numPage,this.numSize)
     // console.log(this.$route.query)
@@ -348,6 +368,7 @@ export default {
   destroyed(){
     window.onscroll = null
     console.log(window.onscroll,"销毁了")
+    window.removeEventListener('scroll', this.scrollToTop)
   }
 }
 </script>

@@ -3,7 +3,7 @@
         <div class="priTop">
             <mt-header :title="$route.query.username" style="background-color:#f1f1f1;color: #222222;font-size: 1.2rem;height:4rem;">
                 <mt-button icon="back" slot="left" @click="$router.go(-1)"></mt-button>
-        </mt-header>
+            </mt-header>
         </div>
         <div  ref="contentScroll" class="contentScroll">
             <div class="center-content">
@@ -96,7 +96,6 @@ export default {
                         }
                     })
                 }
-
             })
         },
         sendmessage(){

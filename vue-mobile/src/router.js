@@ -61,7 +61,7 @@ const router = new Router({
           path: '/social',
           name: 'social',
           component: Social,
-          // meta:{keepAlive:true}
+          meta:{keepAlive:true}
         },
         {
           path: '/mine',
@@ -174,7 +174,8 @@ const router = new Router({
     {
       path:'/social/info',
       name:'info',
-      component: () => import('./views/Social/Socialinfo/socialinfo.vue')
+      component: () => import('./views/Social/Socialinfo/socialinfo.vue'),
+      meta:{keepAlive:true}
     },
     {
       path:'/social/sendtopic',

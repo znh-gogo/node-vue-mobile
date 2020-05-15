@@ -1,6 +1,6 @@
 <template>
   <div class="about">
-    <div style="width:100%;text-align:center;margin:5rem 0rem;font-weight:700;line-height:1.5rem" v-if="mysaveList.length === 0">您暂时还没有关注任何商品哦，快去关注吧~</div>
+    <div style="width:100%;text-align:center;margin:5rem 0rem;font-weight:700;line-height:1.5rem;min-height:30rem" v-if="mysaveList.length === 0">您暂时还没有关注任何商品哦，快去关注吧~</div>
     <div v-else>
       <div class="goodbox">
         <div v-for="(item,index) in mysaveList" :key="index">
@@ -58,6 +58,7 @@ export default {
   padding:2%;
   width:100%;
   height:100%;
+  min-height:30rem;
   // display: flex;
   // flex-flow:row wrap;
   -moz-column-count:2; /* Firefox */

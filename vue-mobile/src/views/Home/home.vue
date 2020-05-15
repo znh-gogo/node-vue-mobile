@@ -163,6 +163,7 @@ export default {
     },
     mounted(){
         this.fetchAd()
+        // console.log(this.$store.state.account)
         // this.$router.push({path:'/'})
     },
     computed: {

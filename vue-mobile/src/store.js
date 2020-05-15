@@ -9,7 +9,7 @@ export default new Vuex.Store({
   },
   mutations: {
       GET_ACCOUNT(state,payload){
-        // state.account = state.account+payload
+        state.account = payload
       }
   },
   actions: {

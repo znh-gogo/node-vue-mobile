@@ -62,7 +62,6 @@ export default {
                 sessionStorage.id = res.data.user._id
                 sessionStorage.headimg = res.data.user.headImg
                 this.$router.push('/')
-                // this.$message.success('登陆成功')
                 Notification({
                     title:'您好,登陆成功',
                     message:'希望您能拥有美好的一天，加油！',
@@ -75,9 +74,7 @@ export default {
                 sessionStorage.token=res.data.token
                 sessionStorage.username = res.data.user.adminName
                 sessionStorage.authflag = res.data.user.authflag
-                // console.log(sessionStorage.authflag+'1')
                 this.$router.push('/')
-                // this.$message.success('登陆成功')
                 Notification({
                         title:'您好,登陆成功',
                         message:'希望您能拥有美好的一天，加油！',
